@@ -1,0 +1,9 @@
+tests/**/*.wav
+tests/**/_tmp/
+.venv/
+__pycache__/
+.env
+
+# rendered / generated output (large; re-create with the episode CLI)
+episodes/*/out/
+episodes/*/review/
