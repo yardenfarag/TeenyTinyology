@@ -81,6 +81,8 @@ tests/           old experiments (not used by episodes)
 ```
 
 ## Commands (run from the project root with the project venv)
+Setup on a new machine: `python -m venv .venv && .venv/Scripts/python -m pip install -r requirements.txt`, then copy
+`.env.example` to `.env` and add the ElevenLabs key.
 ```
 .venv/Scripts/python -m characters.model_sheet review.png [--only mochi,pip]
 .venv/Scripts/python -m episodes.<pkg>.episode stills --style cute        # storyboard stills + contact sheet
@@ -95,7 +97,9 @@ copy review images/videos there when asking for feedback.
 3. Characters on-model (compare with `model_sheet`), eyes blink, nothing frozen for > 2 s.
 4. Loudness measured (`mix.measure_lufs`) ≈ −14 LUFS; voice clearly above music.
 5. Facts re-read against `facts.md`. Report honestly what could not be verified (Claude cannot listen to audio).
-6. The `video-judge` agent has reviewed the MP4 and its "Must fix" items are resolved.
+6. The `video-judge` agent has reviewed the MP4 and its "Must fix" items are resolved; its report is saved in
+   `episodes/<pkg>/judge_reports/` and new lessons are added to `docs/judge-lessons.md`.
+7. `docs/judge-lessons.md` re-read: none of the known mistakes repeat in this episode.
 
 ## Backlog (owner feedback to address later)
 - Mochi: nose and mouth look weird / out of place — redesign the muzzle (placement, size, shape) before Mochi's next episode.

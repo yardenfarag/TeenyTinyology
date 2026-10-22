@@ -6,6 +6,7 @@ description: Turn the owner's idea into a finished Teenyology episode (facts →
 # New Teenyology episode
 
 Read `CLAUDE.md` first — it holds the locked decisions (voice, music, cast, format, rules).
+Then read `docs/judge-lessons.md` — mistakes earlier episodes made; design this one so the judge can't catch them again.
 
 ## 0. Set up
 - Pick the next number: `episodes/NNN-short-slug/` (lowercase, hyphens). Python package name: `eNNN_slug`
@@ -55,8 +56,11 @@ Read `CLAUDE.md` first — it holds the locked decisions (voice, music, cast, fo
 ## 6b. Judge — independent critique before the owner sees it
 - Run the `video-judge` agent (`.claude/agents/video-judge.md`) on the rendered MP4. It builds its own review packet
   with `python -m engine.judge_kit episodes.<pkg> <mp4>` and returns a ranked critique + fact-check table.
+- Save the full report as `episodes/<pkg>/judge_reports/passN.md` (N = 1, 2, …).
 - Fix every "Must fix", consider the "Should fix" items, re-render, and include a short summary of the verdict when
   presenting the episode to the owner.
+- **Learn from it:** add each new, generalisable lesson to `docs/judge-lessons.md` (cite the episode + pass). If the
+  judge caught something already listed there, mark it **(repeat)** and turn it into an engine default or a check.
 
 ## 7. Upload pack (`out/`)
 - `NNN-slug.mp4`, `cover.png` (best frame + title), `post.md`: title (< 60 chars), description with 2–3 sentence

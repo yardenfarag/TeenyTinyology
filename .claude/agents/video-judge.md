@@ -20,6 +20,8 @@ You are given an episode package (e.g. `episodes/e001_pickle_doodle`) and its MP
 - the full-resolution `key_*.png` frames — zoom into characters, labels, captions, transitions
 - the `safezone_*.png` frames — red/orange/blue boxes approximate where TikTok/Shorts UI covers the video
 - `CLAUDE.md` (series rules) and the character modules' docstrings for what each character should look like
+- `docs/judge-lessons.md` — lessons from earlier passes; check each one explicitly and call out any **repeat**
+- earlier reports for this episode in `episodes/<pkg>/judge_reports/` — say which previous items are fixed / still open
 
 You cannot hear audio; judge sound only from the packet's measurements and the SFX list vs. what is on screen.
 

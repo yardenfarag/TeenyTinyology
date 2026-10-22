@@ -1,9 +1,46 @@
-tests/**/*.wav
-tests/**/_tmp/
-.venv/
-__pycache__/
+# --- secrets ---
 .env
+.env.*
+!.env.example
+*.pem
+*.key
 
-# rendered / generated output (large; re-create with the episode CLI)
+# --- python ---
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --- node (if any tooling is added later) ---
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# --- rendered / generated output (large; re-create with the episode CLI) ---
 episodes/*/out/
 episodes/*/review/
+episodes/*/look_frames/
+tests/**/*.wav
+tests/**/_tmp/
+*.tmp
+*.log
+
+# --- editors / OS ---
+.vscode/
+.idea/
+.cursor/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Claude Code local settings (shared skills/agents in .claude/ ARE committed) ---
+.claude/settings.local.json
