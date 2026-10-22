@@ -185,14 +185,18 @@ def water_shimmer(c, t, night=False, y0=820, y1=1220):
         c.stroke()
 
 
-def underwater(seed=3):
+def underwater(seed=3, night=False):
+    """Pond seen from below. night=True: deep moonlit blue, a few faint cool moonbeams instead of sun rays."""
     def build():
         s, c = new_surface(W, HH)
         r = rng(seed)
-        _grad(c, 0, HH, [(0, "#d9f0ec"), (0.22, "#8ccbc4"), (0.6, "#4f9a98"), (1, "#2a5f62")])
+        if night:
+            _grad(c, 0, HH, [(0, "#4a6a86"), (0.22, "#24435e"), (0.6, "#16304a"), (1, "#0d1f33")])
+        else:
+            _grad(c, 0, HH, [(0, "#d9f0ec"), (0.22, "#8ccbc4"), (0.6, "#4f9a98"), (1, "#2a5f62")])
         c.paint()
         # surface band seen from below
-        _grad(c, 0, 440, [(0, "#f6fbf2"), (1, "#bfe6dc")])
+        _grad(c, 0, 440, [(0, "#8aa4bc"), (1, "#4f6f8c")] if night else [(0, "#f6fbf2"), (1, "#bfe6dc")])
         c.rectangle(0, 0, W, 430)
         c.fill()
         c.move_to(0, 430)
@@ -201,9 +205,9 @@ def underwater(seed=3):
         c.line_to(W, 470)
         c.line_to(0, 470)
         c.close_path()
-        c.set_source_rgba(1, 1, 1, 0.5)
+        c.set_source_rgba(1, 1, 1, 0.22 if night else 0.5)
         c.fill()
-        for k in range(8):  # light rays
+        for k in range(3 if night else 8):  # light rays (moonbeams at night)
             x0 = r.uniform(-100, W)
             c.move_to(x0, 430)
             c.line_to(x0 + 60, 430)
@@ -211,12 +215,12 @@ def underwater(seed=3):
             c.line_to(x0 + 120, HH)
             c.close_path()
             g = cairo.LinearGradient(0, 430, 0, HH)
-            g.add_color_stop_rgba(0, 1, 1, 0.92, 0.18)
-            g.add_color_stop_rgba(1, 1, 1, 0.92, 0)
+            g.add_color_stop_rgba(0, *((0.8, 0.9, 1, 0.12) if night else (1, 1, 0.92, 0.18)))
+            g.add_color_stop_rgba(1, *((0.8, 0.9, 1, 0) if night else (1, 1, 0.92, 0)))
             c.set_source(g)
             c.fill()
         # bottom: sand, pebbles, plants
-        _grad(c, 1650, HH, [(0, "#7f8a62"), (1, "#5a6044")])
+        _grad(c, 1650, HH, [(0, "#3a4a50"), (1, "#26323a")] if night else [(0, "#7f8a62"), (1, "#5a6044")])
         c.move_to(0, 1700)
         c.curve_to(300, 1650, 700, 1720, W, 1660)
         c.line_to(W, HH)
@@ -225,19 +229,20 @@ def underwater(seed=3):
         c.fill()
         for _ in range(40):
             ellipse(c, r.uniform(0, W), r.uniform(1690, HH - 20), r.uniform(8, 22), r.uniform(5, 12), r.uniform(0, 3))
-            c.set_source_rgba(*mix(hexc("#8a8a7a"), hexc("#b0a88a"), r.random()))
+            c.set_source_rgba(*mix(hexc("#8a8a7a"), hexc("#b0a88a"), r.random())[:3], 0.45 if night else 1)
             c.fill()
         for _ in range(18):
             x = r.uniform(0, W)
             hh = r.uniform(250, 600)
             c.move_to(x, 1720)
             c.curve_to(x + 40, 1720 - hh * 0.4, x - 40, 1720 - hh * 0.7, x + r.uniform(-30, 30), 1720 - hh)
-            c.set_source_rgba(*mix(hexc("#3f7a4a"), hexc("#5e9a5a"), r.random()))
+            col = mix(hexc("#3f7a4a"), hexc("#5e9a5a"), r.random())
+            c.set_source_rgba(*(mix(col, hexc("#16304a"), 0.55) if night else col))
             c.set_line_width(r.uniform(6, 12))
             c.stroke()
         return s
 
-    return _cached(("underwater", seed), build)
+    return _cached(("underwater", seed, night), build)
 
 
 def motes(c, t, n=40, y0=480, y1=1650, seed=5, col=(1, 1, 0.95), a=0.5):

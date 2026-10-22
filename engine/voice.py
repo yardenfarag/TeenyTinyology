@@ -7,6 +7,7 @@ back from ElevenLabs, so captions and sound effects can lock to the exact spoken
 import base64
 import hashlib
 import json
+import math
 import os
 import re
 import subprocess
@@ -40,11 +41,25 @@ class Cue:
     start: float
     end: float
     words: list               # [(word, abs_start, abs_end)]
+    breaks: tuple = ()        # word indices where a caption line must start (from "|" in the script text)
 
     def word(self, needle, which=0):
         """Absolute start time of the n-th word containing needle (case-insensitive)."""
         hits = [s for w, s, _ in self.words if needle.lower() in w.lower()]
         return hits[which] if len(hits) > which else self.start
+
+
+def spoken_text(text):
+    """Script text may contain "|" to force a caption line break; it is never sent to the voice."""
+    return re.sub(r"\s*\|\s*", " ", text).strip()
+
+
+def forced_breaks(text):
+    out, n = [], 0
+    for part in text.split("|")[:-1]:
+        n += len(part.split())
+        out.append(n)
+    return tuple(out)
 
 
 def api_key():
@@ -118,7 +133,7 @@ def narrate(lines, cache_dir, t0=0.8):
     """Returns (voice_track, cues: dict id->Cue, captions: list[Caption], end_time)."""
     clips, t = [], t0
     cues = {}
-    texts = [ln.text for ln in lines]
+    texts = [spoken_text(ln.text) for ln in lines]
     # Approved takes stay locked: once a line has audio, editing a neighbour (which changes the context sent to
     # ElevenLabs) must not silently re-voice it. Change the line's text or `take` to get a new read.
     lock_path = os.path.join(cache_dir, "takes.lock.json")
@@ -129,17 +144,19 @@ def narrate(lines, cache_dir, t0=0.8):
             t += ln.pause
             continue
         spoken = [x for x in texts if x]
-        j = spoken.index(ln.text)
+        j = spoken.index(spoken_text(ln.text))
         prev = " ".join(spoken[max(0, j - 2):j])
         nxt = " ".join(spoken[j + 1:j + 2])
         hit = lock.get(VOICE_ID + ":" + ln.id)
-        hit = hit["hash"] if hit and hit["text"] == ln.text and hit.get("take", 0) == ln.take and             os.path.exists(os.path.join(cache_dir, hit["hash"] + ".json")) else None
-        audio, words, h = _synth(ln.text, prev, nxt, cache_dir, ln.take, hit)
-        lock[VOICE_ID + ":" + ln.id] = {"text": ln.text, "take": ln.take, "hash": h}
+        said = spoken_text(ln.text)
+        hit = hit["hash"] if hit and hit["text"] == said and hit.get("take", 0) == ln.take and             os.path.exists(os.path.join(cache_dir, hit["hash"] + ".json")) else None
+        audio, words, h = _synth(said, prev, nxt, cache_dir, ln.take, hit)
+        lock[VOICE_ID + ":" + ln.id] = {"text": said, "take": ln.take, "hash": h}
         audio, off = _trim(audio)
         dur = len(audio) / SR
-        words = [(w, t + max(0.0, s - off), t + max(0.0, e - off)) for w, s, e in words]
-        cues[ln.id] = Cue(ln.id, t, t + dur, words)
+        # alignment can stretch the last word over trailing silence; clamp to the audible audio
+        words = [(w, t + min(dur, max(0.0, s - off)), t + min(dur, max(0.0, e - off))) for w, s, e in words]
+        cues[ln.id] = Cue(ln.id, t, t + dur, words, forced_breaks(ln.text))
         clips.append((t, audio, ln))
         t += dur + ln.pause
     end = t
@@ -156,6 +173,14 @@ def narrate(lines, cache_dir, t0=0.8):
     return track, cues, finalize_captions(caps), end
 
 
+WEAK_ENDS = {"a", "an", "the", "of", "to", "in", "on", "at", "for", "and", "or", "but", "with", "by", "from", "her",
+             "his", "its", "their", "my", "your", "our", "is", "are", "was", "be", "that", "this", "as", "into", "so",
+             "no", "can", "will", "get", "got", "she", "he", "it", "they", "we", "you", "i", "new", "next", "tiny"}
+
+
+BOUND_STARTS = {"it", "up", "off", "out", "down", "away"}   # words that belong with the word before them
+
+
 def chunk_captions(cue, max_w=None):
     """Split a line's words into ONE-LINE caption chunks: break at punctuation when sensible, otherwise when the
     next word would make the line wider than the caption bubble allows."""
@@ -163,25 +188,50 @@ def chunk_captions(cue, max_w=None):
     from .scene import CAP_MAX_W, CAP_SIZE
     max_w = max_w or CAP_MAX_W - 64
     words = cue.words
-    out, cur = [], []
 
     def w_of(ws):
         return text.width(" ".join(x[0] for x in ws), CAP_SIZE, bold=True)
 
-    for i, w in enumerate(words):
-        if cur and w_of(cur + [w]) > max_w:
-            out.append(cur)
-            cur = []
-        cur.append(w)
-        punct = re.search(r"[.,!?…:;]$", w[0]) is not None
-        if punct and len(cur) >= 2:
-            out.append(cur)
-            cur = []
-    if cur:
-        if out and len(cur) == 1 and w_of(out[-1] + cur) <= max_w:
-            out[-1] += cur
-        else:
-            out.append(cur)
+    # Best split by dynamic programming: lines must fit; prefer ending at sentence/clause punctuation, never end on
+    # a little word ("a", "the", "of"...), avoid one-word orphans, keep lines roughly balanced.
+    n = len(words)
+    best = [0.0] + [math.inf] * n
+    back = [0] * (n + 1)
+    for j in range(1, n + 1):
+        for i in range(j - 1, -1, -1):
+            grp = words[i:j]
+            wd = w_of(grp)
+            if wd > max_w and j - i > 1:
+                break
+            last = grp[-1][0]
+            cost = 1.0 + ((max_w - wd) / max_w) ** 2 * 0.6
+            if i in cue.breaks:
+                cost -= 6.0
+            elif i > 0 and cue.breaks:
+                cost += 4.0          # the script chose its breaks: don't add others unless a line won't fit
+            cost += sum(6.0 for b in cue.breaks if i < b < j)
+            if grp[-1][2] - grp[0][1] < 0.9:      # on screen too briefly to read
+                cost += 1.2
+            if j < n:
+                if re.search(r"[.!?…]$", last):
+                    cost -= 1.2
+                elif re.search(r"[,:;]$", last) or last.endswith("..."):
+                    cost -= 0.7
+                elif last.lower().strip("\"'") in WEAK_ENDS:
+                    cost += 3.0
+                if words[j][0].lower().strip(".,!?…") in BOUND_STARTS:
+                    cost += 2.5
+                # a sentence end inside the line (not at its end) reads worse than breaking there
+            cost += sum(2.0 for w in grp[:-1] if re.search(r"[.!?…]$", w[0]))
+            if j - i == 1:
+                cost += 1.5
+            if best[i] + cost < best[j]:
+                best[j], back[j] = best[i] + cost, i
+    out, j = [], n
+    while j > 0:
+        out.append(words[back[j]:j])
+        j = back[j]
+    out.reverse()
     caps = []
     for i, grp in enumerate(out):
         end = out[i + 1][0][1] if i + 1 < len(out) else grp[-1][2] + 0.45

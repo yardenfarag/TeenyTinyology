@@ -100,9 +100,10 @@ UI_HILITE = (1.0, 0.84, 0.72)          # soft peach behind the word being spoken
 UI_ACCENT = (0.80, 0.42, 0.24)
 
 # Safe zones for TikTok / YouTube Shorts (1080x1920): keep text + key action inside x 60..900, y 200..1460.
+CAP_X = 480               # caption bubble centre x = middle of the safe zone (x 60..900; the app buttons sit right)
 CAP_Y = 1400              # caption bubble centre (clear of the app description area that starts ~y 1520)
-CAP_SIZE = 50
-CAP_MAX_W = 820           # one line only; voice.chunk_captions splits by this width
+CAP_SIZE = 46
+CAP_MAX_W = 840           # one line only (= safe-zone width x 60..900); voice.chunk_captions splits by this width
 
 
 def soft_bubble(c, x, y, w, h, alpha, r=None, fill=UI_CREAM, shadow=0.16):
@@ -119,8 +120,11 @@ def soft_bubble(c, x, y, w, h, alpha, r=None, fill=UI_CREAM, shadow=0.16):
 
 def draw_captions(c, t, caps):
     from . import text
-    for cap in caps:
-        if not (cap.start - 0.06 <= t <= cap.end):
+    # Exactly one caption bubble at a time: the latest one that has started. Two bubbles must never overlap,
+    # not even for a frame (a fading old line under a new one reads as garbled text).
+    live = [c for c in caps if (c.start if c.chained_in else c.start - 0.06) <= t]
+    for cap in live[-1:]:
+        if t > cap.end:
             continue
         fi = 1.0 if cap.chained_in else ease(prog(t, cap.start - 0.06, cap.start + 0.14))
         fo = 1.0 if cap.chained_out else 1 - ease(prog(t, cap.end - 0.16, cap.end))
@@ -134,8 +138,8 @@ def draw_captions(c, t, caps):
         bh = CAP_SIZE * 1.7
         bw = tw + 64
         cy = CAP_Y + (1 - fi) * 14
-        soft_bubble(c, W / 2 - bw / 2, cy - bh / 2, bw, bh, al)
-        x = W / 2 - tw / 2
+        soft_bubble(c, CAP_X - bw / 2, cy - bh / 2, bw, bh, al)
+        x = CAP_X - tw / 2
         base = cy + CAP_SIZE * 0.36
         for (w, ws, we), wd in zip(cap.words, ws_):
             active = ws - 0.02 <= t < we + 0.06

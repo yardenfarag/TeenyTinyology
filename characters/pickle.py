@@ -4,7 +4,9 @@ Calm, careful, a little shy. As a female she has an ovipositor (long egg-laying 
 draw(c, st, x, y, s, ...) — side view facing right, (x, y) = feet line centre.
 pose: ang, phase (walk), walking, crouch (0..1 before a hop), antenna (wiggle phase), blink, happy,
       chew (0..1 mouth moving), wet (0..1 droopy/damp look), xray (callable(c) drawn inside the abdomen),
-      xray_alpha (how see-through the abdomen is, 0..1)
+      xray_alpha (how see-through the abdomen is, 0..1), kick (0..1 hind legs thrust straight back on take-off,
+      other legs tucked), slim (0..1 emptier, flatter tummy — e.g. after a worm has left),
+      night (pale antennae so they still read against a dark sky)
 ABDOMEN gives the abdomen ellipse (local) for x-ray effects; to_world() maps local points.
 """
 import math
@@ -26,7 +28,7 @@ def to_world(x, y, s, ang, lx, ly):
 
 
 def draw(c, st, x, y, s, ang=0.0, phase=0.0, walking=False, crouch=0.0, antenna=0.0, blink=False, happy=0.0,
-         chew=0.0, wet=0.0, xray=None, xray_alpha=0.0, alpha=1.0, sx=1.0, sy=1.0):
+         chew=0.0, wet=0.0, xray=None, xray_alpha=0.0, alpha=1.0, sx=1.0, sy=1.0, kick=0.0, slim=0.0, night=False):
     c.save()
     c.translate(x, y)
     c.rotate(ang)
@@ -36,10 +38,13 @@ def draw(c, st, x, y, s, ang=0.0, phase=0.0, walking=False, crouch=0.0, antenna=
     sh = 8 * math.sin(phase) if walking else 0.0
     st.shadow(c, -30, 4, 210, 16, 0.2)
     far = Palette("#5f8a38", "#94b866", "#2f4a18")
+    tk = 22 * kick   # small legs tuck forward/up while airborne
     # far legs
-    st.limb(c, [(40, -48), (60, -24), (74 - sh, 0)], 7, far)
-    st.limb(c, [(10, -46), (14, -22), (26 + sh, 0)], 7, far)
-    st.limb(c, [(-24, -58), (-140 + 10 * crouch, -124 + 34 * crouch), (-108 + sh, -2)], 12, far)
+    st.limb(c, [(40, -48), (60 + tk, -24 - tk * 0.6), (74 - sh + tk * 1.6, -tk)], 7, far)
+    st.limb(c, [(10, -46), (14 + tk, -22 - tk * 0.6), (26 + sh + tk * 1.4, -tk)], 7, far)
+    fk = (-140 + 10 * crouch, -124 + 34 * crouch)
+    st.limb(c, [(-24, -58), (fk[0] + (-128 - fk[0]) * kick, fk[1] + (-62 - fk[1]) * kick),
+                (-108 + sh + (-236 + 108) * kick, -2 + 26 * kick)], 12, far)
     # antennae (long, sweeping back over the body)
     wig = 10 * math.sin(antenna)
     droop = 30 * wet
@@ -47,7 +52,7 @@ def draw(c, st, x, y, s, ang=0.0, phase=0.0, walking=False, crouch=0.0, antenna=
         pts = [(118 + dx, -104), (150 + dx, -170 + droop), (60 + dx, -230 + wig + droop * 2),
                (-90 + dx, -215 - wig + droop * 2), (-200 + dx, -170 + wig * 0.6 + droop * 2)]
         smooth_path(c, pts)  # one continuous curve (no kink)
-        c.set_source_rgba(*DARK[:3], 0.9 if k else 0.6)
+        c.set_source_rgba(*((0.78, 0.88, 0.6) if night else DARK[:3]), 0.9 if k else 0.6)  # pale at night
         c.set_line_width(w)
         c.stroke()
     # ovipositor + cerci
@@ -56,6 +61,9 @@ def draw(c, st, x, y, s, ang=0.0, phase=0.0, walking=False, crouch=0.0, antenna=
     st.line(c, [(-150, -60), (-200, -66)], 3, DARK)
     # abdomen
     ax, ay, arx, ary, arot = ABDOMEN
+    ary *= 1 - 0.2 * slim
+    ay -= 0.2 * 50 * slim * 0.5
+    arx *= 1 - 0.05 * slim
     st.ellipse(c, ax, ay, arx, ary, arot, BODY, seed=201)
     if xray is not None and xray_alpha > 0:
         # x-ray: contents seen *through* the green skin; the tummy keeps its shape and outline
@@ -109,8 +117,8 @@ def draw(c, st, x, y, s, ang=0.0, phase=0.0, walking=False, crouch=0.0, antenna=
     st.part(c, pronotum, Palette("#6f9e3e", "#b4d67a", "#36601c", "#2c4a16"), 36, -78, 42, seed=203)
     st.shine(c, 30, -100, 18, 6, -0.15, 0.28)
     # near middle + front legs
-    st.limb(c, [(48, -46), (70, -22), (84 + sh, 0)], 8, LEG)
-    st.limb(c, [(16, -44), (22, -20), (36 - sh, 0)], 8, LEG)
+    st.limb(c, [(48, -46), (70 + tk, -22 - tk * 0.6), (84 + sh + tk * 1.6, -tk)], 8, LEG)
+    st.limb(c, [(16, -44), (22 + tk, -20 - tk * 0.6), (36 - sh + tk * 1.4, -tk)], 8, LEG)
     # head
     hr = (40, 40) if real else (46, 46)
     st.ellipse(c, 100, -86, hr[0], hr[1], 0.0, BODY, seed=204)
@@ -126,6 +134,7 @@ def draw(c, st, x, y, s, ang=0.0, phase=0.0, walking=False, crouch=0.0, antenna=
     # big jumping hind leg (near side): thick femur angled up-back, tibia dropping behind the body
     hip = (-30, -52)
     kx, ky = -150 + 10 * crouch, -128 + 34 * crouch
+    kx, ky = kx + (-136 - kx) * kick, ky + (-60 - ky) * kick   # take-off: leg straightens back
 
     fem = Palette("#5f9436", "#a8d070", "#2f5418", "#24420f")
     L = math.hypot(kx - hip[0], ky - hip[1])
@@ -153,11 +162,12 @@ def draw(c, st, x, y, s, ang=0.0, phase=0.0, walking=False, crouch=0.0, antenna=
         c.move_to(fx - 5, fy - 7)
         c.line_to(fx + 5, fy + 3)
         c.stroke()
-    footx = -122 - sh
-    st.limb(c, [(kx, ky), (footx, -6), (footx + 26, 0)], 7, LEG)
+    footx = -122 - sh + (-250 + 122) * kick
+    footy = -6 + 30 * kick
+    st.limb(c, [(kx, ky), (footx, footy), (footx + 26 - 40 * kick, footy + 6 + 8 * kick)], 7, LEG)
     for k in range(4):  # tibia spines
         f = (k + 1) / 5
-        px, py = kx + (footx - kx) * f, ky + (-6 - ky) * f
+        px, py = kx + (footx - kx) * f, ky + (footy - ky) * f
         st.line(c, [(px, py), (px - 9, py - 2)], 2, DARK)
     if wet > 0:
         for k in range(4):

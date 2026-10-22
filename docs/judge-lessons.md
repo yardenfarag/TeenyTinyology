@@ -32,16 +32,34 @@ probably become an engine default or a checklist item.
 ## Animation & polish
 - **The climax needs real animation:** anticipation (crouch), action (leg kick, stretch), an eased arc, a landing
   into the effect. A pose sliding along a path looks flat **(repeat: e001 pass 1 + pass 2)**.
+  Root cause in e001: the action had no time. Its window was squeezed between the end of a line and a sound cue, so
+  it began before the scene did. **Budget the silence for a big action in the script** (the pause before the
+  silent beat). A jump needs ≥ 1.3 s: 0.5 s crouch, 0.8 s airborne. Then check the scene's start and end times
+  against the action's start and end. Pickle now has `kick=` (take-off pose).
+- **End-card icons are held to the same standard as scenes.** A fix in a character's pose must reach every place
+  she is drawn, including the icons (e001 pass 3: flat-winged mayfly icon).
+- **Effects respect the medium.** Bubbles only under water, splashes at the waterline (e001 pass 3).
+- **Use a cut, not a crossfade, between two shots of the same character at different positions or zoom.** A
+  crossfade shows two copies of her (e001 pass 3).
 - **Lighting stays continuous within a sequence.** A night jump means a moonlit underwater shot (e001 pass 2).
+  Use `bg.underwater(night=True)` for that, plus `pickle.draw(..., night=True)` for pale antennae.
 - **Time-passing effects must read as intentional.** A grey dim looks like a glitch. Use a moon, stars and a blue
-  cast, or skip the effect (e001 pass 2).
+  cast, or skip the effect (e001 pass 2). Tint with cairo `OPERATOR_MULTIPLY` (blue), not a semi-transparent
+  dark paint (which turns grey).
 - **Don't hold a still frame > 5 s.** Add a slow push-in or a small idle motion (e001 pass 2).
 - **Night scenes:** dark ink outlines vanish on dark blue. Lighten antennae and outlines at night (e001 pass 2).
 
 ## UI / UX
-- **Captions never overlap, not even for one frame** **(repeat: e001 pass 1 + pass 2)**. A new bubble only appears
-  after the old one is gone, or they swap as a hard cut.
+- **Captions never overlap, not even for one frame** **(repeat: e001 pass 1 + pass 2)**. Now an engine default:
+  `scene.draw_captions` draws exactly one bubble at a time.
 - **Captions break at natural phrase boundaries,** never ending a line on a/the/of/to. A one-word orphan
-  ("mystery.") should not sit alone on screen (e001 pass 2).
+  ("mystery.") should not sit alone on screen (e001 pass 2). Now an engine default: `voice.chunk_captions` picks
+  breaks by cost, preferring punctuation and avoiding weak endings and orphans. Where it still splits a phrase
+  badly, put `|` in the script text to force a break there. The `|` is never spoken.
+- **Centre captions in the safe zone, not the frame.** A line that fits the frame can still run under the app's
+  right rail (e001 pass 3). `CAP_X = 480` is the middle of x 60–900.
+- **No caption shorter than ~0.9 s on screen.** A 0.4 s bubble reads as a flicker with the sound off (e001 pass 3).
+  If you force a break with `|`, check the timing of the piece it creates.
+- **Read the full caption list before the look frames.** Print it with `narrate(...)` and check every line.
 - **Safe zones:** content in x 60–900, y 200–1460; captions centred at y=1400 (e001 pass 1).
 - **End card:** arrows must not touch labels, and the card stays fully readable for at least 4 s (e001 pass 2).

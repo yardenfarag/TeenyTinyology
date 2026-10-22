@@ -7,6 +7,7 @@ Every scene time and sound cue is derived from the narration word timestamps.
 import argparse
 import math
 import os
+import random
 import shutil
 
 import cairo
@@ -88,7 +89,7 @@ def build(style_name):
     st = styles.get(style_name)
     TEASER = 1.5
     track, Q, caps, end = narrate(SCRIPT, os.path.join(HERE, "voice_cache"), t0=TEASER + 0.15)
-    DUR = end + 2.4
+    DUR = end + 4.2   # end card stays fully readable for ~4 s
     tl = Timeline(DUR, captions=caps)
     ctx = {"style": st, "vignette": bg.vignette()}
     q = Q
@@ -98,7 +99,7 @@ def build(style_name):
         from engine.scene import label
         paint(c, bg.pond(night=True))
         bg.water_shimmer(c, t, night=True)
-        pickle.draw(c, st, 470, 1300, 1.25, antenna=t * 2, blink=False)
+        pickle.draw(c, st, 470, 1300, 1.25, antenna=t * 2, blink=False, night=True)
         c.set_source_rgba(0.08, 0.1, 0.25, 0.25)
         c.paint()
         bg.water_shimmer(c, t + 0.5, night=True)
@@ -176,13 +177,14 @@ def build(style_name):
 
     def s_doodle(c, t, ctx):
         z = lerp(1.6, 2.4, ease(prog(t, q["doodle1"].start - 0.4, q["doodle1"].start + 1.4)))
+        z += 0.35 * ease(prog(t, q["doodle1"].start + 1.4, q["eat"].start))   # keep drifting in during the hold
         cam = Cam(z, LAND[0] + 10, LAND[1] - 90, 540, 1000)
         c.save()
         cam.apply(c)
         paint(c, bg.pond())
         bg.water_shimmer(c, t)
         xa = ease(prog(t, q["doodle1"].start + 0.2, q["doodle1"].start + 0.9))
-        pulse = 1 + 0.25 * math.sin(max(0, t - q["doodle1"].word("speck")) * 9) * window(t, q["doodle1"].word("speck"), q["doodle1"].word("speck") + 1.2, 0.1, 0.4)
+        pulse = 1 + 0.05 * math.sin(t * 2.2) + 0.25 * math.sin(max(0, t - q["doodle1"].word("speck")) * 9) * window(t, q["doodle1"].word("speck"), q["doodle1"].word("speck") + 1.2, 0.1, 0.4)
 
         def inside(cc):
             doodle.draw_cyst(cc, st, *cyst_local, 17 * pulse, 1.0, t=t, blink=blinking(t, 2.0))
@@ -280,9 +282,28 @@ def build(style_name):
             la = window(t, w_several + 0.4, w_coiled + 0.3, 0.3, 0.3)
             pill(c, "Doodle, unwound", 540, 780, la, size=34)
         wk = prog(t, q["grow1"].word("Week") - 0.3, q["grow2"].start + 0.2)
-        if 0 < wk < 1:  # days and nights passing
-            c.set_source_rgba(0.08, 0.1, 0.3, 0.32 * (0.5 - 0.5 * math.cos(TAU * 3 * wk)))
-            c.paint()
+        if 0 < wk < 1:  # days and nights passing: two real nights (blue cast, moon, stars), not a grey dim
+            nk = clamp((math.sin(TAU * 2 * wk - math.pi / 2) * 0.5 + 0.5) * 1.7 - 0.35, 0, 1)  # long, readable nights
+            if nk > 0.01:
+                c.set_operator(cairo.OPERATOR_MULTIPLY)     # true moonlit blue, not a grey dim
+                c.set_source_rgba(lerp(1, 0.32, nk), lerp(1, 0.4, nk), lerp(1, 0.78, nk), 1)
+                c.paint()
+                c.set_operator(cairo.OPERATOR_OVER)
+                rs = random.Random(11)
+                for _ in range(26):
+                    sx_, sy_ = rs.uniform(80, 1000), rs.uniform(380, 700)
+                    tw = 0.6 + 0.4 * math.sin(t * 3 + sx_)
+                    c.arc(sx_, sy_, rs.uniform(1.8, 3.6), 0, TAU)
+                    c.set_source_rgba(1, 0.97, 0.85, 0.85 * nk * tw)
+                    c.fill()
+                mx = lerp(260, 860, (wk * 2) % 1)          # the moon travels across each night
+                my = 470 - 70 * math.sin(math.pi * ((wk * 2) % 1))
+                c.arc(mx, my, 70, 0, TAU)
+                c.set_source_rgba(1, 0.96, 0.82, 0.12 * nk)
+                c.fill()
+                c.arc(mx, my, 38, 0, TAU)
+                c.set_source_rgba(1, 0.97, 0.86, 0.95 * nk)
+                c.fill()
         sparkles(c, 540, 1250, t, w_several + 0.6, r=160)
 
     tl.add(s_grow, q["grow1"].start - 0.35, q["problem1"].start)
@@ -334,7 +355,7 @@ def build(style_name):
         paint(c, bg.pond(night=True))
         bg.water_shimmer(c, t, night=True)
         x, y, s, walking = walk7(t)
-        pickle.draw(c, st, x, y, s, phase=t * 6, walking=walking, antenna=t * 1.5, blink=blinking(t, 0.2))
+        pickle.draw(c, st, x, y, s, phase=t * 6, walking=walking, antenna=t * 1.5, blink=blinking(t, 0.2), night=True)
         c.set_source_rgba(0.08, 0.1, 0.25, 0.28)
         c.paint()
         bg.water_shimmer(c, t + 0.5, night=True)
@@ -343,7 +364,7 @@ def build(style_name):
             hx, hy = pickle_head_top(x, y, s)
             _think(c, hx + 40, hy - 70, qa)
 
-    HOP0 = q["how"].end + 0.15        # the jump: close shot, anticipation, big splash on the silent beat
+    HOP0 = q["how"].end + 0.1         # the jump: close shot, anticipation, big splash on the silent beat
     tl.add(s_night, q["drawn"].start - 0.35, HOP0 + 0.3)
 
     # ------------------------------------------------------------ 8. splash + Doodle escapes (underwater)
@@ -352,69 +373,108 @@ def build(style_name):
     w_swims = q["escape"].word("swims")
     UNDER_AT = w_water + 0.35
 
+    LAUNCH = w_water - 0.8            # take-off; splash (sound + rings) lands exactly on the silent beat
+    HOP_A, HOP_B, SPL = (480, 1290), (650, 1150), (650, 1122)
+
     def s_hop(c, t, ctx):
         cam = Cam(lerp(1.5, 1.7, prog(t, HOP0, w_water + 0.8)), 560, 1180, 540, 1000)
         c.save()
         cam.apply(c)
         paint(c, bg.pond(night=True))
         bg.water_shimmer(c, t, night=True)
-        crouch = ease(prog(t, HOP0, w_water - 1.1)) * (1 - ease(prog(t, w_water - 1.1, w_water - 1.0)))
-        k = ease(prog(t, w_water - 1.05, w_water))
-        x, y = lerp(480, 640, k), lerp(1290, 1120, k) - 240 * math.sin(math.pi * k)
+        # anticipation: sink into a deep crouch, hold a beat, then explode off the bank
+        crouch = ease(prog(t, HOP0, LAUNCH - 0.15)) * (1 - ease(prog(t, LAUNCH - 0.02, LAUNCH + 0.06)))
+        k = prog(t, LAUNCH, w_water)
         if k < 1:
-            sx, sy = (1 + 0.06 * crouch, 1 - 0.1 * crouch) if k <= 0 else (0.94, 1.08)
-            pickle.draw(c, st, x, y, 0.85, ang=-0.45 * math.sin(math.pi * k), crouch=crouch,
-                        antenna=t * 2, sx=sx, sy=sy, blink=False)
+            x = lerp(HOP_A[0], HOP_B[0], k)
+            y = lerp(HOP_A[1], HOP_B[1], k) - 300 * math.sin(math.pi * k)
+            air = k > 0
+            kick = (ease(prog(t, LAUNCH - 0.04, LAUNCH + 0.05)) * (1 - 0.65 * ease(prog(k, 0.45, 0.95)))) if air else 0
+            ang = lerp(-0.55, 0.75, ease(k)) if air else 0.0
+            stretch = window(t, LAUNCH - 0.02, LAUNCH + 0.3, 0.04, 0.2)
+            sx, sy = (1 + 0.08 * crouch - 0.08 * stretch, 1 - 0.14 * crouch + 0.12 * stretch)
+            c.save()
+            if k > 0.6:   # diving in: whatever is below the surface is hidden (she never fades out in the air)
+                c.rectangle(-500, -500, 3000, SPL[1] + 6 + 500)
+                c.clip()
+            pickle.draw(c, st, x, y, 0.85, ang=ang, crouch=crouch, kick=kick, antenna=t * 2 + 3 * k,
+                        sx=sx, sy=sy, blink=False, night=True)
+            c.restore()
+            if not air:
+                st.shadow(c, HOP_A[0] - 20, HOP_A[1] + 4, 170, 12, 0.1 * crouch)
         sp = prog(t, w_water, w_water + 1.1)
         if 0 < sp < 1:
             for i in range(4):
-                ellipse(c, 640, 1120, 40 + 230 * sp + i * 34, (16 + 70 * sp + i * 12) * 0.5)
+                ellipse(c, SPL[0], SPL[1], 40 + 230 * sp + i * 34, (16 + 70 * sp + i * 12) * 0.5)
                 c.set_source_rgba(1, 1, 1, (1 - sp) * 0.85)
                 c.set_line_width(5)
                 c.stroke()
             for i in range(16):
                 a_ = -math.pi * (0.08 + 0.84 * i / 15)
                 d = 220 * sp
-                c.arc(640 + math.cos(a_) * d, 1120 + math.sin(a_) * d * 1.3 + 300 * sp * sp, 9 * (1 - sp), 0, TAU)
+                c.arc(SPL[0] + math.cos(a_) * d, SPL[1] + math.sin(a_) * d * 1.3 + 300 * sp * sp, 9 * (1 - sp), 0, TAU)
                 c.set_source_rgba(0.85, 0.95, 1, 1 - sp)
                 c.fill()
         c.set_source_rgba(0.08, 0.1, 0.25, 0.25)
         c.paint()
         c.restore()
 
-    tl.add(s_hop, HOP0, UNDER_AT + 0.3, trans_dur=0.3)
+    tl.add(s_hop, HOP0, UNDER_AT + 0.3, transition="cut")   # a crossfade showed two Pickles
 
     REAR_LOCAL = (-160, -54)   # tip of the abdomen: where hairworms really exit
     PFLOAT = (620, 478)        # floating at the surface (y 430), rear tipped under water
     PANG = -0.35
     DIR = (-0.36, 0.93)        # out of the rear, down and back, into the pond
 
+    def worm_path(d):
+        """Doodle's swim path, d px from Pickle's rear: down and away in big lazy S-curves, so his full length
+        (~6x Pickle, as in the 'unwound' diagram) fits on screen."""
+        k = min(1.0, d / 220)              # leaves along the body axis, then heads straight down the pond
+        fx, fy = lerp(DIR[0], 0.0, k), lerp(DIR[1], 1.0, k)
+        fwd = d * lerp(0.9, 0.5, k)
+        lat = 250 * math.sin(d / 330) * k
+        return (rear0[0] + fx * fwd + lat, rear0[1] + fy * fwd)
+
+    rear0 = pickle.to_world(PFLOAT[0], PFLOAT[1], 1.1, PANG, *REAR_LOCAL)
+
     def s_escape(c, t, ctx):
-        paint(c, bg.underwater())
-        c.set_source_rgba(0.08, 0.12, 0.3, 0.42)  # night-time pond, matching the scene before
-        c.paint()
+        paint(c, bg.underwater(night=True))   # still night: same moonlit pond as the jump
         bg.motes(c, t)
         bob = 5 * math.sin(t * 2)
         rear = pickle.to_world(PFLOAT[0], PFLOAT[1] + bob, 1.1, PANG, *REAR_LOCAL)
-        L = 720
-        e = ease(prog(t, w_slips - 0.1, w_slips + 1.6))
-        away = max(0.0, t - (w_slips + 1.6)) * 230
-        head = (rear[0] + DIR[0] * (L * e + away), rear[1] + DIR[1] * (L * e + away))
-        n = 200
+        L = 1700                                # ~6x Pickle's body length at this scale
+        e = ease(prog(t, w_slips - 0.1, w_swims + 0.6))
+        away = max(0.0, t - (w_swims + 0.6)) * 260
+        D = L * e + away                        # distance the head has travelled from the rear
+        shown = min(L, D)                       # only the part that has already come out is visible
+        n = 360
         pts = []
-        shown = min(L, L * e + away)   # only the part that has already come out is visible
         for i in range(n):
             uu = i / (n - 1)
-            along = uu * shown
-            px, py = head[0] - DIR[0] * along, head[1] - DIR[1] * along
-            amp = 26 * math.sin(uu * TAU * 2.0 - t * 6) * min(1.0, uu * 4)
-            pts.append((px + DIR[1] * amp, py - DIR[0] * amp))
+            d = max(0.0, D - uu * shown)
+            px, py = worm_path(d)
+            fol = max(0.0, 1 - d / 200)   # the part still near her follows her bobbing
+            px, py = px + (rear[0] - rear0[0]) * fol, py + (rear[1] - rear0[1]) * fol
+            amp = 10 * math.sin(uu * TAU * 5.0 - t * 7) * min(1.0, uu * 6)
+            pts.append((px + amp, py + amp * 0.3))
         if shown > 12:
-            doodle.draw_along(c, st, pts, 9, face=True, blink=blinking(t, 0.3), happy=0.5)
+            c.move_to(*pts[0])                 # faint moonlit halo so a thin dark worm reads on dark water
+            for p_ in pts[1:]:
+                c.line_to(*p_)
+            c.set_source_rgba(0.85, 0.93, 1.0, 0.16)
+            c.set_line_width(30)
+            c.set_line_cap(cairo.LINE_CAP_ROUND)
+            c.set_line_join(cairo.LINE_JOIN_ROUND)
+            c.stroke()
+            doodle.draw_along(c, st, pts, 12, face=True, blink=blinking(t, 0.3), happy=0.5)
         pickle.draw(c, st, PFLOAT[0], PFLOAT[1] + bob, 1.1, ang=PANG, phase=t * 9, walking=True,
-                    antenna=t * 3, blink=blinking(t), wet=1.0)
+                    antenna=t * 3, blink=blinking(t), wet=1.0, slim=ease(prog(t, w_swims, w_swims + 1.5)))
+        c.save()
+        c.rectangle(0, 445, W, bg.HH)          # bubbles only under the surface, never in the air
+        c.clip()
         bg.bubbles(c, t, rear[0], rear[1], n=10, seed=4, t0=w_slips - 0.2, life=2.2)
         bg.bubbles(c, t, PFLOAT[0] + 80, PFLOAT[1] + 40, n=6, seed=9, t0=UNDER_AT, life=3.0)
+        c.restore()
 
     tl.add(s_escape, UNDER_AT, q["survive"].start + 0.1, transition="fade", trans_dur=0.3)
 
@@ -429,7 +489,7 @@ def build(style_name):
         wet = 1 - ease(prog(t, w_dry - 0.2, w_dry + 1.4))
         shake = 0.04 * math.sin(t * 40) * window(t, w_dry - 0.2, w_dry + 0.6, 0.1, 0.2)
         pickle.draw(c, st, x, y, 1.3, ang=shake, phase=x / 14, walking=0 < k < 1, antenna=t * 2.4,
-                    blink=blinking(t, 0.5), happy=ease(prog(t, w_dry, w_dry + 0.5)), wet=wet)
+                    blink=blinking(t, 0.5), happy=ease(prog(t, w_dry, w_dry + 0.5)), wet=wet, slim=1.0)
         hx, hy = pickle_head_top(x, y, 1.3)
         sparkles(c, hx, hy + 60, t, w_dry + 0.3, r=120)
 
@@ -444,6 +504,12 @@ def build(style_name):
     LARVA_T = (640, 1180)
 
     def s_pondlife(c, t, ctx):
+        # gentle zoom onto the nymph's head while it swallows the (tiny) larva, so the moment reads on a phone
+        zk = window(t, w_swallow2 - 0.6, w_swallow2 + 1.0, 0.4, 0.5)
+        c.save()
+        cam = Cam(1 + 0.45 * ease(zk), lerp(540, LARVA_T[0] - 180, ease(zk)), lerp(960, LARVA_T[1], ease(zk)),
+                  540, lerp(960, 1050, ease(zk)))
+        cam.apply(c)
         paint(c, bg.underwater())
         bg.motes(c, t)
         # gelatinous egg strings
@@ -483,8 +549,11 @@ def build(style_name):
             pixie.draw_nymph(c, st, nx, ny, 2.2, t * 3)
             if eaten:
                 doodle.draw_cyst(c, st, nx - 120, ny - 44, 13, ease(prog(t, w_swallow2 + 0.2, w_swallow2 + 0.6)), t=t)
-            tag(c, "young mayfly", nx - 20, ny - 100, window(t, q["cycle2"].word("insects"), q["cycle3"].start, 0.3, 0.3),
-                size=34, sub="like Pixie once was")
+        c.restore()
+        if q["cycle2"].start - 0.2 < t:
+            tx, ty = cam.screen(nx - 20, ny - 100)
+            tag(c, "young mayfly", tx, ty, window(t, q["cycle2"].word("insects") + 0.4, q["cycle3"].start, 0.3, 0.3),
+                size=34, sub="a nymph")
 
     tl.add(s_pondlife, q["cycle1"].start - 0.35, q["cycle3"].start + 0.2)
 
@@ -522,7 +591,7 @@ def build(style_name):
             pixie.draw_nymph(c, st, 80, 20, 1.2, t * 3)
             doodle.draw_cyst(c, st, -10, -6, 9, 1.0, t=t)
         elif kind == "fly":
-            pixie.draw(c, st, 20, 60, 0.55, flap=t * 34)
+            pixie.draw(c, st, 20, 60 - 6 * math.sin(t * 3), 0.55)   # upright wings: unmistakably a mayfly
         elif kind == "cricket":
             def inside(cc):
                 doodle.draw_along(cc, st, doodle.coil_points(-72, -58, 55, 5, t, n=300), 5, face=False)
@@ -554,7 +623,7 @@ def build(style_name):
                     text_center(c, ln, nx, ny + 74 + j * 40, 36, INK, alpha=ease(k))
             pa = ease(prog(t, nt + 0.2, nt + 0.55))
             if pa > 0:
-                a0, a1 = a + 0.42, a + step - 0.42
+                a0, a1 = a + 0.42, a + step - 0.56   # arrowhead stops well clear of the next node's label
                 e_ = lerp(a0, a1, pa)
                 c.new_path()
                 c.arc(CX, CY, CR, a0, e_)

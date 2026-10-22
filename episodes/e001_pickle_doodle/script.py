@@ -1,12 +1,12 @@
 """Episode 001 narration, v4 (judge fixes: wandering, Later, grow up). v2 (livelier rewrite, read by Miles). v1 is kept in script_v1_remi.py.
-Pauses are seconds of silence after each line."""
+Pauses are seconds of silence after each line. "|" marks a caption line break (never spoken)."""
 from engine.voice import Line
 
 SCRIPT = [
     Line("pickle", "This is Pickle. She's a cricket...", 0.35),
     Line("hook", "and she's about to do something no cricket should ever do.", 0.9),
     Line("pixie1", "This is Pixie. She's a mayfly.", 0.4),
-    Line("pixie2", "She grew up underwater, in a pond. Now, at the very end of her short life, she's landed on the shore.", 0.8),
+    Line("pixie2", "She grew up underwater, in a pond. | Now, at the very end | of her short life, | she's landed on the shore.", 0.8),
     Line("doodle1", "And this is Doodle. A horsehair worm, no bigger than a speck...", 0.35),
     Line("doodle2", "hiding inside Pixie. Waiting.", 1.0),
     Line("eat", "Pickle finds Pixie... and gobbles her up. Doodle included.", 1.0),
@@ -15,13 +15,13 @@ SCRIPT = [
     Line("problem1", "There's just one problem.", 0.5),
     Line("problem2", "Doodle needs water to find a mate. And Pickle? Pickle lives on land.", 1.0),
     Line("drawn", "So something strange happens. Pickle starts wandering... restless... until she finds the water.", 0.45),
-    Line("how", "Is Doodle steering her? Scientists think so... but how he does it is still a mystery.", 0.9),
+    Line("how", "Is Doodle steering her? Scientists think so... | but how he does it | is still a mystery.", 1.5),  # room for crouch + leap before the splash
     Line("splash", "", 1.3, sfx="splash"),  # owner prefers a real splash sound to the narrator saying it
-    Line("escape", "In the water, Doodle slides out of Pickle, and swims off to find a mate.", 0.9),
+    Line("escape", "In the water, | Doodle slides out of Pickle, and swims off to find a mate.", 0.9),
     Line("survive", "And Pickle? If she can scramble back to dry land... she can actually survive.", 1.1),
-    Line("cycle1", "Later, a new batch of worm eggs hatches in the pond.", 0.45),
+    Line("cycle1", "Later, a new batch of worm eggs | hatches in the pond.", 0.45),
     Line("cycle2", "The tiny larvae get swallowed by young insects, like Pixie once was.", 0.45),
-    Line("cycle3", "They grow up, fly to land... and wait for the next hungry cricket.", 1.2),
+    Line("cycle3", "They grow up, | fly to land... and wait | for the next hungry cricket.", 1.2),
 ]
 
 # Sound effects anchored to the narration: (line id, word in that line or None = line start, effect, gain, offset s).
@@ -45,7 +45,7 @@ SFX = [
     ("problem2", "water", "bubbles", 0.10, 0.0),
     ("how", "steering", "pop", 0.18, 0.0),
     ("how", "mystery", "shimmer", 0.07, 0.0),
-    ("splash", None, "boing", 0.16, -1.05),  # take-off of the (slower) jump
+    ("splash", None, "boing", 0.16, -0.8),   # take-off (episode.LAUNCH = splash - 0.8)
     ("escape", "slides", "slurp", 0.12, 0.0),
     ("escape", "swims", "bubbles", 0.14, 0.0),
     ("survive", "scramble", "ruffle", 0.15, 0.0),
