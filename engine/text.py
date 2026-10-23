@@ -26,6 +26,14 @@ FAMILIES = {
                 "bold": "fredoka-600-normal.ttf"},
     "Baloo 2": {"regular": "baloo-2-500-normal.ttf", "semibold": "baloo-2-700-normal.ttf",
                 "bold": "baloo-2-700-normal.ttf"},
+    # serif families for branding (variable fonts: "file@weight")
+    "Cormorant Garamond": {"regular": "cormorant-garamond-variable.ttf@500",
+                           "semibold": "cormorant-garamond-variable.ttf@600",
+                           "bold": "cormorant-garamond-variable.ttf@700"},
+    "EB Garamond": {"regular": "eb-garamond-variable.ttf@400", "semibold": "eb-garamond-variable.ttf@500",
+                    "bold": "eb-garamond-variable.ttf@600"},
+    "Outfit": {"regular": "outfit-variable.ttf@400", "semibold": "outfit-variable.ttf@600", "bold": "outfit-variable.ttf@700"},
+    "Lora": {"regular": "lora-variable.ttf@400", "semibold": "lora-variable.ttf@500", "bold": "lora-variable.ttf@600"},
 }
 _state = {"family": "Nunito"}
 
@@ -53,7 +61,11 @@ def _file(fam, bold, italic, semibold=False):
 
 @lru_cache(maxsize=256)
 def _font(path, px):
-    return ImageFont.truetype(os.path.join(FONT_DIR, path), max(4, px))
+    name, _, wght = path.partition("@")
+    f = ImageFont.truetype(os.path.join(FONT_DIR, name), max(4, px))
+    if wght:
+        f.set_variation_by_axes([float(wght)])
+    return f
 
 
 def width(txt, size, bold=False, italic=False, fam=None, semibold=False):

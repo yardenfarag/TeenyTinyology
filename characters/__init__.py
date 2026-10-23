@@ -1,1 +1,1 @@
-"""The permanent Teenyology cast."""
+"""The permanent TeenyTinyology cast."""

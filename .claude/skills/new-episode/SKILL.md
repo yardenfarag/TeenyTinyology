@@ -1,9 +1,9 @@
 ---
 name: new-episode
-description: Turn the owner's idea into a finished Teenyology episode (facts → script → storyboard → render → upload pack), with approval gates. Use when the owner describes a story idea or asks for a new video/episode.
+description: Turn the owner's idea into a finished TeenyTinyology episode (facts → script → storyboard → render → upload pack), with approval gates. Use when the owner describes a story idea or asks for a new video/episode.
 ---
 
-# New Teenyology episode
+# New TeenyTinyology episode
 
 Read `CLAUDE.md` first — it holds the locked decisions (voice, music, cast, format, rules).
 Then read `docs/judge-lessons.md` — mistakes earlier episodes made; design this one so the judge can't catch them again.
@@ -64,5 +64,5 @@ Then read `docs/judge-lessons.md` — mistakes earlier episodes made; design thi
 
 ## 7. Upload pack (`out/`)
 - `NNN-slug.mp4`, `cover.png` (best frame + title), `post.md`: title (< 60 chars), description with 2–3 sentence
-  summary + sources, 3–6 hashtags (#Teenyology #ScienceForKids …).
+  summary + sources, 3–6 hashtags (#TeenyTinyology #ScienceForKids …).
 - Copy the deliverables to the T3 workspace folder and report paths, length, loudness, and anything unverified.

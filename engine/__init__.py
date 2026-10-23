@@ -1,1 +1,1 @@
-"""Teenyology animation engine."""
+"""TeenyTinyology animation engine."""

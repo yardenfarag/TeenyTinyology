@@ -640,7 +640,7 @@ def build(style_name):
                     c.close_path()
                     c.fill()
         ea = ease(prog(t, q["cycle3"].end + 0.55, q["cycle3"].end + 1.1))  # after the last caption has gone
-        text_center(c, "Teenyology", W / 2, 1385, 64, INK, bold=True, alpha=ea)
+        text_center(c, "TeenyTinyology", W / 2, 1385, 64, INK, bold=True, alpha=ea)
         text_center(c, "Teeny creatures. Big stories.", W / 2, 1440, 34, INK, italic=True, alpha=ea * 0.8)
 
     tl.add(s_cycle, w_cycle - 0.35, DUR + 0.1)

@@ -212,7 +212,7 @@ def concept_parade(c):
     pickle.draw(c, ST, 2270, ground + 6, 0.85, antenna=1.0, happy=0.5)
     pixie.draw(c, ST, 1650, 600, 0.55, flap=1.2, happy=0.5)
     # wordmark
-    bouncy_word(c, "Teenyology", BW / 2, 735, 190, CAST_COLS, hw=14)
+    bouncy_word(c, "TeenyTinyology", BW / 2, 735, 190, CAST_COLS, hw=14)
     halo_text(c, "Teeny creatures. Big stories.", BW / 2, 840, 62, INK, hw=8, semibold=True, bold=False)
     for (x, y, s) in ((800, 600, 18), (1760, 820, 14), (1745, 560, 10), (820, 820, 11)):
         sparkle(c, x, y, s)
@@ -265,7 +265,7 @@ def concept_magnifier(c):
     pip.draw(c, ST, 1540, gy - 2, 0.12)
     # wordmark left
     tx = 1030
-    halo_text(c, "Teenyology", tx, 745, 178, INK, hw=0)
+    halo_text(c, "TeenyTinyology", tx, 745, 178, INK, hw=0)
     text.center(c, "Teeny creatures.", tx - 150, 840, 58, PEACH, semibold=True)
     text.center(c, "Big stories.", tx + 245, 840, 58, hexc("#6f9a3c"), semibold=True)
     # side characters for the desktop strip
@@ -296,7 +296,7 @@ def concept_letters(c):
                                      (300, 820, "#f9e2b8"), (2280, 780, "#f6d7b8"))):
         wash(c, x, y, 360, 150, col, 0.32, 20 + i, 16)
     size = 215
-    word = "Teenyology"
+    word = "TeenyTinyology"
     base = 772
     total = text.width(word, size, bold=True)
     x0 = BW / 2 - total / 2
@@ -383,7 +383,7 @@ def concept_pond(c):
     c.translate(1280, 0)
     soft_card(c, -560, 610, 1120, 300)
     c.restore()
-    bouncy_word(c, "Teenyology", BW / 2, 765, 180, CAST_COLS, hw=0, tilt=0.04, bounce=8)
+    bouncy_word(c, "TeenyTinyology", BW / 2, 765, 180, CAST_COLS, hw=0, tilt=0.04, bounce=8)
     text.center(c, "Teeny creatures. Big stories.", BW / 2, 860, 58, INK, semibold=True)
     for (x, y, s) in ((1940, 520, 14), (700, 500, 10), (1700, 650, 9)):
         sparkle(c, x, y, s)
@@ -397,6 +397,7 @@ def soft_card(c, x, y, w, h):
 
 # ================================================================ round 2: gentle — just the name + a few friends
 COCOA = hexc("#5e4636")
+NAME = "TeenyTinyology"
 
 
 def soft_bg(c, top, bottom, washes=()):
@@ -407,9 +408,10 @@ def soft_bg(c, top, bottom, washes=()):
 
 
 def name(c, x=BW / 2, y=772, size=178, col=COCOA):
-    """The wordmark: one calm colour, no outline, no tagline."""
-    w = text.width("Teenyology", size, semibold=True)
-    text.draw(c, "Teenyology", x - w / 2, y, size, col, semibold=True)
+    """The wordmark: one calm colour, no outline, no tagline. Shrinks to stay inside the phone-safe box."""
+    size = min(size, size * 1300 / text.width(NAME, size, semibold=True))
+    w = text.width(NAME, size, semibold=True)
+    text.draw(c, NAME, x - w / 2, y, size, col, semibold=True)
     return x - w / 2, w
 
 
@@ -431,10 +433,10 @@ def ground_line(c, x0, x1, y, seed, col="#8fa77a", blades=60):
 def concept_nap(c):
     """Mochi napping beside the name, Pip resting on the last letter."""
     soft_bg(c, "#fbf5ea", "#f4eadb", ((700, 760, 380, 150, "#f3d9c4"), (1900, 700, 320, 140, "#e6e2cf")))
-    x0, w = name(c, x=BW / 2 + 120)
-    ground_line(c, 330, 900, 880, 1)
-    mochi.draw(c, ST, 620, 880, 0.5, eyes=0.0, breathe=0.2, tail=0.6)
-    pip.draw(c, ST, 560, 800, 0.3, phase=0.3, happy=0.4)
+    x0, w = name(c)
+    ground_line(c, 150, 640, 880, 1)
+    mochi.draw(c, ST, 400, 880, 0.5, eyes=0.0, breathe=0.2, tail=0.6)
+    pip.draw(c, ST, 340, 800, 0.3, phase=0.3, happy=0.4)
     haze(c)
     paper_overlay(c)
 
@@ -456,7 +458,7 @@ def concept_perch(c):
     """Pale sage page; Plum perched on the T, a mayfly drifting past the end of the name."""
     soft_bg(c, "#f3f4ea", "#e7ebdb", ((1280, 720, 700, 170, "#f6efe0"),))
     x0, w = name(c, y=800, size=180, col=hexc("#55503a"))
-    plum.draw(c, ST, x0 + 50, 664, 0.42, happy=0.6)
+    plum.draw(c, ST, x0 + 46, 694, 0.4, happy=0.6)
     pixie.draw(c, ST, x0 + w + 170, 650, 0.45, flap=1.1, happy=0.3)
     haze(c, 0.12)
     paper_overlay(c)
@@ -479,8 +481,174 @@ def concept_peek(c):
     paper_overlay(c)
 
 
-CONCEPTS = {"e_nap": concept_nap, "f_stroll": concept_stroll, "g_perch": concept_perch, "h_meet": concept_peek}
+# ================================================================ round 3: grown-up — serif name, quiet field-notebook characters
+class _Quiet(styles.Illustrated):
+    faces = False          # no blush / smiles — characters keep their eyes but lose the cartoon expressions
+
+
+QUIET = _Quiet()
+REAL = styles.get("real")
+SEPIA = hexc("#4a3a2e")
+
+
+def serif_name(c, fam, y, size=170, track=0.04, col=SEPIA, x=BW / 2, max_w=1250):
+    """Letter-spaced serif wordmark, centred, shrunk to fit the phone-safe box."""
+    def total(sz):
+        return sum(text.width(ch, sz, fam=fam, semibold=True) for ch in NAME) + sz * track * (len(NAME) - 1)
+    size = min(size, size * max_w / total(size))
+    w = total(size)
+    xx = x - w / 2
+    for ch in NAME:
+        text.draw(c, ch, xx, y, size, col, fam=fam, semibold=True)
+        xx += text.width(ch, size, fam=fam, semibold=True) + size * track
+    return x - w / 2, w, size
+
+
+def flat(c, tint):
+    """Plain page colour — the paper grain goes on once, at the end (paper_overlay)."""
+    c.set_source_rgba(*hexc(tint))
+    c.paint()
+
+
+def ink_rule(c, x0, x1, y, a=0.35, seed=1):
+    r = rng(seed)
+    pts = [(x, y + r.uniform(-0.8, 0.8)) for x in range(int(x0), int(x1) + 1, 24)]
+    QUIET.line(c, pts, 2.2, SEPIA, a)
+
+
+def fine_grass(c, x0, x1, y, n, seed, h=(14, 44), a=0.55):
+    """Sparse pen-line grass, not painted blades."""
+    r = rng(seed)
+    c.set_line_cap(cairo.LINE_CAP_ROUND)
+    for _ in range(n):
+        x = r.uniform(x0, x1)
+        hh = r.uniform(*h)
+        lean = r.uniform(-0.35, 0.35)
+        c.move_to(x, y)
+        c.curve_to(x + lean * hh * 0.3, y - hh * 0.5, x + lean * hh * 0.7, y - hh * 0.8, x + lean * hh, y - hh)
+        col = mix(hexc("#7d8f62"), hexc("#55603f"), r.random())
+        c.set_source_rgba(col[0], col[1], col[2], a)
+        c.set_line_width(r.uniform(1.6, 2.8))
+        c.stroke()
+
+
+def concept_notebook(c):
+    """Field-notebook page: serif name, a single pen line with a few small residents spaced along it."""
+    flat(c, "#f7f1e5")
+    serif_name(c, "Cormorant Garamond", 760, 190)
+    gy = 890
+    ink_rule(c, 140, 2420, gy, 0.3)
+    fine_grass(c, 140, 2420, gy, 70, 3)
+    pip.draw(c, QUIET, 420, gy, 0.3, phase=0.4)
+    peanut.draw(c, QUIET, 760, gy, 0.42, phase=0.8)
+    pickle.draw(c, QUIET, 1880, gy, 0.42, antenna=0.9)
+    pixie.draw(c, QUIET, 2230, 690, 0.32, flap=0.9)
+    paper_overlay(c)
+
+
+def concept_margin(c):
+    """Editorial: name set left, one resident on a tall stem on the right, a mayfly passing."""
+    flat(c, "#f5f2ea")
+    x0, w, size = serif_name(c, "EB Garamond", 770, 150, track=0.02, x=1060, max_w=1100)
+    # tall grass stem with Pickle on it
+    sx, sy = 1880, 930
+    c.move_to(sx, sy)
+    c.curve_to(sx + 6, sy - 120, sx + 30, sy - 220, sx + 80, sy - 300)
+    c.set_source_rgba(*hexc("#66724a", 0.8))
+    c.set_line_width(4)
+    c.stroke()
+    ellipse(c, sx + 60, sy - 180, 70, 14, -0.9)
+    c.set_source_rgba(*hexc("#8b9a6a", 0.6))
+    c.fill()
+    fine_grass(c, 1700, 2100, sy, 40, 5, h=(20, 70))
+    pickle.draw(c, QUIET, sx + 10, sy - 120, 0.42, ang=-0.55, antenna=0.7)
+    pixie.draw(c, QUIET, 2250, 640, 0.3, flap=1.4)
+    peanut.draw(c, QUIET, 380, 905, 0.36, phase=0.5)
+    paper_overlay(c)
+
+
+def concept_plate(c):
+    """Natural-history plate: realistic drawings of the residents in a calm row under the name."""
+    flat(c, "#f6f0e2")
+    serif_name(c, "Cormorant Garamond", 740, 180)
+    gy = 895
+    ink_rule(c, 900, 1660, gy + 12, 0.25)
+    pip.draw(c, REAL, 1000, gy, 0.3)
+    peanut.draw(c, REAL, 1250, gy, 0.42, walking=False)
+    pickle.draw(c, REAL, 1530, gy, 0.4, antenna=0.6)
+    paper_overlay(c)
+
+
+def concept_dusk(c):
+    """Soft evening wash, name in Lora, Plum on a bare twig and a mayfly — very still."""
+    grad(c, 0, BH, [(0, "#efe6da"), (0.5, "#f3ebe0"), (1, "#e6e3d6")])
+    c.paint()
+    wash(c, 1280, 700, 900, 200, "#f2dccb", 0.12, 50, 18)
+    serif_name(c, "Lora", 765, 150, track=0.03)
+    # twig from the right edge
+    QUIET.line(c, [(2560, 760), (2380, 772), (2240, 790), (2150, 800)], 9, hexc("#5e4a3a"), 0.9)
+    QUIET.line(c, [(2300, 778), (2260, 740), (2245, 715)], 5, hexc("#5e4a3a"), 0.9)
+    plum.draw(c, QUIET, 2330, 776, 0.55)
+    pixie.draw(c, QUIET, 420, 650, 0.32, flap=0.6)
+    paper_overlay(c)
+
+
+# ================================================================ round 4: banner K in the logo's midnight palette (owner chose K + midnight logo)
+NAVY, NAVY_LIFT, CREAM_M, GOLD = hexc("#1e2a3a"), hexc("#2a3a4f"), hexc("#f3ead8"), hexc("#f2b84b")
+
+
+def midnight_name(c, y, hyphens=False, size=150, max_w=1250):
+    """One-line logo wordmark: cream 'teeny tiny', gold 'ology' whose o is the logo's lens."""
+    from branding.logo import lens   # logo.py imports this module, so import lazily
+    fam, kw = "Outfit", dict(fam="Outfit", semibold=True)
+    head = "teeny-tiny-" if hyphens else "teeny tiny "
+    def total(sz):   # + room for the lens handle, which reaches down-left into the gap
+        return text.width(head, sz, **kw) + sz * 0.22 + text.width("ology", sz, **kw)
+    size = min(size, size * max_w / total(size))
+    x = BW / 2 - total(size) / 2
+    text.draw(c, head, x, y, size, CREAM_M, **kw)
+    x += text.width(head, size, **kw) + size * 0.22
+    ow = text.width("o", size, **kw)
+    xh = size * 0.5
+    r = ow * 0.42
+    lens(c, x + ow / 2, y - xh / 2 - 2, r, size * 0.15, GOLD, handle=-1)
+    text.draw(c, "logy", x + ow, y, size, GOLD, **kw)
+
+
+def plate_row(c, gy):
+    """K's residents on a soft lighter pool so the dark drawings still read on navy."""
+    g = cairo.RadialGradient(1265, gy - 30, 10, 1265, gy - 30, 420)
+    g.add_color_stop_rgba(0, *NAVY_LIFT[:3], 1)
+    g.add_color_stop_rgba(1, *NAVY_LIFT[:3], 0)
+    c.save()
+    c.translate(0, gy - 30)
+    c.scale(1, 0.32)
+    c.translate(0, -(gy - 30))
+    c.arc(1265, gy - 30, 420, 0, TAU)
+    c.set_source(g)
+    c.fill()
+    c.restore()
+    c.move_to(900, gy + 12)
+    c.line_to(1660, gy + 12)
+    c.set_source_rgba(*GOLD[:3], 0.35)
+    c.set_line_width(2)
+    c.stroke()
+    pip.draw(c, REAL, 1000, gy, 0.3)
+    peanut.draw(c, REAL, 1250, gy, 0.42, walking=False)
+    pickle.draw(c, REAL, 1530, gy, 0.4, antenna=0.6)
+
+
+def concept_midnight(c, hyphens=False):
+    flat(c, "#1e2a3a")
+    midnight_name(c, 750, hyphens)
+    plate_row(c, 895)
+
+
+CONCEPTS = {"m1_midnight": concept_midnight, "m2_midnight_hyphens": lambda c: concept_midnight(c, True)}
+# round 3 (owner chose K): concept_notebook, concept_margin, concept_plate, concept_dusk
+
 # round 1 (owner: too colourful / busy): concept_parade, concept_magnifier, concept_letters, concept_pond
+# round 2 (owner: too childish): concept_nap, concept_stroll, concept_perch, concept_peek
 
 
 # ---------------------------------------------------------------- previews

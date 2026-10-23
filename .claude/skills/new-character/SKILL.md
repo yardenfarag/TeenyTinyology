@@ -1,9 +1,9 @@
 ---
 name: new-character
-description: Design and add a permanent Teenyology cast member (name, look, personality, code module, model sheet) with owner approval. Use when a story needs a creature that is not in the cast yet.
+description: Design and add a permanent TeenyTinyology cast member (name, look, personality, code module, model sheet) with owner approval. Use when a story needs a creature that is not in the cast yet.
 ---
 
-# New Teenyology character
+# New TeenyTinyology character
 
 1. **Research the real animal** — body plan, proportions, colours, how it moves, life stages needed for stories.
    Note 3–5 visual must-haves (e.g. ants: elbowed antennae, three body parts, petiole node).

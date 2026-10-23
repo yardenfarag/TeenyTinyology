@@ -70,7 +70,7 @@ def api_key():
             if ln.strip().startswith("ELEVENLABS_API_KEY="):
                 key = ln.split("=", 1)[1].strip().strip('"').strip("'")
     if not key:
-        raise SystemExit("No ELEVENLABS_API_KEY (set env var or teenyology/.env)")
+        raise SystemExit("No ELEVENLABS_API_KEY (set env var or .env in the project root)")
     return key
 
 

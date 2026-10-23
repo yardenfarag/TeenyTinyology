@@ -1,4 +1,4 @@
-"""The Teenyology theme ("Theme C": celesta + marimba), arranged to any length with mood changes.
+"""The TeenyTinyology theme ("Theme C": celesta + marimba), arranged to any length with mood changes.
 
 score(duration, moods) builds the 16-bar form (intro, looping theme, cadence) to fit the episode,
 renders each instrument layer once, then shapes the layers with a smooth per-mood mix so the

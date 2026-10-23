@@ -1,4 +1,4 @@
-# Teenyology — series bible
+# TeenyTinyology — series bible
 
 Short, calm, cute educational videos (TikTok / YouTube Shorts) about tiny creatures and the animals they live with.
 Tagline: *Teeny creatures. Big stories.*
@@ -9,14 +9,16 @@ narration from ElevenLabs. No stock footage, no sampled audio, no other people's
 ## Decisions (locked unless the owner changes them)
 | | |
 |---|---|
+| Name | **TeenyTinyology** — one word, capital T on Teeny and Tiny; handle `@teenytinyology`, hashtag `#TeenyTinyology`. The logo/banner wordmark shows it as "teeny tiny ology" (lowercase, gold "ology"). Renamed from "Teenyology" (Oct 2026) because "Teeny" alone read as "teen" — never use the old name |
 | Format | 1080×1920, 30 fps, H.264 + AAC, loudness −14 LUFS (true peak −1.5 dB) |
 | Length | whatever the narration needs, usually 45–90 s; never squeeze the voice to hit a length |
 | Narrator | ElevenLabs **Miles** (`uk7wwhXdWYHKKZ8KTCVw`), model `eleven_multilingual_v2`, speed 1.0 (Remi was tried in ep. 001 and dropped) |
-| Music | the **Teenyology theme** (celesta + marimba, 74 BPM, D major) — `engine/audio/music.py`, shaped by moods |
+| Music | the **TeenyTinyology theme** (celesta + marimba, 74 BPM, D major) — `engine/audio/music.py`, shaped by moods |
 | SFX | `engine/audio/sfx.py` (pop, boing, gulp, slurp, sparkle, whoosh, …) — the owner loves these, use generously but softly |
 | Art style | **illustrated** (ink + watercolor, paper grain) — chosen after ep. 001 comparison. Use `--style illustrated` |
 | Captions | soft cream one-line bubbles, peach highlight on the spoken word, centre y=1400 (`scene.CAP_Y`) |
 | Font | **Nunito** (rounded, SIL OFL) via `engine/text.py` — alternatives on file: Quicksand, Fredoka, Baloo 2 |
+| Brand | Profile picture + YouTube banner in `assets/brand/` (made by `branding/logo.py` `final` and `branding/banner.py` `m1_midnight`). Palette "midnight": navy `#1e2a3a`, cream `#f3ead8`, gold `#f2b84b`. Wordmark font **Outfit** semibold; the "o" of "ology" is a magnifying glass. Channel description in `assets/brand/channel.md` |
 | API key | `ELEVENLABS_API_KEY` in `.env` (git-ignored). Never print it, never commit it |
 
 ## The cast (permanent names — never rename)

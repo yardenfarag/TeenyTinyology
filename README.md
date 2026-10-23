@@ -1,4 +1,4 @@
-# Teenyology
+# TeenyTinyology
 
 *Teeny creatures. Big stories.* Calm, cute, accurate educational shorts (TikTok / YouTube Shorts) about tiny
 creatures, all generated in code: illustrated vector art (pycairo), original music and sound effects (numpy),

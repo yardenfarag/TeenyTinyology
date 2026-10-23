@@ -1,4 +1,4 @@
-"""The Teenyology sound-effect library (all synthesised). Each function returns a mono array.
+"""The TeenyTinyology sound-effect library (all synthesised). Each function returns a mono array.
 
 Use with a Bus:  fx.add(t, sfx.pop(), pan, gain)  or the helper  play(bus, "pop", t, ...).
 """

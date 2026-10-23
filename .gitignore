@@ -44,3 +44,6 @@ desktop.ini
 
 # --- Claude Code local settings (shared skills/agents in .claude/ ARE committed) ---
 .claude/settings.local.json
+
+# --- branding scratch renders (finals are copied to assets/brand/) ---
+branding/out/
