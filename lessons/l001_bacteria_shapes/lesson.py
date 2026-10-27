@@ -272,10 +272,11 @@ def build():
     pen.write("not the flu (a virus)", *R("C", 980, 900), NOTE, B.RED, w("c8", "doesn't"), align="center")
     pen.stroke(rod(*R("C", 1290, 812), 70, 50, 0.0, seed=97), w("c9", "Yersinia"), 0.2, Bl, width=6)
     pen.write("Y. pestis: Black Death", *R("C", 1580, 830), NOTE, B.NAVY, pen.free, align="center")
-    pen.write("roughly 1/3 of Europe", *R("C", 1580, 900), NOTE, B.RED, w("c10", "third"), align="center")
+    pen.write("1347-51", *R("C", 1580, 900), NOTE, B.NAVY, w("c10", "1347"), align="center", cps=20)
+    pen.write("roughly 1/3 of Europe", *R("C", 1580, 965), NOTE, B.RED, w("c10", "roughly"), align="center", cps=20)
 
     # ---- D: curves
-    go("D", c["c10"].end + 0.1)
+    go("D", c["c10"].end + 0.8)
     pen.title("Curves", *R("D", 120, 190), c["d1"].start)
     Rd = B.RED
     vib = tube(arc_cl(*R("D", 330, 420), 200, 1.7, 0.15), 70, seed=101)
@@ -311,8 +312,15 @@ def build():
     pen.stroke(trunk, w("e2", "threads"), 0.4, B.GREEN, width=7)
     for (x0, y0), (x1, y1) in (((260, 355), (240, 270)), ((330, 360), (360, 440)), ((400, 360), (430, 270))):
         pen.stroke(B.line(*R("E", x0, y0), *R("E", x1, y1), sag=6), pen.free, 0.15, B.GREEN, width=6)
-    pen.write("exception: many cells", *R("E", 330, 640), NOTE, B.RED, pen.free, align="center", cps=20)
-    pen.write("smell of rain, antibiotics", *R("E", 330, 570), NOTE, B.GREEN, w("e3", "geosmin"), align="center")
+    pen.write("exception: many cells", *R("E", 330, 570), NOTE, B.RED, pen.free, align="center", cps=20)
+    for k in (0.2, 0.4, 0.6, 0.8):                        # cross-walls: the thread is many cells
+        i = int(k * (len(trunk) - 1))
+        (ax, ay), (bx, by) = trunk[max(i - 1, 0)], trunk[min(i + 1, len(trunk) - 1)]
+        d = math.hypot(bx - ax, by - ay) or 1
+        nx, ny = -(by - ay) / d * 14, (bx - ax) / d * 14
+        px, py = trunk[i]
+        pen.stroke([(px - nx, py - ny), (px + nx, py + ny)], pen.free, 0.05, B.RED, width=5)
+    pen.write("smell of rain, antibiotics", *R("E", 330, 640), NOTE, B.GREEN, w("e3", "geosmin"), align="center")
     st = star6(*R("E", 960, 350), 95)
     pen.stroke(st, w("e4", "stars"), 0.5, B.GOLD_DK, width=8)
     pen.hatch(st, pen.free, 0.3, B.GOLD)
@@ -372,7 +380,7 @@ def build():
               align="center")
 
     # ---- wrap: the whole board
-    b.cam.frame(c["w1"].start - 0.6, 1.8, 0, 0, 5760, 2160, margin=150)   # the whole board, inside the safe area
+    b.cam.frame(c["w1"].start - 0.6, 1.8, 0, 0, 5760, 2160, margin=220)   # the whole board, inside the safe area
     pen.wait(c["w1"].start + 1.2)
     for reg, word in (("A", "Spheres"), ("C", "rods"), ("D", "commas"), ("E", "stars")):
         x0, y0 = REGION[reg]
@@ -385,7 +393,7 @@ def build():
 
     # ---- outro: the board fades to a background and the series logo plays over it, with its jingle
     t = b.veil(c["w1"].end + 0.6, 1.2).t1
-    t = b.logo(2880, 960, t - 0.3, size=600, sub="@teenytinyology")
+    t = b.logo(2880, 960, t - 0.7, size=600, sub="@teenytinyology")
     dur = t + 2.5
     return b, voice, c, dur
 

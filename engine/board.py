@@ -672,8 +672,8 @@ class Board:
         end = max(lg.t1, lens.t1)
         if sub:
             s = self.write(sub, cx, y + size * 1.02, size * 0.64, NAVY, end + 0.05, cps=14, align="center")
-            ul = self.stroke(line(cx - s.w / 2 - 6, y + size * 1.19, cx + s.w / 2 + 6, y + size * 1.16, sag=4),
-                             s.t1 + 0.06, 0.25, GOLD, width=8)
+            ul = self.stroke(line(cx - s.w / 2 - 6, y + size * 1.33, cx + s.w / 2 + 6, y + size * 1.30, sag=4),
+                             s.t1 + 0.06, 0.25, GOLD, width=size * 0.06)
             for i, note in enumerate(["D4", "F#4", "A4", "D5"]):   # the closing chord, gently rolled
                 self.cues.append((ul.t1 - 0.1 + i * 0.045, "kalimba", hz(note), 0.2, (i - 1.5) * 0.15))
             end = ul.t1
