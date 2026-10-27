@@ -228,7 +228,7 @@ def build():
     for i, (dx, dy) in enumerate(((-40, -40), (40, -40), (-40, 40), (40, 40))):
         pen.stroke(B.circle(*R("B", col["sa"] + dx - 20, 430 + dy), 36, seed=54 + i), pen.free, 0.18, G, width=7)
     pen.write("sarcina: 8", *R("B", col["sa"], 580), LABEL, B.NAVY, w("b7", "sarcina"), align="center")
-    tag("sf", "any way", w("b8", "any"))
+    tag("sf", "changing ways", w("b8", "new"))
     grapes = [(-66, -50), (0, -56), (66, -50), (-34, 4), (34, 4), (-66, 58), (0, 58), (66, 58), (0, 112)]
     for i, (dx, dy) in enumerate(grapes):
         pen.stroke(B.circle(*R("B", col["sf"] + dx, 380 + dy * 0.8), 32, seed=60 + i),
@@ -272,8 +272,8 @@ def build():
     pen.write("not the flu (a virus)", *R("C", 980, 900), NOTE, B.RED, w("c8", "doesn't"), align="center")
     pen.stroke(rod(*R("C", 1290, 812), 70, 50, 0.0, seed=97), w("c9", "Yersinia"), 0.2, Bl, width=6)
     pen.write("Y. pestis: Black Death", *R("C", 1580, 830), NOTE, B.NAVY, pen.free, align="center")
-    pen.write("1347-51", *R("C", 1580, 900), NOTE, B.NAVY, w("c10", "1347"), align="center", cps=20)
-    pen.write("roughly 1/3 of Europe", *R("C", 1580, 965), NOTE, B.RED, w("c10", "roughly"), align="center", cps=20)
+    pen.write("mid-1300s", *R("C", 1580, 900), NOTE, B.NAVY, w("c10", "mid"), align="center", cps=20)
+    pen.write("at least 1/3 of Europe", *R("C", 1580, 965), NOTE, B.RED, w("c10", "least"), align="center", cps=20)
 
     # ---- D: curves
     go("D", c["c10"].end + 0.8)
@@ -285,7 +285,7 @@ def build():
     pen.hatch(vib, w("d2", "comma"), 0.25, Rd)
     pen.write("= vibrates", *R("D", 330, 650), NOTE, Rd, w("d3", "vibrate"), align="center")
     pen.write("V. cholerae: cholera", *R("D", 330, 760), NOTE, B.NAVY, w("d4", "cholerae"), align="center")
-    pen.write("tens of thousands a year", *R("D", 330, 830), NOTE, Rd, w("d5", "tens"), align="center")
+    pen.write("est. 20,000+ a year", *R("D", 330, 830), NOTE, Rd, w("d5", "tens"), align="center")
     spl = tube(sine_cl(*R("D", 960, 420), 330, 40, 1.5), 50, seed=102)
     pen.write("spirillum: stiff", *R("D", 960, 580), LABEL, B.NAVY, w("d6", "spirillum"), align="center")
     pen.stroke(spl, w("d6", "spiral"), 0.7, Rd, width=8)
@@ -335,7 +335,7 @@ def build():
     bl = blob(*R("E", 330, 760), 80)
     pen.stroke(bl, w("e7", "Mycoplasma"), 0.4, B.RED, width=7)
     pen.write("Mycoplasma", *R("E", 330, 890), LABEL, B.NAVY, pen.free, align="center")
-    pen.write("no wall, no shape", *R("E", 330, 955), NOTE, B.RED, w("e7", "shape"), align="center")
+    pen.write("no wall, no fixed shape", *R("E", 330, 955), NOTE, B.RED, w("e7", "shape"), align="center")
     gi = tube(sine_cl(*R("E", 960, 760), 460, 10, 0.6), 34, seed=112)
     pen.stroke(gi, w("e8", "giants"), 0.7, B.GREEN, width=7)
     pen.write("Thiomargarita", *R("E", 960, 890), LABEL, B.NAVY, w("e9", "Thiomargarita"), align="center")
@@ -356,7 +356,8 @@ def build():
     pen.stroke(wall, w("f2", "cell"), 0.45, B.GOLD_DK, width=16)
     pen.stroke(rod(*R("F", 330, 400), 270, 92, 0.0, seed=121), pen.free, 0.35, B.BLUE, width=6)
     pen.write("1. the wall", *R("F", 330, 580), LABEL, B.NAVY, pen.free, align="center")
-    pen.write("no wall: no shape", *R("F", 330, 650), NOTE, B.RED, w("f3", "wall"), align="center")
+    pen.write("no wall:", *R("F", 330, 650), NOTE, B.RED, w("f3", "wall"), align="center", cps=20)
+    pen.write("no fixed shape", *R("F", 330, 720), NOTE, B.RED, pen.free, align="center", cps=20)
     food = B.circle(*R("F", 960, 400), 70, seed=122)
     pen.stroke(food, w("f4", "food"), 0.3, B.GREEN, width=7)
     for k in range(8):

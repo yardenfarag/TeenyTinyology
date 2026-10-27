@@ -127,7 +127,8 @@ narrator to say as written. Nothing here may be stretched further than the wordi
   review: "at least one third of the European population (more than 25 million people) died between 1347 and 1352".
   The PNAS 2000 paper: "17–28 million Europeans (from 30 to 40% of the total population) between the years 1347 and
   1351". CDC's EID journal is more conservative still (a quarter to a third). Safest narrator wording: **"roughly a
-  third of Europe — estimates range from a quarter to a half."**
+  third of Europe — estimates range from a quarter to a half."** SUPERSEDED: see the fact audit at the end of this file
+  ("mid-1300s", "at least a third"; Wikipedia gives 1346–1353 and 30–60%).
   Sources: https://pmc.ncbi.nlm.nih.gov/articles/PMC7920731/, https://pmc.ncbi.nlm.nih.gov/articles/PMC7513766/, https://pmc.ncbi.nlm.nih.gov/articles/PMC18844/
 
 ## D. Curves
@@ -349,7 +350,7 @@ narrator to say as written. Nothing here may be stretched further than the wordi
     textbook point.
 15. **Spiral shape and swimming.** Don't say the spiral is what lets a spirillum swim: straight *Spirillum
     volutans* mutants swim just as fast.
-16. **Black Death.** Use "roughly a third of Europe; estimates a quarter to a half", dates 1347–1351. Avoid
+16. **Black Death.** SUPERSEDED by the fact audit (end of file): say "In the mid-1300s … at least a third of Europe". Avoid
     "30–50%+".
 17. **Anthrax line: cut the spore-longevity number.** Safe version: *"Bacillus anthracis* is a rod that forms
     spores, and it lives naturally in soil around the world." Nothing about how long spores last, and nothing about
@@ -359,3 +360,19 @@ narrator to say as written. Nothing here may be stretched further than the wordi
     ("people pay to have it injected into their faces"), with no doses, amounts or lethality comparisons.
 19. **S. aureus carriage:** "roughly a quarter to a third of people", not a flat 30%.
 20. **S. pyogenes:** keep the word "rarely" before necrotizing fasciitis.
+
+## Fact audit (2026-10-27) — wording changed so it holds under every major source
+Full table: `review/fact_audit.md`. Owner asked after spotting that Wikipedia dates the Black Death 1346–1353.
+- Black Death: "In the mid-1300s, it killed at least a third of Europe" (Britannica ~1/3 and 1347–51; Wikipedia
+  1346–1353 and 30–60%; Benedictow 2021 ~60%). Board: "mid-1300s", "at least 1/3 of Europe".
+- *H. influenzae*: "first described in the 1890s" (CDC Pink Book 1892, Wikipedia 1893).
+- Opening: "Almost every bacterium is a single cell" (*Streptomyces* is multicellular; the board marks it).
+- Staphylococci: "split in a new direction each time" (textbooks: random planes; 2010/2020 imaging: each plane
+  perpendicular to the last). Board: "changing ways".
+- Cholera deaths are WHO estimates (21,000–143,000/yr): "it's thought to kill"; board "est. 20,000+ a year".
+- *H. pylori*: "the mucus of the stomach" (about half of people carry it).
+- Botox: "In tiny, purified doses, it's also Botox" (owner asked, 2026-10-27, whether the toxin is "highly diluted"
+  or genetically engineered). It is neither: the toxin is produced by the bacterium and purified, and the medicine
+  works because the dose is tiny. Avoid "diluted enormously" and any production detail.
+- Mycoplasma board: "no wall, no fixed shape" (some wall-less species keep a shape, e.g. M. pneumoniae's flask
+  shape, Spiroplasma's spiral). Never "no shape" or "shapeless" on the board.

@@ -27,6 +27,10 @@ Each gate below ends when the owner has approved; show them files through `for-r
 - Every claim the narration or the board will make, each with a source URL (university, government,
   peer-reviewed, textbook). Etymologies and metaphors count as claims. Done when no line of the plan rests on an
   unsourced claim; flag anything uncertain to the owner.
+- Viewers check Wikipedia. Every date, number and superlative must also hold against Wikipedia and Britannica.
+  Where reliable sources disagree (spans, percentages, "first described in"), use wording that is true under all of
+  them ("mid-1300s", "at least a third", "the 1890s"). Before the final render, run a separate adversarial fact audit
+  of everything said and written (`review/all_claims.md` → `review/fact_audit.md`).
 
 ## 3. Script (`script.py`) — **owner approves the text**
 - `SCRIPT = [Line(id, text, pause), ...]` (`engine.voice.Line`). Teaching voice: short sentences, one idea per line,

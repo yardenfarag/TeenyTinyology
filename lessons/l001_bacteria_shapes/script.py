@@ -7,7 +7,7 @@ from engine.voice import Line
 
 SCRIPT = [
     # A — the basic shapes (hook)
-    Line("a1", "Every bacterium is a single cell.", 0.4),
+    Line("a1", "Almost every bacterium is a single cell.", 0.4),
     Line("a2", "Most are about a micrometre across. Far too small to see.", 0.5),
     Line("a3", "And yet, under a microscope, they come in more shapes than you'd think.", 0.7),
     Line("a4", "Long before DNA tests, the microscope was all there was. "
@@ -26,7 +26,7 @@ SCRIPT = [
                "And, rarely, the flesh-eating infection.", 0.9),
     Line("b6", "Split in two directions, and you get a square of four. A tetrad.", 0.4),
     Line("b7", "Three directions, and you get a little package, up to a cube of eight. A sarcina.", 0.5),
-    Line("b8", "And split in any old direction... and you get a bunch of grapes.", 0.4),
+    Line("b8", "And split in a new direction each time... and you get a bunch of grapes.", 0.4),
     Line("b9", "Staphylococcus. Staphyle is Greek for a bunch of grapes.", 0.5),
     Line("b10", "Which makes Staphylococcus aureus the golden grape-bunch berry.", 0.5),
     Line("b12", "It's a common cause of skin infections. And it lives quietly up the nose of about one person in four.", 0.5, take=1),
@@ -39,19 +39,19 @@ SCRIPT = [
                "So its rods end up side by side, like a fence... or at angles, in Vs and Ys.", 0.7),
     Line("c3", "Some rods have quite a career.", 0.4),
     Line("c4", "Clostridium botulinum makes botulinum toxin. The most lethal biological toxin known.", 0.6),
-    Line("c5", "Diluted enormously, it's also Botox. People pay to have it injected into their faces.", 1.0),
+    Line("c5", "In tiny, purified doses, it's also Botox. People pay to have it injected into their faces.", 1.0),
     Line("c6", "Between the round and the rod sits the coccobacillus: a rod so short, it's almost round.", 0.5),
-    Line("c7", "Haemophilus influenzae is one. It was first described in 1892, by a scientist who thought it caused the flu.", 0.4),
+    Line("c7", "Haemophilus influenzae is one. It was first described in the 1890s, by a scientist who thought it caused the flu.", 0.4),
     Line("c8", "It doesn't. Flu is caused by a virus. The name stuck anyway.", 0.8),
     Line("c9", "Yersinia pestis is another one. Small, plump, and the cause of the Black Death.", 0.4),
-    Line("c10", "Between 1347 and 1351, it killed roughly a third of Europe.", 1.0),
+    Line("c10", "In the mid-1300s, it killed at least a third of Europe.", 1.0),
 
     # D — curves
     Line("d1", "Now, the curves.", 0.4),
     Line("d2", "A vibrio is a curved rod. A comma.", 0.4),
-    Line("d3", "Its name comes from the Latin for vibrate, for the way it darts about.", 0.4),
-    Line("d4", "Vibrio cholerae causes cholera. This little comma has ended a great many sentences.", 1.0),
-    Line("d5", "Even now, it kills tens of thousands of people a year.", 0.8),
+    Line("d3", "Its name comes from the Latin for vibrate, because it looks like it's vibrating as it swims.", 0.4),
+    Line("d4", "Vibrio cholerae causes cholera. This little comma has ended a great many sentences.", 1.0, take=1),
+    Line("d5", "Even now, it's thought to kill tens of thousands of people a year.", 0.8),
     Line("d6", "A spirillum is a thick, stiff spiral, with tufts of flagella at each end.", 0.5),
     Line("d7", "And a spirochete is a thin, flexible corkscrew, with a trick: its flagella are inside the cell.", 0.5),
     Line("d8", "In open water, spirochetes are slowpokes. In thick, gel-like places, they do better than you'd expect.", 0.5),
@@ -81,7 +81,7 @@ SCRIPT = [
     Line("f4", "Second, food. A bacterium feeds through its surface, and small cells have a lot of surface for their size. "
                "That's one big reason bacteria stay small.", 0.5, take=1),
     Line("f5", "Growing into long threads adds even more surface to feed through.", 0.6),
-    Line("f6", "Third, getting around. Helicobacter pylori lives in the mucus of your stomach. "
+    Line("f6", "Third, getting around. Helicobacter pylori lives in the mucus of the stomach. "
                "Its spiral cells swim a little faster there than straight ones.", 0.5),
     Line("f7", "And scientists think shape also helps bacteria stick to things, and avoid being eaten.", 0.8),
 

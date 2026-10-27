@@ -50,6 +50,12 @@ probably become an engine default or a checklist item.
 - **Long narrations go to the owner in batches** (`engine.preview ... --batches`), one per section, with a
   timestamped line list. Nobody can review six minutes in one pass.
 
+## Facts against what viewers will check
+- **Viewers check Wikipedia, so facts must survive it** (owner, l001: Wikipedia dates the Black Death 1346–1353; we
+  said "1347 to 1351" from peer-reviewed sources). Where reliable sources disagree, write what is true under all of
+  them: "mid-1300s", "at least a third", "the 1890s", "thought to kill" for estimates. An adversarial fact audit
+  before the final render found 12 such fragile claims that five judge passes had accepted.
+
 ## Science in the pictures
 - **Check each insect's resting posture, not just its anatomy.** Mayflies rest with their wings *upright*, pressed
   together over the back (e001 pass 2). Look up a photo of the resting pose for every new character.
