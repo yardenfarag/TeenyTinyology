@@ -374,5 +374,13 @@ Full table: `review/fact_audit.md`. Owner asked after spotting that Wikipedia da
 - Botox: "In tiny, purified doses, it's also Botox" (owner asked, 2026-10-27, whether the toxin is "highly diluted"
   or genetically engineered). It is neither: the toxin is produced by the bacterium and purified, and the medicine
   works because the dose is tiny. Avoid "diluted enormously" and any production detail.
+- Star-shaped bacteria ARE named, in the voice and on the board: **Allostella** (board note "star-shaped (was
+  Stella)"). Owner asked why this one had no example (2026-10-27). LPSN: *Stella* Vasilyeva 1985 is validly
+  published but **illegitimate**; *Allostella* Deshmukh and Oren 2025 ("another Stella") is the correct name, with
+  *A. humosa* (type) and *A. vacuolata*. Keep the old name on the board, because that is what people search for.
+  https://lpsn.dsmz.de/genus/allostella  https://lpsn.dsmz.de/genus/stella
+- *Thiomargarita* scale note: the board says "really thousands of times bigger", not "(not to scale!)" — the owner
+  read the old note and could not tell what it meant (2026-10-27). A board note must say what it means to a viewer,
+  never be a note to ourselves. ~9,000 um long against a ~1-2 um typical cell is thousands of times.
 - Mycoplasma board: "no wall, no fixed shape" (some wall-less species keep a shape, e.g. M. pneumoniae's flask
   shape, Spiroplasma's spiral). Never "no shape" or "shapeless" on the board.

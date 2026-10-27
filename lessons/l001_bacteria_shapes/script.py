@@ -63,7 +63,7 @@ SCRIPT = [
     Line("e2", "Streptomyces grows as branching threads, like a tiny fungus.", 0.4),
     Line("e3", "It makes geosmin: the earthy smell of soil after rain. "
                "And more than two-thirds of the useful antibiotics that come from nature.", 0.6),
-    Line("e4", "Some bacteria are shaped like flat, six-pointed stars.", 0.5),
+    Line("e4", "Some bacteria are shaped like flat, six-pointed stars. They are called Allostella.", 0.5),
     Line("e5", "Caulobacter grows a stalk, with glue on the end. One of the strongest natural glues known.", 0.4),
     Line("e6", "When it divides, one daughter swims away. The other stays stuck.", 0.6),
     Line("e7", "Mycoplasma has no cell wall at all. So it has no fixed shape.", 0.5),

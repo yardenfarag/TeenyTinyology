@@ -26,6 +26,12 @@ probably become an engine default or a checklist item.
 - **An absolute opening claim and a later exception must meet on screen** (l001 pass 3). "Every bacterium is a
   single cell" plus a later "threads of many cells" label reads as a contradiction unless the label says
   "exception". Better: soften the opening ("almost every").
+- **Name every example, or say why you can't.** In a list of examples, one unnamed item stands out: the owner
+  asked why the star-shaped bacterium alone had no name (l001). It had been renamed (*Stella* to *Allostella*,
+  2025) and we had quietly dropped the name. Use the current name and keep the old one in a note, since that is
+  what viewers search for.
+- **A board note must mean something to a viewer.** "(not to scale!)" is a note to ourselves; "really thousands of
+  times bigger" is the fact it stands for (owner, l001).
 - **Board labels are shorter than the narration, so they lose qualifiers** **(repeat ×3: l001 passes 1–3: "more
   surface", "strongest glue", "a third of Europe")**. "small = more surface" dropped "per
   volume" and became false (l001 pass 1). Check each label as a stand-alone claim.
