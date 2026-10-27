@@ -28,6 +28,9 @@ pnpm-debug.log*
 episodes/*/out/
 episodes/*/review/
 episodes/*/look_frames/
+lessons/*/out/
+lessons/*/review/
+lessons/*/look_frames/
 tests/**/*.wav
 tests/**/_tmp/
 *.tmp
@@ -47,3 +50,6 @@ desktop.ini
 
 # --- branding scratch renders (finals are copied to assets/brand/) ---
 branding/out/
+
+# review copies for the owner
+for-review/

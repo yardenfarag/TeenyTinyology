@@ -26,6 +26,13 @@ FAMILIES = {
                 "bold": "fredoka-600-normal.ttf"},
     "Baloo 2": {"regular": "baloo-2-500-normal.ttf", "semibold": "baloo-2-700-normal.ttf",
                 "bold": "baloo-2-700-normal.ttf"},
+    # handwriting (whiteboard lessons)
+    "Kalam": {"regular": "kalam-400-normal.ttf", "semibold": "kalam-700-normal.ttf", "bold": "kalam-700-normal.ttf"},
+    "Patrick Hand": {"regular": "patrick-hand-400-normal.ttf", "semibold": "patrick-hand-400-normal.ttf",
+                     "bold": "patrick-hand-400-normal.ttf"},
+    "Caveat": {"regular": "caveat-500-normal.ttf", "semibold": "caveat-700-normal.ttf", "bold": "caveat-700-normal.ttf"},
+    "Gochi Hand": {"regular": "gochi-hand-400-normal.ttf", "semibold": "gochi-hand-400-normal.ttf",
+                   "bold": "gochi-hand-400-normal.ttf"},
     # serif families for branding (variable fonts: "file@weight")
     "Cormorant Garamond": {"regular": "cormorant-garamond-variable.ttf@500",
                            "semibold": "cormorant-garamond-variable.ttf@600",

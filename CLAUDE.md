@@ -6,6 +6,9 @@ Tagline: *Teeny creatures. Big stories.*
 Everything is generated in code: vector art (pycairo), original synthesized music + sound effects (numpy),
 narration from ElevenLabs. No stock footage, no sampled audio, no other people's music or characters.
 
+This file is the bible for the **Shorts**. The channel's second format, **Lessons** (landscape whiteboard videos
+in `lessons/`, `engine/board.py`), has its own rules: read `docs/lessons.md` before any Lessons work.
+
 ## Decisions (locked unless the owner changes them)
 | | |
 |---|---|
@@ -19,6 +22,7 @@ narration from ElevenLabs. No stock footage, no sampled audio, no other people's
 | Captions | soft cream one-line bubbles, peach highlight on the spoken word, centre y=1400 (`scene.CAP_Y`) |
 | Font | **Nunito** (rounded, SIL OFL) via `engine/text.py` — alternatives on file: Quicksand, Fredoka, Baloo 2 |
 | Brand | Profile picture + YouTube banner in `assets/brand/` (made by `branding/logo.py` `final` and `branding/banner.py` `m1_midnight`). Palette "midnight": navy `#1e2a3a`, cream `#f3ead8`, gold `#f2b84b`. Wordmark font **Outfit** semibold; the "o" of "ology" is a magnifying glass. Channel description in `assets/brand/channel.md` |
+| End card | the series logo plate (navy pill, "teeny tiny ology" with the lens "o"): `brand_plate()` in `episodes/e001_pickle_doodle/episode.py`, centred in the safe zone at y≈1400. No tagline (owner removed "Teeny creatures. Big stories.") |
 | API key | `ELEVENLABS_API_KEY` in `.env` (git-ignored). Never print it, never commit it |
 
 ## The cast (permanent names — never rename)
@@ -76,9 +80,12 @@ three looks; the `real` style may switch to anatomically correct drawings and ha
 engine/          core.py (math/geometry/text) · style.py (3 looks) · scene.py (timeline, captions, tags)
                  render.py (stills, contact sheets, MP4) · voice.py (ElevenLabs + timing)
                  audio/ music.py (theme) · sfx.py · mix.py (ducking, loudness) · common.py
+                 board.py (Lessons whiteboard) · judge_kit.py / lesson_kit.py (review packets)
 characters/      one module per cast member + model_sheet.py
 episodes/NNN-slug/  idea.md · facts.md · script.py · episode.py · voice_cache/ · review/ · out/
-.claude/skills/  new-episode · new-character
+lessons/lNNN_slug/  plan.md · facts.md · script.py · lesson.py · voice_cache/ · out/   (bake_* = engine tests)
+.claude/skills/  new-episode · new-character · new-lesson      .claude/agents/  video-judge · lesson-judge
+for-review/      copies for the owner to watch (git-ignored)
 tests/           old experiments (not used by episodes)
 ```
 
@@ -90,8 +97,8 @@ Setup on a new machine: `python -m venv .venv && .venv/Scripts/python -m pip ins
 .venv/Scripts/python -m episodes.<pkg>.episode stills --style cute        # storyboard stills + contact sheet
 .venv/Scripts/python -m episodes.<pkg>.episode render --style cute        # full MP4 (+ music-only variant)
 ```
-The owner reviews files inside the T3 workspace folder (`C:\Users\yarde\.t3\scratch\...`), not inside this repo —
-copy review images/videos there when asking for feedback.
+The owner reviews files in `for-review/` at the project root (git-ignored): copy review images, videos and MP3s
+there and give the full path when asking for feedback. (The owner can't open chat attachments or other app folders.)
 
 ## Quality checklist (before showing anything)
 1. Contact sheet of the *encoded MP4* (`render.sample_frames`) — every scene, transition and caption checked by eye.

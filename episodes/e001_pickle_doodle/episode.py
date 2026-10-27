@@ -84,6 +84,44 @@ def _think(c, x, y, a):
     c.restore()
 
 
+def brand_plate(c, x, y, a, max_w=640):
+    """Series logo for end cards: the one-line midnight wordmark (cream 'teeny tiny', gold 'ology' whose o is
+    the magnifying glass) on a soft navy pill. Same design as assets/brand (branding/banner.py midnight_name)."""
+    if a <= 0:
+        return
+    from branding.banner import CREAM_M, GOLD, NAVY
+    from branding.logo import lens
+    from engine import text as tx
+    kw = dict(fam="Outfit", semibold=True)
+    head = "teeny tiny "
+    size = 100
+    tot = tx.width(head, size, **kw) + size * 0.22 + tx.width("ology", size, **kw)
+    size *= min(1.0, max_w / tot)
+    tot = tx.width(head, size, **kw) + size * 0.22 + tx.width("ology", size, **kw)
+    k = back_out(min(1.0, a * 1.3))
+    c.save()
+    c.translate(x, y)
+    c.scale(0.9 + 0.1 * k, 0.9 + 0.1 * k)
+    c.push_group()
+    pw, ph = tot + size * 0.9, size * 1.55
+    rounded_rect(c, -pw / 2, -ph / 2 + 6, pw, ph, ph / 2)
+    c.set_source_rgba(0.1, 0.08, 0.05, 0.18)
+    c.fill()
+    rounded_rect(c, -pw / 2, -ph / 2, pw, ph, ph / 2)
+    c.set_source_rgba(*NAVY[:3], 1)
+    c.fill()
+    bx, by = -tot / 2, size * 0.3
+    tx.draw(c, head, bx, by, size, CREAM_M, **kw)
+    bx += tx.width(head, size, **kw) + size * 0.22
+    ow = tx.width("o", size, **kw)
+    r = ow * 0.42
+    lens(c, bx + ow / 2, by - size * 0.25 - 2, r, size * 0.15, GOLD, handle=-1)
+    tx.draw(c, "logy", bx + ow, by, size, GOLD, **kw)
+    c.pop_group_to_source()
+    c.paint_with_alpha(a)
+    c.restore()
+
+
 # ================================================================ build
 def build(style_name):
     st = styles.get(style_name)
@@ -605,7 +643,9 @@ def build(style_name):
         paint(c, bg.parchment())
         t0 = w_cycle - 0.35
         ta = ease(prog(t, t0, t0 + 0.4))
-        text_center(c, "The horsehair worm cycle", W / 2, 330, 58, INK, italic=True, bold=True, alpha=ta)
+        # name the species: "horsehair worm" is a whole phylum (~350+ species) with many different hosts
+        text_center(c, "The life cycle of", CX, 290, 40, INK, bold=True, alpha=ta)
+        text_center(c, "Paragordius varius", CX, 360, 62, INK, italic=True, alpha=ta)
         step = TAU / len(NODES)
         for i, (label, kind) in enumerate(NODES):
             a = -math.pi / 2 + i * step
@@ -640,8 +680,7 @@ def build(style_name):
                     c.close_path()
                     c.fill()
         ea = ease(prog(t, q["cycle3"].end + 0.55, q["cycle3"].end + 1.1))  # after the last caption has gone
-        text_center(c, "TeenyTinyology", W / 2, 1385, 64, INK, bold=True, alpha=ea)
-        text_center(c, "Teeny creatures. Big stories.", W / 2, 1440, 34, INK, italic=True, alpha=ea * 0.8)
+        brand_plate(c, CX, 1400, ea)
 
     tl.add(s_cycle, w_cycle - 0.35, DUR + 0.1)
 

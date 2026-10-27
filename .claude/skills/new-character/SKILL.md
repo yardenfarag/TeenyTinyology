@@ -19,5 +19,5 @@ description: Design and add a permanent TeenyTinyology cast member (name, look, 
    - expose helpers other scenes need (`to_world`, mouth/tip points, life-stage functions);
    - built-in life: blink, breathe/idle, a walk or move cycle via a `phase` parameter.
 4. **Add it to `characters/model_sheet.py`** (`CELLS`), render the sheet, check it at full size, fix, and
-   show the owner the sheet (copy to the T3 workspace).
+   show the owner the sheet (copy to `for-review/`).
 5. **Record it** in the cast table in `CLAUDE.md` once approved. Names are permanent from then on.

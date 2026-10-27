@@ -11,12 +11,44 @@ probably become an engine default or a checklist item.
   starts (e001 pass 1).
 - **Narration about mystery should be a question, not a flat statement.** "How the worm pulls this off… scientists
   are still figuring out" was flat. A question with a hedged answer works better (owner, e001).
+- **Name the exact species when a story follows one life cycle.** A group name ("horsehair worm", "flea",
+  "tapeworm") covers many species with different hosts and cycles. Put the scientific name (italic) on the end
+  card, and record in `facts.md` which species the story follows (owner, e001: the end card said "horsehair worm";
+  it is *Paragordius varius*). The judge missed this, so check it explicitly.
 - **Hedge open science honestly.** "Scientists think so… but how is still a mystery" is fine. Never state a
   hypothesis as settled (e001 pass 1: an overstated claim had to be reworded).
-- **Every narrated beat needs a visual payoff.** If the narrator says "until she finds the water", start her far
-  away from the water (e001 pass 2).
+- **Every narrated beat needs a visual payoff** **(repeat: e001 pass 2, l001 pass 1)**. If the narrator says
+  "until she finds the water", start her far away from the water (e001). On a whiteboard: when the narrator states a
+  rule ("split in two directions, and you get…"), draw the rule, not just its result (l001: "1 way / 2 ways / 3 ways"
+  tags; a dividing cell). Before rendering, list every line whose time on screen adds nothing new to the board.
+- **Closing summaries are claims too.** "All of them, single cells" was false for one item in its own list
+  (*Streptomyces* threads, l001 pass 1). Re-check every word of the recap against facts.md.
+- **An absolute opening claim and a later exception must meet on screen** (l001 pass 3). "Every bacterium is a
+  single cell" plus a later "threads of many cells" label reads as a contradiction unless the label says
+  "exception". Better: soften the opening ("almost every").
+- **Board labels are shorter than the narration, so they lose qualifiers** **(repeat ×3: l001 passes 1–3: "more
+  surface", "strongest glue", "a third of Europe")**. "small = more surface" dropped "per
+  volume" and became false (l001 pass 1). Check each label as a stand-alone claim.
+- **Define every term at first use, on the board if the script doesn't** (l001 pass 1: flagella, archaeon).
+- **On a big board, draw in sentence order.** When the narrator names a thing before describing its shape
+  ("A vibrio is a curved rod"), write the label first. Otherwise the label waits behind the drawing and lands
+  seconds late (l001: up to 10 s) **(repeat ×3: l001 passes 1–3)**. Check with the lag test: board item start minus
+  its cue word, and run it over the whole lesson, not just the start and end (mid-lesson stills of 6–10 s, pass 3).
 - **On-screen tags must add information, not repeat the caption** (e001 pass 2: the tag "like Pixie once was"
   repeated the caption).
+
+## Narration audio
+- **ElevenLabs clips carry stray sound at their edges** (l001 preview, owner: "cut midway", "missed heartbeats", "a
+  sound like he is going to speak"). With neighbouring lines sent as context, a clip often ends with 0.5–0.9 s of
+  silence and then the first ~50 ms of the NEXT sentence, cut hard. Some start with the previous sentence's tail.
+  Now an engine default: `voice.clean` strips edge fragments, caps silences inside a line at 0.6 s, fades the edges,
+  and writes lines that still sound wrong to `voice_cache/qa.json`. Re-take those before the owner listens.
+- **ffmpeg `loudnorm` silently stops being linear** when the gain would push peaks past its true-peak limit. It then
+  compresses dynamically, lifting quiet parts: the l001 jingle came out at the voice's level, whatever gain it was
+  given (l001 pass 1). Lessons now use `mix.normalize_linear`: one gain plus a soft limiter on the few peaks. The
+  Shorts still go through `mix.loudnorm`, so check their quiet passages after the next render.
+- **Long narrations go to the owner in batches** (`engine.preview ... --batches`), one per section, with a
+  timestamped line list. Nobody can review six minutes in one pass.
 
 ## Science in the pictures
 - **Check each insect's resting posture, not just its anatomy.** Mayflies rest with their wings *upright*, pressed
@@ -46,7 +78,14 @@ probably become an engine default or a checklist item.
 - **Time-passing effects must read as intentional.** A grey dim looks like a glitch. Use a moon, stars and a blue
   cast, or skip the effect (e001 pass 2). Tint with cairo `OPERATOR_MULTIPLY` (blue), not a semi-transparent
   dark paint (which turns grey).
-- **Don't hold a still frame > 5 s.** Add a slow push-in or a small idle motion (e001 pass 2).
+- **Don't hold a still frame > 5 s** **(repeat ×3: e001 pass 2, l001 pass 1 and pass 2)**. Add a slow push-in or a
+  small idle motion (e001). On a lesson's final zoom-out, give every recap word and the teaser something new on the
+  board: light up each region as it is named, underline, draw the teaser (l001). **Checklist item:** before
+  rendering, list the stretches where nothing new appears on the board (board item starts, camera moves, erasers)
+  and fix every one over 5 s at the start or end of a lesson.
+- **A fix is checked like new work** (l001 pass 2). Pass-1 fixes brought in a new overstated label ("strongest
+  glue") and late tags (queued after the drawings). Re-run the lag test and re-read every new label against
+  facts.md before re-rendering.
 - **Night scenes:** dark ink outlines vanish on dark blue. Lighten antennae and outlines at night (e001 pass 2).
 
 ## UI / UX

@@ -14,7 +14,7 @@ import cairo
 from engine.core import TAU, Palette, ellipse, hexc, lerp, rng
 
 NAME = "Doodle"
-SPECIES = "horsehair worm"
+SPECIES = "horsehair worm"   # in e001: Paragordius varius (a cricket hairworm)
 SKIN = Palette("#5a3a22", "#a8805a", "#2a180c", "#1a0c04")
 TIP = hexc("#efe4cc")
 

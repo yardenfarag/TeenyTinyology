@@ -21,3 +21,15 @@ Not claimed (unverified): exact egg counts; exact worm length ratios for this sp
   (Thomas et al. 2002, J. Evol. Biol.), and are drawn toward light reflected off water (Ponton et al. 2011, Behav. Ecol.).
 - Mechanism not settled: proteomics shows altered host brain proteins and worm proteins resembling host signalling
   molecules (Biron et al. 2005, 2006), but the exact pathway is still unresolved.
+
+## Which worm is Doodle? (owner note, 2026-10-23)
+"Horsehair worm" is a whole phylum (Nematomorpha, ~350+ described freshwater species) with many hosts: mantids,
+beetles, millipedes, crickets… so the end card names the species. The cycle in this episode matches
+***Paragordius varius*** (North America): crickets are among its main definitive hosts; larvae encyst in aquatic
+insect larvae, the cysts survive metamorphosis, and crickets are infected mostly by eating dead emerged insects.
+Cysts in naturally infected mayflies (*Callibaetis*) are documented for gordiids.
+- Hanelt & Janovy 2004, *J. Parasitol.* 90(2), "Life cycle and paratenesis of American gordiids"
+  https://bioone.org/journals/journal-of-parasitology/volume-90/issue-2/GE-78R/LIFE-CYCLE-AND-PARATENESIS-OF-AMERICAN-GORDIIDS-NEMATOMORPHA-GORDIIDA/10.1645/GE-78R.full
+- https://en.wikipedia.org/wiki/Paragordius_varius · https://animaldiversity.org/accounts/Paragordius_varius
+- The behaviour studies cited above (Thomas 2002, Ponton 2011) used the European sister species *P. tricuspidatus*.
+  Same genus and same cricket-to-water behaviour, so the narration stays accurate.

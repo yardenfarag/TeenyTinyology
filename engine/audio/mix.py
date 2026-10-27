@@ -64,6 +64,30 @@ def loudnorm(src, dst, target=-14.0, tp=-1.8):  # aim below -1.5 dBTP: AAC encod
     return dst
 
 
+def normalize_linear(x, path, target=-14.0, ceiling_db=-2.6):   # AAC adds ~0.9 dB of true peak
+    """Write x to `path` at `target` LUFS with ONE gain for the whole track, so relative levels stay as mixed.
+
+    ffmpeg's loudnorm only stays linear if the gain fits under its true-peak limit; otherwise it silently switches to
+    dynamic compression, which lifts quiet parts (e.g. a jingle before the voice). Here the few peaks that would
+    exceed the ceiling are soft-limited instead, and the gain is re-measured after limiting."""
+    x = x if x.ndim == 2 else np.stack([x, x], 1)
+    ceil = 10 ** (ceiling_db / 20)
+    knee = ceil * 0.7
+
+    def limit(y):
+        a = np.abs(y)
+        over = a > knee
+        y = y.copy()
+        y[over] = np.sign(y[over]) * (knee + (ceil - knee) * np.tanh((a[over] - knee) / (ceil - knee)))
+        return y
+    y = x / (np.abs(x).max() + 1e-9) * 0.5
+    for _ in range(3):
+        write_wav(path, limit(y))
+        y = y * 10 ** ((target - measure_lufs(path)) / 20)
+    write_wav(path, limit(y))
+    return path
+
+
 def measure_lufs(path):
     r = subprocess.run([ffmpeg_exe(), "-hide_banner", "-i", path, "-af", "ebur128", "-f", "null", "-"],
                        capture_output=True, text=True)

@@ -27,7 +27,8 @@ Then read `docs/judge-lessons.md` — mistakes earlier episodes made; design thi
 ## 2b. Narration preview — **owner approves by ear before any visuals**
 - Add the episode's sound effects to `SFX` in `script.py` (word-anchored) — sounds are never spoken by the narrator.
 - `python -m engine.preview episodes.<pkg>.script <out.mp3>` renders narration + theme + all sound effects.
-- Copy the MP3 to the T3 workspace, show the script text next to it, and iterate on wording/pauses until approved.
+  Before sending, `voice_cache/qa.json` must be empty (lines the voice QA flags get a new `take`).
+- Copy the MP3 to `for-review/`, show the script text next to it, and iterate on wording/pauses until approved.
 
 ## 3. Voice + timing
 - `narrate(SCRIPT, cache_dir)` → voice track, cues (word timestamps) and captions. Audio is cached by text,
@@ -36,13 +37,13 @@ Then read `docs/judge-lessons.md` — mistakes earlier episodes made; design thi
 
 ## 4. Look frames — **owner approves backgrounds / characters / text before the full render**
 - Render ~10 full-resolution frames (one per scene: teaser, each setting, key moments, end card) plus an overview
-  sheet into the T3 workspace (`<episode>/look_frames/`). Check them against the UI/UX rules first.
+  sheet into `for-review/<episode>_look_frames/`. Check them against the UI/UX rules first.
 - Wait for the owner's feedback on backgrounds, characters, fonts, bubbles and layout; iterate on frames (cheap)
   rather than on rendered video (slow).
 
 ## 4b. Storyboard (internal)
 - Build the scenes in `episode.py`, render stills (one or two per scene) for the requested style(s) and a contact sheet.
-- Self-review against the quality checklist, fix, then copy the sheet to the T3 workspace and show it.
+- Self-review against the quality checklist, fix, then copy the sheet to `for-review/` and show it.
 
 ## 5. Score + mix
 - `music.score(duration, moods)` with a mood per story beat (`sleepy`, `cozy`, `curious`, `mystery`, `playful`,
@@ -65,4 +66,4 @@ Then read `docs/judge-lessons.md` — mistakes earlier episodes made; design thi
 ## 7. Upload pack (`out/`)
 - `NNN-slug.mp4`, `cover.png` (best frame + title), `post.md`: title (< 60 chars), description with 2–3 sentence
   summary + sources, 3–6 hashtags (#TeenyTinyology #ScienceForKids …).
-- Copy the deliverables to the T3 workspace folder and report paths, length, loudness, and anything unverified.
+- Copy the deliverables to `for-review/` and report paths, length, loudness, and anything unverified.

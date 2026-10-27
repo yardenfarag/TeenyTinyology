@@ -120,13 +120,79 @@ def _words(al):
     return words
 
 
-def _trim(audio, thr=0.012, pad=0.03):
-    idx = np.where(np.abs(audio) > thr)[0]
-    if not len(idx):
-        return audio, 0.0
-    a = max(0, idx[0] - int(pad * SR))
-    b = min(len(audio), idx[-1] + int(pad * SR))
-    return audio[a:b], a / SR
+MAX_GAP = 0.6          # longest silence kept inside one line (ElevenLabs often leaves 0.7–1 s between sentences)
+FRAME = 0.01
+
+
+def clean(audio, words):
+    """Make one synthesised line safe to place on the timeline. Returns (audio, words, problems).
+
+    ElevenLabs clips often carry stray sound at their edges, because the neighbouring lines are sent as context:
+    the start of the NEXT sentence after a long silence at the end ("he's about to speak", then a hard cut), or the
+    tail of the previous one at the start. This removes short edge fragments that are separated from the speech by
+    silence, caps long silences inside the line at MAX_GAP, trims to the speech with soft fades, and shifts the word
+    timestamps to match. `problems` lists what still sounds wrong (a word cut off at the end): re-take that line.
+    """
+    f = int(FRAME * SR)
+    n = len(audio) // f
+    if n < 3:
+        return audio, words, ["empty"]
+    env = 20 * np.log10(np.sqrt((audio[:n * f].reshape(n, f) ** 2).mean(1)) + 1e-9)
+    on = env > env.max() - 42
+    segs, i = [], 0
+    while i < n:
+        if on[i]:
+            j = i
+            while j < n and on[j]:
+                j += 1
+            segs.append([i, j])
+            i = j
+        else:
+            i += 1
+    # 1. edge fragments: < 0.25 s of sound, cut off from the speech by >= 0.15 s of silence
+    while len(segs) > 1 and segs[-1][1] - segs[-1][0] < 25 and segs[-1][0] - segs[-2][1] >= 15:
+        segs.pop()
+    while len(segs) > 1 and segs[0][1] - segs[0][0] < 25 and segs[1][0] - segs[0][1] >= 15:
+        segs.pop(0)
+    # 2. keep [speech start - 40 ms, speech end + 60 ms], with long inner silences shortened
+    pad0, pad1, keep = 4, 6, int(MAX_GAP / FRAME)
+    pieces = [[max(0, segs[0][0] - pad0), None]]
+    for (a0, a1), (b0, b1) in zip(segs, segs[1:]):
+        if b0 - a1 > keep:
+            half = keep // 2
+            pieces[-1][1] = a1 + half
+            pieces.append([b0 - (keep - half), None])
+    pieces[-1][1] = min(n, segs[-1][1] + pad1)
+    out, tmap, t_out = [], [], 0.0                   # tmap: (source start, source end, output start) in seconds
+    xf = int(0.008 * SR)
+    for p0, p1 in pieces:
+        chunk = audio[p0 * f:p1 * f].copy()
+        if out and len(chunk) > xf:                  # tiny crossfade where silence was removed
+            ramp = np.linspace(0, 1, xf)
+            out[-1][-xf:] = out[-1][-xf:] * (1 - ramp) + chunk[:xf] * ramp
+            chunk = chunk[xf:]
+            tmap.append((p0 * FRAME + xf / SR, p1 * FRAME, t_out))
+        else:
+            tmap.append((p0 * FRAME, p1 * FRAME, t_out))
+        out.append(chunk)
+        t_out += len(chunk) / SR
+    res = np.concatenate(out)
+    fi, fo = int(0.01 * SR), int(0.04 * SR)
+    res[:fi] *= np.linspace(0, 1, fi)
+    res[-fo:] *= np.linspace(1, 0, fo)
+
+    def remap(t):
+        for s0, s1, o in tmap:
+            if t <= s1:
+                return o + max(0.0, t - s0)
+        return t_out
+    words = [(w, remap(s), remap(e)) for w, s, e in words]
+    problems = []
+    if segs[-1][1] >= n - 1 and env[-2:].max() > env.max() - 30:
+        problems.append("ends mid-sound (word cut off)")
+    if segs[0][0] == 0 and env[0] > env.max() - 30:
+        problems.append("starts mid-sound")
+    return res, words, problems
 
 
 def narrate(lines, cache_dir, t0=0.8):
@@ -138,6 +204,7 @@ def narrate(lines, cache_dir, t0=0.8):
     # ElevenLabs) must not silently re-voice it. Change the line's text or `take` to get a new read.
     lock_path = os.path.join(cache_dir, "takes.lock.json")
     lock = json.load(open(lock_path, encoding="utf8")) if os.path.exists(lock_path) else {}
+    qa = {}
     for i, ln in enumerate(lines):
         if not ln.text:  # silent beat (a sound effect says it instead of the narrator)
             cues[ln.id] = Cue(ln.id, t, t + ln.pause, [])
@@ -152,16 +219,22 @@ def narrate(lines, cache_dir, t0=0.8):
         hit = hit["hash"] if hit and hit["text"] == said and hit.get("take", 0) == ln.take and             os.path.exists(os.path.join(cache_dir, hit["hash"] + ".json")) else None
         audio, words, h = _synth(said, prev, nxt, cache_dir, ln.take, hit)
         lock[VOICE_ID + ":" + ln.id] = {"text": said, "take": ln.take, "hash": h}
-        audio, off = _trim(audio)
+        audio, words, problems = clean(audio, words)
+        if problems:
+            qa[ln.id] = problems
         dur = len(audio) / SR
         # alignment can stretch the last word over trailing silence; clamp to the audible audio
-        words = [(w, t + min(dur, max(0.0, s - off)), t + min(dur, max(0.0, e - off))) for w, s, e in words]
+        words = [(w, t + min(dur, s), t + min(dur, e)) for w, s, e in words]
         cues[ln.id] = Cue(ln.id, t, t + dur, words, forced_breaks(ln.text))
         clips.append((t, audio, ln))
         t += dur + ln.pause
     end = t
     with open(lock_path, "w", encoding="utf8") as f:
         json.dump(lock, f, indent=1)
+    with open(os.path.join(cache_dir, "qa.json"), "w", encoding="utf8") as f:
+        json.dump(qa, f, indent=1)                   # lines that still sound wrong: give them a new `take`
+    for lid, probs in qa.items():
+        print(f"voice QA {lid}: {', '.join(probs)}")
     track = np.zeros(int((end + 1) * SR))
     for start, audio, _ in clips:
         i0 = int(start * SR)
