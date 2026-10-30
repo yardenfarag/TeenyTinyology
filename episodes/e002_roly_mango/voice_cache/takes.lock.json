@@ -1,0 +1,122 @@
+{
+ "uk7wwhXdWYHKKZ8KTCVw:hook1": {
+  "text": "Open this fish's mouth...",
+  "take": 0,
+  "hash": "54d00d0927ddc34b"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:hook2": {
+  "text": "and something looks back.",
+  "take": 0,
+  "hash": "8f21962ec55e6bc7"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:mango": {
+  "text": "This is Mango. She's a spotted rose snapper.",
+  "take": 0,
+  "hash": "895a374e5c923f47"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:roly": {
+  "text": "And this is Roly. She's an isopod \u2014 a crustacean, more shrimp than insect.",
+  "take": 0,
+  "hash": "d37fcdc333ffd028"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:arrive": {
+  "text": "Roly arrived as a speck, and slipped in through Mango's gills.",
+  "take": 0,
+  "hash": "7dd3478176c30872"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:two": {
+  "text": "Two of them found Mango. Every one of them starts out male.",
+  "take": 0,
+  "hash": "0fdebfd966931312"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:change": {
+  "text": "Roly grew faster. And then Roly changed.",
+  "take": 0,
+  "hash": "197058bb7e0844fe"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:female": {
+  "text": "She became female. And the female gets the mouth.",
+  "take": 0,
+  "hash": "ccc2b6d23878d03d"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:tongue1": {
+  "text": "Now, a fish's tongue is nothing like yours. It's a bony pad. No muscle of its own.",
+  "take": 1,
+  "hash": "b4911d3d9ef731d6"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:tongue2": {
+  "text": "Its job is to press food against the teeth in the roof of the mouth.",
+  "take": 0,
+  "hash": "5e26b2b9307f61c1"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:grip": {
+  "text": "Roly clamps onto the base of Mango's tongue, and drinks the blood that feeds it.",
+  "take": 0,
+  "hash": "c8a703a06cd66f70"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:fade": {
+  "text": "Without that blood, the tongue slowly shrinks... and falls away.",
+  "take": 0,
+  "hash": "7155ac3221d97d88"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:place": {
+  "text": "She doesn't eat it. She takes its place.",
+  "take": 0,
+  "hash": "7e1ce1558c7f1d7b"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:feet": {
+  "text": "Fourteen hooked feet, holding on to what's left.",
+  "take": 0,
+  "hash": "c9d6fc692fa323fe"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:eats": {
+  "text": "And Mango? Mango goes back to eating.",
+  "take": 0,
+  "hash": "de6dd730e06be1d8"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:proof": {
+  "text": "When scientists opened up fish like Mango, they found the teeth above had scuffed Roly's back.",
+  "take": 0,
+  "hash": "01489cd6a5d4f68e"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:press": {
+  "text": "Mango had been pressing her food against her.",
+  "take": 0,
+  "hash": "bac825f99f9f9ce4"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:hedge1": {
+  "text": "Is that bad for Mango? Nobody's sure.",
+  "take": 0,
+  "hash": "6172ac639315d839"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:hedge2": {
+  "text": "But a fish with Roly may feed better than a fish with no tongue at all.",
+  "take": 0,
+  "hash": "3653bcf9ab788c08"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:pouch": {
+  "text": "Under Roly's belly, a pouch. More than four hundred eggs.",
+  "take": 0,
+  "hash": "4591d1b66a5cf65c"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:father": {
+  "text": "And the father? The other one who found Mango. Still back on the gills.",
+  "take": 0,
+  "hash": "783de3a82568ceb7"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:hatch": {
+  "text": "One day the pouch opens. Hundreds of specks swim out, each one looking for a mouth.",
+  "take": 0,
+  "hash": "d0410ea8e0be8838"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:stay": {
+  "text": "And Mango will carry Roly for the rest of her life.",
+  "take": 0,
+  "hash": "563038ce7406d71d"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:button": {
+  "text": "She still has a tongue. It just isn't hers.",
+  "take": 0,
+  "hash": "25f47d1c6f8bff54"
+ }
+}

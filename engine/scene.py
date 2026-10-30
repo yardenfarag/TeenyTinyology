@@ -76,7 +76,12 @@ def render_frame(c, t, tl, ctx):
         c.set_source_surface(ctx["vignette"], 0, 0)
         c.paint()
     draw_captions(c, t, tl.captions)
-    edge = max(1 - ease(prog(t, 0, 0.3)), ease(prog(t, tl.duration - 0.6, tl.duration)))
+    if ctx.get("watermark"):
+        watermark(c, alpha=ctx.get("watermark_alpha", 0.85), art=ctx.get("watermark_art", False))
+    # Frame 0 is the thumbnail, so an episode may opt out of the opening fade with ctx["fade_in"] = 0.
+    fi = ctx.get("fade_in", 0.3)
+    edge = max((1 - ease(prog(t, 0, fi))) if fi > 0 else 0.0,
+               ease(prog(t, tl.duration - 0.6, tl.duration)))
     if edge > 0:
         c.set_source_rgba(0, 0, 0, edge)
         c.paint()
@@ -104,6 +109,88 @@ CAP_X = 480               # caption bubble centre x = middle of the safe zone (x
 CAP_Y = 1400              # caption bubble centre (clear of the app description area that starts ~y 1520)
 CAP_SIZE = 46
 CAP_MAX_W = 840           # one line only (= safe-zone width x 60..900); voice.chunk_captions splits by this width
+
+
+# ---- series wordmark ----------------------------------------------------
+WM_X, WM_Y = 60, 242      # top-left of the safe zone: below the app's top bar (y<170), far from the right rail
+_ASSET_LOGO = __import__("pathlib").Path(__file__).resolve().parent.parent / "assets" / "brand" / "profile_800.png"
+
+
+def wordmark(c, x, y, size, alpha=1.0, halo=0.0, center=True):
+    """The series wordmark — cream "teeny tiny", gold "ology" whose o is the magnifying glass.
+
+    (x, y) is the left baseline, or the centre when `center`. `halo` draws a soft dark glow behind the
+    glyphs so the mark stays readable on both a bright sea and the inside of a mouth, without needing a
+    hard plate. Returns the drawn width.
+    """
+    from branding.banner import CREAM_M, GOLD
+    from branding.logo import lens
+    from . import text as tx
+    kw = dict(fam="Outfit", semibold=True)
+    head = "teeny tiny "
+    hw = tx.width(head, size, **kw)
+    gap = size * 0.22
+    ow = tx.width("o", size, **kw)
+    tot = hw + gap + ow + tx.width("logy", size, **kw)
+    bx = x - tot / 2 if center else x
+    if halo > 0:
+        # A few widely-spaced soft copies, not a tight ring: a tight ring stacks into a dirty fringe
+        # that greys the cream out (first watermark test, e002).
+        for k, (dx, dy, a) in enumerate(((0, size * 0.10, 0.55), (-size * 0.09, 0, 0.32),
+                                         (size * 0.09, 0, 0.32), (0, -size * 0.07, 0.26))):
+            tx.draw(c, head, bx + dx, y + dy, size, (0.06, 0.05, 0.03), halo * alpha * a, **kw)
+            tx.draw(c, "ology", bx + hw + gap + dx, y + dy, size, (0.06, 0.05, 0.03), halo * alpha * a, **kw)
+    tx.draw(c, head, bx, y, size, CREAM_M, alpha, **kw)
+    lx = bx + hw + gap
+    lens(c, lx + ow / 2, y - size * 0.25 - 2, ow * 0.42, size * 0.15, (*GOLD[:3], alpha), handle=-1)
+    tx.draw(c, "logy", lx + ow, y, size, GOLD, alpha, **kw)
+    return tot
+
+
+WM_R = 52                 # badge radius
+
+
+def watermark(c, alpha=0.85, cx=None, cy=None, r=None, art=False):
+    """Small round channel badge, top-left — so the video still carries the channel when it is reposted
+    without a caption. A navy disc with the gold magnifying-glass "o" from the wordmark.
+
+    `art=True` uses the actual profile picture clipped to the circle instead; at this size its stacked
+    wordmark is not legible, so the lens mark is the default.
+    """
+    from branding.banner import CREAM_M, GOLD, NAVY
+    from branding.logo import lens
+    cx = WM_X + WM_R if cx is None else cx
+    cy = WM_Y + WM_R - 40 if cy is None else cy
+    r = WM_R if r is None else r
+    c.save()
+    c.push_group()
+    for dy, grow, a in ((7, 7, 0.10), (4, 4, 0.12), (2, 2, 0.12)):   # soft diffuse shadow
+        c.arc(cx, cy + dy, r + grow / 2, 0, TAU)
+        c.set_source_rgba(0.15, 0.10, 0.04, a)
+        c.fill()
+    c.arc(cx, cy, r, 0, TAU)
+    if art:
+        import cairo as _cairo
+        surf = _cairo.ImageSurface.create_from_png(str(_ASSET_LOGO))
+        c.save()
+        c.clip()
+        k = (2 * r) / surf.get_width()
+        c.translate(cx - r, cy - r)
+        c.scale(k, k)
+        c.set_source_surface(surf, 0, 0)
+        c.paint()
+        c.restore()
+    else:
+        c.set_source_rgba(*NAVY[:3], 1)
+        c.fill()
+        c.arc(cx, cy, r * 0.90, 0, TAU)          # thin cream keyline, so it reads on a dark frame too
+        c.set_source_rgba(*CREAM_M[:3], 0.22)
+        c.set_line_width(r * 0.05)
+        c.stroke()
+        lens(c, cx + r * 0.10, cy - r * 0.10, r * 0.40, r * 0.155, GOLD, handle=-1)
+    c.pop_group_to_source()
+    c.paint_with_alpha(alpha)
+    c.restore()
 
 
 def soft_bubble(c, x, y, w, h, alpha, r=None, fill=UI_CREAM, shadow=0.16):

@@ -10,7 +10,7 @@ import cairo
 
 from engine.core import hexc, set_font, text_center
 from engine import style as styles
-from characters import doodle, mochi, noodle, peanut, pickle, pip, pixie, plum
+from characters import doodle, mango, mochi, noodle, peanut, pickle, pip, pixie, plum, roly
 
 CELL_W, CELL_H = 560, 560
 
@@ -84,6 +84,41 @@ def cell_doodle(c, st, t):
     doodle.draw_cyst(c, st, 420, 430, 34, t=t)
 
 
+def cell_roly(c, st, t):
+    roly.draw(c, st, 280, 300, 0.80, phase=t * 2, female=True, happy=0.5)
+    roly.draw(c, st, 300, 470, 0.80 * roly.MALE_S / roly.FEMALE_S, phase=t * 2 + 1.4, female=False)
+    roly.draw_manca(c, st, 462, 486, 0.26, phase=t * 3)
+
+
+def cell_roly_facing(c, st, t):
+    roly.draw_facing(c, st, 290, 300, 0.95, phase=t * 2, grip=0.0, happy=0.4, tilt=0.45)
+
+
+def cell_roly_stages(c, st, t):
+    roly.draw(c, st, 290, 200, 0.70, phase=t * 2, grip=1.0)
+    roly.draw_underside(c, st, 290, 420, 0.70, eggs=1.0, phase=t * 2)
+
+
+def cell_mango(c, st, t):
+    mango.draw(c, st, 300, 300, 0.50, phase=t * 2, happy=0.6)
+    mango.draw(c, st, 300, 460, 0.50, phase=t * 2 + 1.0, mouth=1.0)
+
+
+def cell_mango_front(c, st, t):
+    def inside(cc):
+        roly.draw_facing(cc, st, 0, 40, 0.60, phase=t * 2, grip=1.0, happy=0.3, tilt=0.70)
+    mango.draw_front(c, st, 280, 290, 0.80, mouth=1.0, inside=inside, teeth=1.0, phase=t * 2)
+
+
+def cell_mango_front_shut(c, st, t):
+    mango.draw_front(c, st, 280, 290, 0.80, mouth=0.12, teeth=0.0, phase=t * 2)
+
+
+def cell_mango_gills(c, st, t):
+    mango.draw_gill_chamber(c, st, 280, 300, 0.70, phase=t * 2)
+    roly.draw(c, st, 250, 300, 0.30, ang=-0.4, phase=t * 2, female=False, grip=1.0)
+
+
 CELLS = {
     "mochi": [("Mochi", cell_mochi), ("Mochi (napping)", cell_mochi_sleep)],
     "pip": [("Pip", cell_pip), ("Pip (larva)", cell_pip_larva)],
@@ -93,6 +128,13 @@ CELLS = {
     "pickle": [("Pickle", cell_pickle), ("Pickle (x-ray: Doodle coiled)", cell_pickle_xray)],
     "pixie": [("Pixie", cell_pixie), ("Pixie resting + as a nymph", cell_pixie_rest)],
     "doodle": [("Doodle (swimming, coiled, cyst)", cell_doodle)],
+    "roly": [("Roly (female, male, manca)", cell_roly),
+             ("Roly gripping + her brood pouch", cell_roly_stages),
+             ("Roly head-on (looking back out at us)", cell_roly_facing)],
+    "mango": [("Mango (swimming, mouth open)", cell_mango),
+              ("Mango head-on: Roly in place, tooth patch", cell_mango_front),
+              ("Mango head-on, mouth nearly shut", cell_mango_front_shut),
+              ("Mango's gill chamber (Roly as a male)", cell_mango_gills)],
 }
 
 

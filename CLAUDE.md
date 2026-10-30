@@ -22,6 +22,7 @@ in `lessons/`, `engine/board.py`), has its own rules: read `docs/lessons.md` bef
 | Captions | soft cream one-line bubbles, peach highlight on the spoken word, centre y=1400 (`scene.CAP_Y`) |
 | Font | **Nunito** (rounded, SIL OFL) via `engine/text.py` — alternatives on file: Quicksand, Fredoka, Baloo 2 |
 | Brand | Profile picture + YouTube banner in `assets/brand/` (made by `branding/logo.py` `final` and `branding/banner.py` `m1_midnight`). Palette "midnight": navy `#1e2a3a`, cream `#f3ead8`, gold `#f2b84b`. Wordmark font **Outfit** semibold; the "o" of "ology" is a magnifying glass. Channel description in `assets/brand/channel.md` |
+| Watermark | small round badge, top-left: navy disc with the gold magnifying-glass "o" and a thin cream keyline — `scene.watermark()`, centre (112, 254), r 52, alpha 0.85. Opt in per episode with `ctx["watermark"] = True`; it rides above the captions and fades with the open/close. `watermark(art=True)` swaps in the profile picture instead. Owner picked the lens mark over the wordmark and over the avatar (e002) |
 | End card | the series logo plate (navy pill, "teeny tiny ology" with the lens "o"): `brand_plate()` in `episodes/e001_pickle_doodle/episode.py`, centred in the safe zone at y≈1400. No tagline (owner removed "Teeny creatures. Big stories.") |
 | API key | `ELEVENLABS_API_KEY` in `.env` (git-ignored). Never print it, never commit it |
 
@@ -36,10 +37,14 @@ in `lessons/`, `engine/board.py`), has its own rules: read `docs/lessons.md` bef
 | **Pickle** | field cricket (female) | leafy green, olive folded wings, very long antennae, egg-laying spike | calm, careful, a little shy; doesn't chirp (only males do) | `characters/pickle.py` |
 | **Pixie** | mayfly (female; + nymph) | pale honey body, brown bands, glassy wings, three tail threads | delicate, dreamy | `characters/pixie.py` |
 | **Doodle** | horsehair worm (male) | long glossy dark-brown string, pale head tip, forked tail | quiet, determined traveller | `characters/doodle.py` |
+| **Roly** | tongue-eating isopod (*Cymothoa exigua*) | tan vaulted shell, 7 pairs of hooked legs, two pairs of widely separated antennae, dark eyes | calm, settled, unhurried — finds one place and stays | `characters/roly.py` |
+| **Mango** | spotted rose snapper (*Lutjanus guttatus*) | rose flanks with rows of silvery-blue dots, yellow belly, one dark blotch high on the back | placid, completely unbothered; keeps eating | `characters/mango.py` |
 
 New characters get a short, cute name in the same spirit (Biscuit, Toffee, Bean, Poppy, Button, Kiwi…) and are
 added with the `new-character` skill. Every character draws through a `Style` (`engine/style.py`) so it works in all
 three looks; the `real` style may switch to anatomically correct drawings and has no cartoon faces.
+Roly is a **protandrous hermaphrodite**: `roly.draw(..., female=False)` is the smaller male stage, and the
+same character becomes the larger female. She is an **isopod, not a louse** — never call her one.
 
 ## Narration rules
 - Write for the ear: short sentences, one idea each, ~140–150 words per minute.

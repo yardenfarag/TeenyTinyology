@@ -302,3 +302,135 @@ def vignette():
         return s
 
     return _cached("vignette", build)
+
+
+# ================================================================ the sea (episode 002)
+def sea(seed=11, deep=False):
+    """Shallow tropical sea, eastern Pacific: sunlit blue, surface at y~380, rippled sand on the bottom.
+    Cymothoa exigua lives at 2-60 m, most records 2-20 m, so this is a bright, shallow, sandy place —
+    not the green pond of `underwater()`. deep=True drops the light for the quieter beats."""
+    def build():
+        s, c = new_surface(W, HH)
+        r = rng(seed)
+        if deep:
+            _grad(c, 0, HH, [(0, "#4e86a6"), (0.28, "#2f6788"), (0.65, "#1d4a68"), (1, "#123349")])
+        else:
+            _grad(c, 0, HH, [(0, "#bfe8f2"), (0.26, "#6fc0da"), (0.62, "#3b8fb4"), (1, "#1f5c80")])
+        c.paint()
+        # the surface, seen from below
+        _grad(c, 0, 400, [(0, "#9fd6e4"), (1, "#5aa6c4")] if deep else [(0, "#eafaff"), (1, "#a6dcec")])
+        c.rectangle(0, 0, W, 380)
+        c.fill()
+        c.move_to(0, 380)
+        for x in range(0, W + 20, 20):
+            c.line_to(x, 380 + 10 * math.sin(x / 46) + 4 * math.sin(x / 17))
+        c.line_to(W, 430)
+        c.line_to(0, 430)
+        c.close_path()
+        c.set_source_rgba(1, 1, 1, 0.26 if deep else 0.55)
+        c.fill()
+        for _ in range(4 if deep else 9):   # sun shafts
+            x0 = r.uniform(-140, W)
+            c.move_to(x0, 380)
+            c.line_to(x0 + 70, 380)
+            c.line_to(x0 + 300, HH)
+            c.line_to(x0 + 130, HH)
+            c.close_path()
+            g = cairo.LinearGradient(0, 380, 0, HH)
+            g.add_color_stop_rgba(0, 1, 1, 0.94, 0.07 if deep else 0.17)
+            g.add_color_stop_rgba(1, 1, 1, 0.94, 0)
+            c.set_source(g)
+            c.fill()
+        # sandy bottom with ripples
+        _grad(c, 1620, HH, [(0, "#4a6272"), (1, "#36495a")] if deep else [(0, "#e2d2a6"), (1, "#bda87a")])
+        c.move_to(0, 1690)
+        c.curve_to(280, 1640, 720, 1716, W, 1656)
+        c.line_to(W, HH)
+        c.line_to(0, HH)
+        c.close_path()
+        c.fill()
+        for k in range(14):     # ripple lines in the sand
+            y = 1700 + k * 32
+            c.move_to(0, y)
+            for x in range(0, W + 30, 30):
+                c.line_to(x, y + 7 * math.sin(x / 70 + k))
+            c.set_source_rgba(0.42, 0.34, 0.22, (0.08 if deep else 0.16) * (1 - k / 18))
+            c.set_line_width(5)
+            c.stroke()
+        for _ in range(26):     # shells and pebbles
+            ellipse(c, r.uniform(0, W), r.uniform(1700, HH - 16), r.uniform(7, 19), r.uniform(4, 10), r.uniform(0, 3))
+            c.set_source_rgba(*mix(hexc("#f0e6cc"), hexc("#c9b188"), r.random())[:3], 0.35 if deep else 0.85)
+            c.fill()
+        return s
+
+    return _cached(("sea", seed, deep), build)
+
+
+def gill_chamber(seed=12):
+    """Inside Mango's gill cover: a warm dark chamber for the gill-arch scenes. The arches themselves are
+    drawn per frame by characters.mango.draw_gill_chamber so they can move with the breathing."""
+    def build():
+        s, c = new_surface(W, HH)
+        r = rng(seed)
+        _grad(c, 0, HH, [(0, "#5d2a2c"), (0.4, "#45201f"), (1, "#2a1314")])
+        c.paint()
+        g = cairo.RadialGradient(W * 0.5, HH * 0.42, 80, W * 0.5, HH * 0.42, W * 0.95)
+        g.add_color_stop_rgba(0, 0.78, 0.40, 0.36, 0.30)      # soft light from the gill slit
+        g.add_color_stop_rgba(1, 0.30, 0.12, 0.12, 0.0)
+        c.set_source(g)
+        c.paint()
+        for _ in range(40):    # damp tissue mottling
+            ellipse(c, r.uniform(0, W), r.uniform(0, HH), r.uniform(60, 200), r.uniform(30, 110), r.uniform(0, 3))
+            c.set_source_rgba(0.62, 0.26, 0.26, 0.05)
+            c.fill()
+        return s
+
+    return _cached(("gill_chamber", seed), build)
+
+
+def mouth_inside(seed=13):
+    """Inside Mango's mouth, looking out: dark palate above, the tongue floor below, and a pale rim of
+    daylight where the jaws open at the far end."""
+    def build():
+        s, c = new_surface(W, HH)
+        r = rng(seed)
+        _grad(c, 0, HH, [(0, "#3a1a18"), (0.34, "#5a2a26"), (0.58, "#7a4038"), (1, "#4a221e")])
+        c.paint()
+        g = cairo.RadialGradient(W * 0.5, HH * 0.46, 40, W * 0.5, HH * 0.46, W * 0.8)
+        g.add_color_stop_rgba(0, 1.0, 0.86, 0.68, 0.34)       # daylight coming in through the gape
+        g.add_color_stop_rgba(1, 0.4, 0.14, 0.12, 0.0)
+        c.set_source(g)
+        c.paint()
+        # the palate arching overhead
+        c.move_to(0, 0)
+        c.line_to(W, 0)
+        c.line_to(W, 470)
+        c.curve_to(760, 640, 320, 640, 0, 470)
+        c.close_path()
+        _grad(c, 0, 620, [(0, "#24100e"), (1, "#7e3a30")])
+        c.fill()
+        c.move_to(0, 470)                                    # lit edge along the palate
+        c.curve_to(320, 640, 760, 640, W, 470)
+        c.set_source_rgba(1.0, 0.72, 0.58, 0.30)
+        c.set_line_width(9)
+        c.stroke()
+        # the floor of the mouth
+        c.move_to(0, HH)
+        c.line_to(W, HH)
+        c.line_to(W, 1420)
+        c.curve_to(740, 1300, 340, 1300, 0, 1420)
+        c.close_path()
+        _grad(c, 1280, HH, [(0, "#a05c4c"), (1, "#361815")])
+        c.fill()
+        c.move_to(0, 1420)                                   # lit edge along the floor
+        c.curve_to(340, 1300, 740, 1300, W, 1420)
+        c.set_source_rgba(1.0, 0.76, 0.62, 0.34)
+        c.set_line_width(9)
+        c.stroke()
+        for _ in range(34):    # wet mottling
+            ellipse(c, r.uniform(0, W), r.uniform(0, HH), r.uniform(50, 180), r.uniform(26, 90), r.uniform(0, 3))
+            c.set_source_rgba(0.95, 0.60, 0.48, 0.045)
+            c.fill()
+        return s
+
+    return _cached(("mouth_inside", seed), build)

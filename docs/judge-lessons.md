@@ -56,6 +56,19 @@ probably become an engine default or a checklist item.
 - **Long narrations go to the owner in batches** (`engine.preview ... --batches`), one per section, with a
   timestamped line list. Nobody can review six minutes in one pass.
 
+## Audio (engine defaults and checks)
+- **`mix.mixdown` padded the ducking curve with zeros.** The music is multiplied by a curve derived from
+  the voice; `fit()` pads with 0.0, so any stretch where the picture outlasts the narration — i.e. every
+  end card — had its music multiplied by zero. e002 shipped 2.0 s of *absolute digital silence* under its
+  end card before this was found. Now padded with 1.0 (engine fix, e002 judge pass 2).
+- **Measure true peak and sample peak, not just LUFS.** e002 passed at −14.0 LUFS while carrying a
+  **+1.97 dBFS** clip from one sound cue stacking on the voice. Loudness normalisation does not remove it.
+  Decode to f32 and assert `max|x| <= 1.0` and peak ≤ −1.5 dBFS.
+- **Check for silence explicitly.** Decode and assert no window ≥ 0.75 s has RMS < −60 dB. A silent tail
+  under a still end card is the Shorts loop point.
+- **One loud cue can clip the whole mix.** Keep SFX gains low where they land on a stressed word under the
+  voice; e002's `click` at 0.13 had to come down to 0.07.
+
 ## Facts against what viewers will check
 - **Viewers check Wikipedia, so facts must survive it** (owner, l001: Wikipedia dates the Black Death 1346–1353; we
   said "1347 to 1351" from peer-reviewed sources). Where reliable sources disagree, write what is true under all of
@@ -73,6 +86,28 @@ probably become an engine default or a checklist item.
 - **Tiny key actions need a close-up.** A 25 px swallow reads as nothing on a phone. Zoom in or exaggerate
   (e001 pass 2).
 
+## Drawing bugs that only show at some parameter values
+*(found in e002's own storyboard pass, before the judge — the same class of error will recur)*
+- **Never size an interior shape for the extreme pose and rely on another shape to cover the excess.**
+  Mango's mouth cavity was drawn deep enough to sit behind a fully-dropped jaw, so at every smaller gape
+  the uncovered part hung outside her head as a dark smear (e002). It read as a shadow, and two rounds of
+  hunting `st.shadow` went nowhere. Build the shape **from** the live parameter instead — the cavity is now
+  the wedge between the two biting edges at the current jaw angle, so it cannot leak at any value.
+- **Paint occlusion before the occupant, never after.** The throat vignette inside Mango's mouth was painted
+  after the `inside()` callback, so it dimmed the parasite in the one shot the whole episode is built around
+  (e002). Anything that darkens a cavity goes down first.
+- **A character scaled to fill its container reads as texture, not an animal.** Roly at full gape width
+  became a striped wall with eyes at the bottom (e002). Leave margin on all four sides so the silhouette
+  still reads.
+- **Ground shadows need ground.** `st.shadow` under a swimming fish is a grey smudge that never connects
+  (owner, e002). Characters in open water or in flight get no contact shadow; characters resting on a
+  surface do.
+- **A head drawn as a separate outlined shape reads as a mask.** Roly's cephalon is immersed in her first
+  body segment, so the head-on view is one continuous silhouette with a suture line, not a face plate stuck
+  on the front (e002). Check what is anatomically continuous before splitting a drawing into parts.
+- **Foreshorten a body seen end-on.** Drawn at its true length, a head-on isopod is a tall cone; it needs a
+  `tilt` that says how far above it the camera sits (e002).
+
 ## Animation & polish
 - **The climax needs real animation:** anticipation (crouch), action (leg kick, stretch), an eased arc, a landing
   into the effect. A pose sliding along a path looks flat **(repeat: e001 pass 1 + pass 2)**.
@@ -87,6 +122,9 @@ probably become an engine default or a checklist item.
   crossfade shows two copies of her (e001 pass 3).
 - **Lighting stays continuous within a sequence.** A night jump means a moonlit underwater shot (e001 pass 2).
   Use `bg.underwater(night=True)` for that, plus `pickle.draw(..., night=True)` for pale antennae.
+- **A dark wash with a caption on it reads as a rendering glitch**, the same way a grey dim does. e002's
+  sex-change beat darkened the frame and wrote "forward, into the mouth" over it; it looked like a fault.
+  Move the character instead and let a normal label carry the words.
 - **Time-passing effects must read as intentional.** A grey dim looks like a glitch. Use a moon, stars and a blue
   cast, or skip the effect (e001 pass 2). Tint with cairo `OPERATOR_MULTIPLY` (blue), not a semi-transparent
   dark paint (which turns grey).
@@ -99,6 +137,45 @@ probably become an engine default or a checklist item.
   glue") and late tags (queued after the drawings). Re-run the lag test and re-read every new label against
   facts.md before re-rendering.
 - **Night scenes:** dark ink outlines vanish on dark blue. Lighten antennae and outlines at night (e001 pass 2).
+
+## Measuring pacing (checks worth running before the judge)
+- **Mask the caption band and the watermark before differencing.** Captions change every ~1.5 s and add
+  roughly +0.5 to +1.0 of mean grey change on their own — enough to lift a frozen scene over a fixed
+  threshold. e002 reported "no static stretches" while nine of twenty scenes were visually near-dead
+  (judge pass 2). Mask y 1300–1500 and the watermark corner, then compare each scene's mean against
+  **this episode's own 75th percentile**, flagging below ~0.45×.
+- **Scan the encoded MP4 for frozen stretches**, don't eyeball the contact sheet. Sample every 0.5 s,
+  downscale to greyscale and take the mean absolute difference between neighbours. e002's first render had
+  a **10.5 s** dead stretch on its diagram card that the contact sheet did not make obvious.
+- **Judge a scene against this episode's own baseline, not an absolute number.** A live e002 scene moves
+  ~5–15 (mean abs grey change per 0.5 s); the diagram card moved ~0.9. The ratio is the signal.
+- **But the measure under-reports camera motion on a flat background.** Zooming uniform parchment changes
+  almost no pixels, so a card can read as frozen to the metric while visibly growing on screen (e002).
+  On a card, confirm by eye across the span; on a painted scene, trust the number.
+- **A diagram card needs a big push-in, not a polite one.** 1.0 → 1.17 over 11 s was invisible; 0.94 → 1.40
+  with a slow pan reads clearly (e002).
+- **Check for black frames too** (mean < 12 and std < 6). It catches both an uncovered timeline and an
+  unwanted fade. **Frame 0 must not be black** — it is the thumbnail, so an episode opts out of the
+  opening fade with `ctx["fade_in"] = 0`.
+- **Assert the timeline has no holes before rendering.** Walk 0 → duration and check every moment has a
+  live scene. e002 once lost a `tl.add()` during an edit and rendered **12 s of black** — the run still
+  exited 0 and still reported −14 LUFS, so nothing downstream caught it.
+- **Clear the stills folder before each run.** Stale frames get swept into the contact sheet and look like
+  a timing bug (e002, cost a debugging cycle).
+
+## Labels and tags (they outlive their qualifiers)
+- **A label must not state what the episode's own `facts.md` forbids.** e002's `facts.md` says in writing
+  that "back on the gills" is safe but "he never left the gills" is not, because males are recorded in the
+  mouth in copula — and the episode then shipped the label **"he never moves in"** (judge pass 2). Before
+  writing a label, re-read the hedge section, not just the fact rows.
+- **A label must not restate the authors' hypothesis as observation.** "Mango had been using her as a
+  tongue" is the hypothesis; the evidence is the abrasion. The narration hedged and the label did not.
+- **Two places in one frame need to be drawn as two places.** The owner wanted the brooding female and the
+  male visible together; drawing both inside the gill chamber read as "they both live on the gills" and
+  contradicted an earlier beat. An inset with its own label fixed it (e002).
+- **If a line asks the viewer to count, the pose must let them.** "Fourteen hooked feet / seven pairs" over
+  a head-on pose where only four legs a side cleared the silhouette (e002). Rear pereopods are the longest,
+  so they should reach past the body even foreshortened.
 
 ## UI / UX
 - **Captions never overlap, not even for one frame** **(repeat: e001 pass 1 + pass 2)**. Now an engine default:

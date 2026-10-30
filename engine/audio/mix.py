@@ -33,7 +33,13 @@ def mixdown(n, music=None, sfx=None, voice=None, music_gain=0.55, sfx_gain=1.0, 
     if music is not None:
         m = fit(music) / (np.abs(music).max() + 1e-9) * music_gain
         if voice is not None:
-            m = m * fit(duck_curve(voice))[:, None]
+            # The duck curve must be padded with 1.0, not 0.0: `fit` pads with zeros, so any stretch
+            # where the picture outlasts the narration (an end card) had its music multiplied by zero.
+            # That is what left e002 with 2.0 s of absolute silence under its end card.
+            d = duck_curve(voice)[:n]
+            if len(d) < n:
+                d = np.pad(d, (0, n - len(d)), constant_values=1.0)
+            m = m * d[:, None]
         out += m
     if sfx is not None:
         out += fit(sfx) * sfx_gain
