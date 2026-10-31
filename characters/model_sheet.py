@@ -8,9 +8,9 @@ import os
 
 import cairo
 
-from engine.core import hexc, set_font, text_center
+from engine.core import Palette, hexc, set_font, text_center
 from engine import style as styles
-from characters import doodle, mango, mochi, noodle, peanut, pickle, pip, pixie, plum, roly
+from characters import biscuit, dilly, doodle, mango, mochi, noodle, peanut, pickle, pip, pixie, plum, poppy, roly
 
 CELL_W, CELL_H = 560, 560
 
@@ -119,6 +119,47 @@ def cell_mango_gills(c, st, t):
     roly.draw(c, st, 250, 300, 0.30, ang=-0.4, phase=t * 2, female=False, grip=1.0)
 
 
+def cell_biscuit(c, st, t):
+    biscuit.draw(c, st, 250, 470, 0.66, eyes=1.0, head=1.0, tail=t * 3, wag=0.8, happy=1.0, tongue=0.6,
+                 breathe=math.sin(t * 2))
+
+
+def cell_biscuit_nap(c, st, t):
+    biscuit.draw_curled(c, st, 280, 470, 0.85, eyes=0.0, breathe=math.sin(t * 2), tail=t, ear=0.3)
+    bx, by = biscuit.to_world(280, 470, 0.85, *biscuit.CURL_SKIN_SPOT)
+    poppy.draw(c, st, bx, by - poppy.FEET_Y * 0.45, 0.45, fly=0.0, probe=1.0, fed=0.6)   # feet on his back
+
+
+def cell_biscuit_xray(c, st, t):
+    def worms(cc):
+        dilly.draw_along(cc, st, dilly.resample(list(reversed(biscuit.ARTERY))[1:4]), 6, face=False)
+    biscuit.draw(c, st, 250, 470, 0.66, eyes=1.0, head=1.0, tail=t * 3, wag=0.4,
+                 xray=lambda cc: biscuit.draw_chest(cc, st, t, worms), xray_alpha=1.0)
+
+
+def cell_poppy(c, st, t):
+    poppy.draw(c, st, 330, 250, 1.35, fly=1.0, phase=t, happy=0.5)
+
+
+def cell_poppy_bite(c, st, t):
+    c.set_source_rgba(*hexc("#dba468"))
+    c.rectangle(0, 470, CELL_W, 100)
+    c.fill()
+    poppy.draw(c, st, 300, 470 - poppy.FEET_Y * 1.35, 1.35, fly=0.0, probe=1.0, fed=0.8, phase=t)
+
+
+def cell_dilly(c, st, t):
+    dilly.draw_along(c, st, dilly.wiggle_points(470, 210, 400, t, amp=26), 22, happy=0.6)
+    dilly.draw_along(c, st, dilly.wiggle_points(90, 420, 300, t + 1, ang=0.0, amp=22), 15, male=True, face=True)
+
+
+def cell_dilly_small(c, st, t):
+    dilly.draw_along(c, st, dilly.wiggle_points(420, 190, 240, t, amp=14), 14, happy=0.5)   # larva close-up
+    dilly.draw_along(c, st, dilly.curl_points(280, 380, 70, t), 12, happy=0.3)             # nestled adult
+    for k in range(4):
+        dilly.draw_microfilaria(c, st, 120 + k * 110, 500 - 20 * (k % 2), 1.6, t + k, ang=0.2 * k, face=True)
+
+
 CELLS = {
     "mochi": [("Mochi", cell_mochi), ("Mochi (napping)", cell_mochi_sleep)],
     "pip": [("Pip", cell_pip), ("Pip (larva)", cell_pip_larva)],
@@ -135,6 +176,10 @@ CELLS = {
               ("Mango head-on: Roly in place, tooth patch", cell_mango_front),
               ("Mango head-on, mouth nearly shut", cell_mango_front_shut),
               ("Mango's gill chamber (Roly as a male)", cell_mango_gills)],
+    "biscuit": [("Biscuit", cell_biscuit), ("Biscuit napping (Poppy biting)", cell_biscuit_nap),
+                ("Biscuit x-ray: lungs, heart, Dilly", cell_biscuit_xray)],
+    "poppy": [("Poppy flying", cell_poppy), ("Poppy biting, fed", cell_poppy_bite)],
+    "dilly": [("Dilly + a male (coiled tail)", cell_dilly), ("Dilly: larva, nestled, babies", cell_dilly_small)],
 }
 
 

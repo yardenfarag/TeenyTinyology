@@ -4,6 +4,8 @@ meadow()       sunny grass field, ground line ~ y 1360
 pond(night)    pond seen from its bank: sky, far trees, water (y 820-1240), near bank ground ~ y 1400
 underwater()   inside a pond: surface at y ~ 430, light rays, plants on the bottom
 parchment()    field-guide paper for diagrams
+skin_section() a dog's skin cut open: fur, dermis, fat (with a vein), muscle   (e003)
+vessel()       inside a blood vessel; blood_cells() streams the cells per frame (e003)
 Animated details (ripples, shimmer, floating motes) are separate functions drawn per frame.
 """
 import math
@@ -434,3 +436,249 @@ def mouth_inside(seed=13):
         return s
 
     return _cached(("mouth_inside", seed), build)
+
+
+# ================================================================ inside a dog (episode 003)
+SKIN_Y = 560          # skin_section(): the skin surface
+FAT_Y = 900           # top of the fat layer
+MUSCLE_Y = 1260       # top of the muscle
+VEIN_Y = 1110         # centre of the vein that runs through the fat
+SKIN_H = HH + 700
+
+
+def skin_section(seed=14):
+    """A dog's skin cut open, seen from the side: warm air and golden fur above the surface (y 560), then the
+    thin outer skin, the pink dermis with hair roots and little capillaries, pale fat cells (with a vein running
+    through them at y ~1110), and red striped muscle from y 1260 down. Extra tall (SKIN_H) so a shot can pan deep."""
+    def build():
+        s, c = new_surface(W, SKIN_H)
+        r = rng(seed)
+        _grad(c, 0, SKIN_Y, [(0, "#fbecd2"), (1, "#f2d6ae")])
+        c.rectangle(0, 0, W, SKIN_Y + 20)
+        c.fill()
+        # muscle
+        _grad(c, MUSCLE_Y, SKIN_H, [(0, "#d77a6e"), (1, "#a8463f")])
+        c.rectangle(0, MUSCLE_Y, W, SKIN_H - MUSCLE_Y)
+        c.fill()
+        for k in range(int((SKIN_H - MUSCLE_Y) / 26)):           # long fibres with fine stripes
+            y = MUSCLE_Y + 14 + k * 26
+            c.move_to(-10, y)
+            for x in range(0, W + 40, 40):
+                c.line_to(x, y + 5 * math.sin(x / 130 + k * 0.7))
+            c.set_source_rgba(0.55, 0.18, 0.16, 0.30)
+            c.set_line_width(3)
+            c.stroke()
+        for _ in range(500):
+            x, y = r.uniform(0, W), r.uniform(MUSCLE_Y, SKIN_H)
+            c.move_to(x, y - 5)
+            c.line_to(x, y + 5)
+            c.set_source_rgba(1, 0.85, 0.8, 0.12)
+            c.set_line_width(2)
+            c.stroke()
+        # fat: pale round cells
+        _grad(c, FAT_Y, MUSCLE_Y, [(0, "#f8e8b8"), (1, "#f1d898")])
+        c.rectangle(0, FAT_Y, W, MUSCLE_Y - FAT_Y)
+        c.fill()
+        for _ in range(170):
+            x, y, rr = r.uniform(-20, W + 20), r.uniform(FAT_Y + 10, MUSCLE_Y - 10), r.uniform(26, 48)
+            c.arc(x, y, rr, 0, TAU)
+            c.set_source_rgba(1, 0.97, 0.84, 0.55)
+            c.fill_preserve()
+            c.set_source_rgba(0.80, 0.66, 0.40, 0.35)
+            c.set_line_width(2.4)
+            c.stroke()
+        c.move_to(0, MUSCLE_Y)                                # soft wavy border fat / muscle
+        for x in range(0, W + 30, 30):
+            c.line_to(x, MUSCLE_Y + 8 * math.sin(x / 90))
+        c.set_source_rgba(0.75, 0.40, 0.32, 0.6)
+        c.set_line_width(5)
+        c.stroke()
+        # the vein through the fat
+        for w_, col in ((70, "#8a3550"), (54, "#b2506a"), (16, "#d8889c")):
+            c.move_to(-20, VEIN_Y)
+            c.curve_to(300, VEIN_Y - 40, 700, VEIN_Y + 40, W + 20, VEIN_Y - 10)
+            c.set_source_rgba(*hexc(col))
+            c.set_line_width(w_)
+            c.stroke()
+        # dermis
+        _grad(c, SKIN_Y, FAT_Y, [(0, "#f3b8ac"), (1, "#eba494")])
+        c.rectangle(0, SKIN_Y, W, FAT_Y - SKIN_Y)
+        c.fill()
+        for _ in range(60):                                   # collagen wisps
+            x, y = r.uniform(0, W), r.uniform(SKIN_Y + 60, FAT_Y - 20)
+            c.move_to(x, y)
+            c.curve_to(x + 30, y - 12, x + 60, y + 12, x + 90, y)
+            c.set_source_rgba(1, 0.9, 0.86, 0.35)
+            c.set_line_width(2.5)
+            c.stroke()
+        for _ in range(9):                                    # capillary loops
+            x = r.uniform(40, W - 40)
+            y = r.uniform(SKIN_Y + 90, FAT_Y - 60)
+            c.move_to(x - 30, y + 40)
+            c.curve_to(x - 30, y - 30, x + 30, y - 30, x + 30, y + 40)
+            c.set_source_rgba(*hexc("#c8505a", 0.55))
+            c.set_line_width(5)
+            c.stroke()
+        c.move_to(0, FAT_Y)
+        for x in range(0, W + 30, 30):
+            c.line_to(x, FAT_Y + 7 * math.sin(x / 70 + 1))
+        c.set_source_rgba(0.85, 0.55, 0.45, 0.6)
+        c.set_line_width(4)
+        c.stroke()
+        # outer skin: a thin pale band with a soft lit edge
+        c.rectangle(0, SKIN_Y, W, 36)
+        c.set_source_rgba(*hexc("#f8d4c6"))
+        c.fill()
+        c.move_to(0, SKIN_Y)
+        for x in range(0, W + 20, 20):
+            c.line_to(x, SKIN_Y + 3 * math.sin(x / 40))
+        c.set_source_rgba(0.75, 0.48, 0.40, 0.8)
+        c.set_line_width(4)
+        c.stroke()
+        # hairs: roots in the dermis, shafts rising into the air
+        c.set_line_cap(cairo.LINE_CAP_ROUND)
+        for _ in range(16):
+            x = r.uniform(20, W - 20)
+            root = r.uniform(SKIN_Y + 120, SKIN_Y + 220)
+            lean = r.uniform(-0.5, 0.5)
+            c.move_to(x - 6, root)
+            c.line_to(x, SKIN_Y)
+            c.curve_to(x + lean * 60, SKIN_Y - 200, x + lean * 160, SKIN_Y - 360, x + lean * 260, SKIN_Y - 520)
+            c.set_source_rgba(*hexc("#c98a48", 0.9))
+            c.set_line_width(r.uniform(10, 15))
+            c.stroke()
+            ellipse(c, x - 6, root, 11, 15)
+            c.set_source_rgba(*hexc("#a8683a", 0.8))
+            c.fill()
+        return s
+
+    return _cached(("skin_section", seed), build)
+
+
+CLOSE_Y = 1050        # skin_closeup(): the skin surface
+
+
+def skin_closeup(seed=17):
+    """The bite, very close: warm air above, the skin surface at y 1050 seen cut open, pink dermis below.
+    Only a few soft, out-of-focus hairs, all near the edges, so the middle of the frame stays clear for the
+    mouthparts, the drop and the larva."""
+    def build():
+        s, c = new_surface(W, HH)
+        r = rng(seed)
+        _grad(c, 0, CLOSE_Y, [(0, "#fcf0da"), (1, "#f4dcb6")])
+        c.paint()
+        c.set_line_cap(cairo.LINE_CAP_ROUND)
+        for x, lean, w_ in ((70, 0.25, 34), (190, -0.15, 26), (900, 0.2, 30), (1010, -0.1, 38)):
+            c.move_to(x, CLOSE_Y + 4)
+            c.curve_to(x + lean * 120, CLOSE_Y - 300, x + lean * 260, CLOSE_Y - 620, x + lean * 380, -40)
+            c.set_source_rgba(*hexc("#d29a5a", 0.55))
+            c.set_line_width(w_)
+            c.stroke()
+        _grad(c, CLOSE_Y, HH, [(0, "#f2b6a8"), (0.6, "#eba596"), (1, "#e2967f")])
+        c.rectangle(0, CLOSE_Y, W, HH - CLOSE_Y)
+        c.fill()
+        for _ in range(70):                                   # collagen wisps
+            x, y = r.uniform(-40, W), r.uniform(CLOSE_Y + 90, HH - 20)
+            c.move_to(x, y)
+            c.curve_to(x + 50, y - 18, x + 100, y + 18, x + 150, y)
+            c.set_source_rgba(1, 0.9, 0.86, 0.3)
+            c.set_line_width(3)
+            c.stroke()
+        for x in (180, 860):                                  # two capillary loops, away from the bite
+            c.move_to(x - 50, CLOSE_Y + 420)
+            c.curve_to(x - 50, CLOSE_Y + 280, x + 50, CLOSE_Y + 280, x + 50, CLOSE_Y + 420)
+            c.set_source_rgba(*hexc("#c8505a", 0.5))
+            c.set_line_width(9)
+            c.stroke()
+        c.rectangle(0, CLOSE_Y, W, 54)                        # outer skin band
+        c.set_source_rgba(*hexc("#f8d6c8"))
+        c.fill()
+        c.move_to(0, CLOSE_Y)
+        for x in range(0, W + 20, 20):
+            c.line_to(x, CLOSE_Y + 3 * math.sin(x / 50))
+        c.set_source_rgba(0.72, 0.46, 0.38, 0.9)
+        c.set_line_width(5)
+        c.stroke()
+        c.move_to(0, CLOSE_Y + 54)
+        for x in range(0, W + 20, 20):
+            c.line_to(x, CLOSE_Y + 54 + 4 * math.sin(x / 70 + 1))
+        c.set_source_rgba(0.85, 0.55, 0.48, 0.5)
+        c.set_line_width(3)
+        c.stroke()
+        return s
+
+    return _cached(("skin_closeup", seed), build)
+
+
+def vessel(seed=15, tint="#f2b6a6"):
+    """Inside a blood vessel, flowing left to right: soft tissue walls above (to y 520) and below (from y 1500),
+    warm plasma in between. The blood cells are drawn per frame by blood_cells()."""
+    def build():
+        s, c = new_surface(W, HH)
+        r = rng(seed)
+        _grad(c, 0, HH, [(0, "#b8505a"), (0.5, tint), (1, "#a8444e")])
+        c.paint()
+        g = cairo.RadialGradient(W / 2, 1010, 80, W / 2, 1010, 760)
+        g.add_color_stop_rgba(0, 1, 0.93, 0.86, 0.55)
+        g.add_color_stop_rgba(1, 1, 0.93, 0.86, 0)
+        c.set_source(g)
+        c.paint()
+        for top, y0, y1 in ((True, 0, 520), (False, 1500, HH)):
+            edge = y1 if top else y0
+
+            def wall_edge():
+                for x in range(0, W + 30, 30):
+                    c.line_to(x, edge + 14 * math.sin(x / 110 + (0 if top else 2)))
+
+            c.move_to(0, edge)
+            wall_edge()
+            c.line_to(W, y0 if top else HH)
+            c.line_to(0, y0 if top else HH)
+            c.close_path()
+            _grad(c, y0, y1, [(0, "#9a3a46"), (1, "#c4646c")] if top else [(0, "#c4646c"), (1, "#8e3440")])
+            c.fill()
+            c.move_to(0, edge)                                # lit inner edge of the wall
+            wall_edge()
+            c.set_source_rgba(1, 0.82, 0.78, 0.45)
+            c.set_line_width(8)
+            c.stroke()
+        for _ in range(40):
+            y = r.uniform(60, 470) if r.random() < 0.5 else r.uniform(1540, HH - 40)
+            ellipse(c, r.uniform(0, W), y, r.uniform(40, 120), r.uniform(14, 40), r.uniform(-0.3, 0.3))
+            c.set_source_rgba(0.55, 0.16, 0.2, 0.10)
+            c.fill()
+        return s
+
+    return _cached(("vessel", seed, tint), build)
+
+
+def blood_cells(c, t, n=34, y0=560, y1=1460, speed=180.0, seed=16, a=1.0, rad=(26, 40)):
+    """Red blood cells drifting left to right through vessel(): soft discs with a pale dimple, slowly tumbling.
+    `rad` sets their size for the shot's scale: a red cell is about as wide as a baby worm (5-7 um), and a
+    speck next to an adult (1 mm thick) — e003 judge pass 1 caught 40 px cells beside a foot-long worm."""
+    r = rng(seed)
+    for i in range(n):
+        x0, y, sp, rad_ = r.uniform(0, W + 200), r.uniform(y0, y1), r.uniform(0.7, 1.3), r.uniform(*rad)
+        x = (x0 + speed * sp * t) % (W + 200) - 100
+        yy = y + 18 * math.sin(t * 0.9 + i)
+        tumble = 0.35 + 0.65 * abs(math.cos(t * 0.8 * sp + i))
+        ellipse(c, x, yy, rad_ * tumble, rad_, 0.2 * math.sin(i))
+        c.set_source_rgba(0.80, 0.20, 0.24, 0.92 * a)
+        c.fill()
+        ellipse(c, x, yy, rad_ * tumble * 0.5, rad_ * 0.5, 0.2 * math.sin(i))
+        c.set_source_rgba(0.93, 0.45, 0.45, 0.8 * a)
+        c.fill()
+
+
+def sunrays(c, t, x=820, y=260, n=9, length=900, a=0.10):
+    """Slowly turning soft rays from the meadow's sun."""
+    for k in range(n):
+        ang = k * TAU / n + t * 0.05
+        c.move_to(x, y)
+        c.arc(x, y, length, ang - 0.07, ang + 0.07)
+        c.close_path()
+        g = cairo.RadialGradient(x, y, 40, x, y, length)
+        g.add_color_stop_rgba(0, 1, 0.96, 0.8, a)
+        g.add_color_stop_rgba(1, 1, 0.96, 0.8, 0)
+        c.set_source(g)
+        c.fill()

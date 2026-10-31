@@ -39,6 +39,9 @@ in `lessons/`, `engine/board.py`), has its own rules: read `docs/lessons.md` bef
 | **Doodle** | horsehair worm (male) | long glossy dark-brown string, pale head tip, forked tail | quiet, determined traveller | `characters/doodle.py` |
 | **Roly** | tongue-eating isopod (*Cymothoa exigua*) | tan vaulted shell, 7 pairs of hooked legs, two pairs of widely separated antennae, dark eyes | calm, settled, unhurried — finds one place and stays | `characters/roly.py` |
 | **Mango** | spotted rose snapper (*Lutjanus guttatus*) | rose flanks with rows of silvery-blue dots, yellow belly, one dark blotch high on the back | placid, completely unbothered; keeps eating | `characters/mango.py` |
+| **Biscuit** | dog (male) | honey-tan fur (also around the eyes), chocolate floppy ears, cream muzzle and belly, toed paws, teal collar with a gold tag; lying pose + curled-up nap (`draw_curled`) + chest x-ray (`draw_chest`: lung, heart, pulmonary artery) | happy, sun-loving, a bit lazy | `characters/biscuit.py` |
+| **Poppy** | mosquito (female — only females bite) | slate-grey with cream bands, banded legs, glassy wings, long proboscis, thin lightly-haired antennae; belly swells red when fed | busy, businesslike | `characters/poppy.py` |
+| **Dilly** | dog heartworm (*Dirofilaria immitis*, female; + larva, microfilariae) | smooth pearly white-pink thread, no segments, blunt head with a tiny face, blunt tail (the male's is a corkscrew) | curious, patient traveller | `characters/dilly.py` |
 
 New characters get a short, cute name in the same spirit (Biscuit, Toffee, Bean, Poppy, Button, Kiwi…) and are
 added with the `new-character` skill. Every character draws through a `Style` (`engine/style.py`) so it works in all

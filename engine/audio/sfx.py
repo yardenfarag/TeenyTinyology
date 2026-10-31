@@ -87,6 +87,24 @@ def buzz():
     return out
 
 
+def whine(d=1.2, f0=640, f1=520, shape="flyby", vib=0.018, bright=1.0, soft=0.45):
+    """A mosquito's wingbeat whine (females beat their wings ~400-700 times a second): a high tone with soft
+    harmonics, a slight wobble and flutter. shape "flyby" swells and fades with a falling pitch (passing by),
+    "hover" holds steady with short soft edges. Much gentler than buzz(), which is a cartoon buzzer."""
+    t = tv(d)
+    f = (f0 + (f1 - f0) * t / d) * (1 + vib * np.sin(2 * np.pi * 6.3 * t) + 0.5 * vib * np.sin(2 * np.pi * 2.1 * t + 1))
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    s = (np.sin(ph) + 0.42 * bright * np.sin(2 * ph + 0.4) + 0.18 * bright * np.sin(3 * ph + 1.1)
+         + 0.07 * bright * np.sin(4 * ph + 2.0))
+    s *= 1 + 0.12 * np.sin(2 * np.pi * 11 * t)                 # wing flutter
+    if shape == "flyby":
+        env = np.sin(np.pi * t / d) ** 1.6
+    else:
+        env = np.clip(t / 0.18, 0, 1) * np.clip((d - t) / 0.25, 0, 1)
+    s *= env
+    return soft * s / (np.abs(s).max() + 1e-9)
+
+
 def click():
     t = tv(0.03)
     return np.sin(2 * np.pi * 3200 * t) * np.exp(-t * 200)

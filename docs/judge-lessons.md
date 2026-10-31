@@ -17,12 +17,23 @@ probably become an engine default or a checklist item.
   it is *Paragordius varius*). The judge missed this, so check it explicitly.
 - **Hedge open science honestly.** "Scientists think so… but how is still a mystery" is fine. Never state a
   hypothesis as settled (e001 pass 1: an overstated claim had to be reworded).
-- **Every narrated beat needs a visual payoff** **(repeat: e001 pass 2, l001 pass 1)**. If the narrator says
+- **Every narrated beat needs a visual payoff** **(repeat ×4: e001 pass 2, l001 pass 1, e003 pass 1 twice)**.
+  e003: "the heart is just a stop" played over nothing (Dilly was drawn *under* the heart), and "Poppy doesn't
+  inject her" had no Dilly on screen at all. Root cause both times: drawing order and late entrances, not the
+  idea. Engine fix: `biscuit.draw_chest` now draws the worm callback last. Check: for each line, name the thing
+  the viewer should see move on its key word, then scrub to that word. If the narrator says
   "until she finds the water", start her far away from the water (e001). On a whiteboard: when the narrator states a
   rule ("split in two directions, and you get…"), draw the rule, not just its result (l001: "1 way / 2 ways / 3 ways"
   tags; a dividing cell). Before rendering, list every line whose time on screen adds nothing new to the board.
 - **Closing summaries are claims too.** "All of them, single cells" was false for one item in its own list
   (*Streptomyces* threads, l001 pass 1). Re-check every word of the recap against facts.md.
+- **Hooks and closing lines must survive the host list on Wikipedia** **(repeat of the l001 "absolute claim" lesson:
+  e003 pass 1)**. "This worm can't grow up without a dog" was the owner-approved hook, and false: coyotes, foxes and
+  wolves are normal hosts, cats occasional. The same overstatement sat in the thumbnail label and the closing line,
+  and the episode's own facts.md already said "dogs are her main home". Re-voicing cost two lines and one more
+  owner approval. **Checklist item before the narration preview:** read every can't / only / always / never /
+  needs in the hook, the thumbnail text and the closing line against the hedge column of facts.md. Describe the
+  story's own animal ("grows up inside two animals: a dog… and a mosquito") instead of a rule for the species.
 - **An absolute opening claim and a later exception must meet on screen** (l001 pass 3). "Every bacterium is a
   single cell" plus a later "threads of many cells" label reads as a contradiction unless the label says
   "exception". Better: soften the opening ("almost every").
@@ -82,6 +93,12 @@ probably become an engine default or a checklist item.
   underwater, not out of the back (e001 pass 1).
 - **Keep scale consistent across scenes.** If a diagram says "several times longer", every later shot must show
   that length (e001 pass 2). Larvae are tiny; draw them at true relative scale (e001 pass 1).
+- **Background props are rulers too** **(repeat of true relative scale: e003 pass 1)**. Red blood cells drawn at
+  one size in every blood shot made the babies 1/7 of their mother's length and as thick as her, made the foot-long
+  adult thinner than one cell, and made the young adult shorter than the babies. Set the prop's size per shot from
+  the subject's real size: a red cell is about as wide as a microfilaria and a speck next to an adult worm.
+  Engine default now: `bg.blood_cells(rad=...)`. Keep the cute close-ups inside a lens, where a new scale is
+  obvious. And when the props shrink, the shot loses motion: give it a camera move (e003, motion scan).
 - **Show consequences on the body.** After a parasite leaves, the host looks emptier (e001 pass 2).
 - **Tiny key actions need a close-up.** A 25 px swallow reads as nothing on a phone. Zoom in or exaggerate
   (e001 pass 2).
@@ -93,6 +110,8 @@ probably become an engine default or a checklist item.
   the uncovered part hung outside her head as a dark smear (e002). It read as a shadow, and two rounds of
   hunting `st.shadow` went nowhere. Build the shape **from** the live parameter instead — the cavity is now
   the wedge between the two biting edges at the current jaw angle, so it cannot leak at any value.
+- **Never stride an outline polyline.** Dilly's ink line used every 5th point, so it cut straight chords across
+  tight bends and the long worm looked faceted (e003 pass 1). Draw outlines through every point.
 - **Paint occlusion before the occupant, never after.** The throat vignette inside Mango's mouth was painted
   after the `inside()` callback, so it dimmed the parasite in the one shot the whole episode is built around
   (e002). Anything that darkens a cavity goes down first.
@@ -133,6 +152,14 @@ probably become an engine default or a checklist item.
   board: light up each region as it is named, underline, draw the teaser (l001). **Checklist item:** before
   rendering, list the stretches where nothing new appears on the board (board item starts, camera moves, erasers)
   and fix every one over 5 s at the start or end of a lesson.
+- **A fix is checked like new work** **(repeat: e003 pass 2)**. e003 moved two labels away from the badge but kept
+  their 0.8 s windows, and a new "heart" tag covered the very worm the fix was meant to show. After every fix pass,
+  re-time what moved and re-scrub the shot it lives in.
+- **A label beside a caption needs about 2 s** (e003 pass 2: three labels read for 0.8–1 s). Measure on the MP4.
+- **Draw labels after `c.restore()`** (e003 pass 2). Inside a camera push they grow, drift and can leave the safe zone.
+- **A second character on a travelling wave sweeps across the hero** (e003 pass 2: the male covered Dilly's face at
+  the babies beat). Scan the whole window, not one still; draw the newcomer behind the hero. And know which end of a
+  path is the head: `along(path, d, L)` puts the head at distance d, i.e. the far end when a worm "grows" along it.
 - **A fix is checked like new work** (l001 pass 2). Pass-1 fixes brought in a new overstated label ("strongest
   glue") and late tags (queued after the drawings). Re-run the lag test and re-read every new label against
   facts.md before re-rendering.
@@ -173,6 +200,13 @@ probably become an engine default or a checklist item.
 - **Two places in one frame need to be drawn as two places.** The owner wanted the brooding female and the
   male visible together; drawing both inside the gill chamber read as "they both live on the gills" and
   contradicted an earlier beat. An inset with its own label fixed it (e002).
+- **On-screen counters are claims, and they must not tick through fast transport** (e003 pass 1). A "day 56 → 70"
+  counter running while she rode the bloodstream implied a two-week float, and "day 70" at the heart sat outside
+  Wikipedia's 75–120 days. Freeze counters when the action is quick, and show the hedged range ("about 3 months
+  after the bite") on arrival.
+- **Top labels collide with the watermark** (e003 pass 1: three labels within 2–8 px of the badge). Labels centred
+  at x 480 that are wider than ~600 px reach the badge's x range (60–164). Keep top labels at rendered y ≥ 370, or
+  centre wide ones at x 540.
 - **If a line asks the viewer to count, the pose must let them.** "Fourteen hooked feet / seven pairs" over
   a head-on pose where only four legs a side cleared the silhouette (e002). Rear pereopods are the longest,
   so they should reach past the body even foreshortened.
@@ -190,4 +224,11 @@ probably become an engine default or a checklist item.
   If you force a break with `|`, check the timing of the piece it creates.
 - **Read the full caption list before the look frames.** Print it with `narrate(...)` and check every line.
 - **Safe zones:** content in x 60–900, y 200–1460; captions centred at y=1400 (e001 pass 1).
-- **End card:** arrows must not touch labels, and the card stays fully readable for at least 4 s (e001 pass 2).
+- **End card:** arrows must not touch labels, and the card stays fully readable for at least 4 s (e001 pass 2)
+  **(repeat: e003 pass 1, 2.5 s)**. When the card follows the last line, `DUR = end + ~4.9` and bring the plate
+  in within 0.7 s of the card.
+- **A camera must never show past its background** (e003, own QA). A `Cam` whose focus point is not its screen
+  point at z ≈ 1 slid the meadow sideways and showed black strips. e003's `framed()` clamps the focus so the
+  frame stays on the painted background; scan every 0.25 s for black edge columns before rendering.
+- **Owner on sounds (e003):** the cartoon `buzz` (square wave) is not a mosquito. Use `sfx.whine` (wingbeat tone,
+  fly-by). `purr` belongs to cats (Mochi); don't put it on a dog. Footsteps don't go on legless animals.
