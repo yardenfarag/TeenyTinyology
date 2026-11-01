@@ -83,8 +83,7 @@ def build(style_name):
         (q["launch"].word("climbs"), 1.25, KX + 60, KY - 20),
         (LAND_T, 1.0, 540, 1120),                                 # the rock, all of it
         (q["cloud"].end, 1.0, 540, 1120),
-        (q["turn"].start + 1.0, 1.15, 680, 1040),                 # slow push on Kiwi on the rock
-        (q["life"].end + 0.5, 1.32, 720, 990),
+        (q["life"].end + 0.5, 1.0, 540, 1120),                    # hold: no slow push (owner: it ticked)
     ]
 
     def cam_at(t):
@@ -577,10 +576,6 @@ def build(style_name):
         c.save()
         c.translate(0, ctx.get("lift", 170))
         paint(c, bg.parchment())
-        z = lerp(0.94, 1.12, ease(prog(t, t0, DUR)))
-        c.translate(540, 900)
-        c.scale(z, z)
-        c.translate(-540, -900)
         ta = ease(prog(t, t0, t0 + 0.4))
         kiwi.draw(c, st, 540, 440, 0.78, phase=t, blink=blinking(t, 0.6), happy=0.8, claw=0.72, pinch=0.3,
                   sac=lambda cc: sac_under(cc, t, eggs=1.0, happy=0.7), alpha=ta)
