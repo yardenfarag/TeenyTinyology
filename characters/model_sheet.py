@@ -10,7 +10,8 @@ import cairo
 
 from engine.core import Palette, hexc, set_font, text_center
 from engine import style as styles
-from characters import biscuit, dilly, doodle, mango, mochi, noodle, peanut, pickle, pip, pixie, plum, poppy, roly
+from characters import (biscuit, dilly, doodle, kiwi, mango, mochi, noodle, peanut, pickle, pip, pixie, plum, poppy,
+                        roly, toffee)
 
 CELL_W, CELL_H = 560, 560
 
@@ -160,6 +161,39 @@ def cell_dilly_small(c, st, t):
         dilly.draw_microfilaria(c, st, 120 + k * 110, 500 - 20 * (k % 2), 1.6, t + k, ang=0.2 * k, face=True)
 
 
+def cell_kiwi(c, st, t):
+    kiwi.draw(c, st, 280, 300, 0.95, phase=t * 2, happy=0.5, pinch=0.4, look=(0.2, 0.1))
+
+
+def cell_kiwi_guard(c, st, t):
+    def sac(cc):
+        toffee.draw_sac(cc, st, 0, 112, 0.62, eggs=1.0, phase=t * 2, happy=0.4, stalk=False)
+    kiwi.draw(c, st, 280, 290, 0.95, phase=t * 2, happy=0.8, raise_=0.8, pinch=0.6, sac=sac, claw=0.8)
+
+
+def cell_kiwi_xray(c, st, t):
+    def roots(cc):
+        toffee.draw_roots(cc, st, 0, 0, 1.0, grow=1.0, seed=1, arms=6, length=100)
+    kiwi.draw(c, st, 280, 300, 0.95, phase=t * 2, happy=0.2, xray=roots, xray_alpha=0.9)
+
+
+def cell_kiwi_under(c, st, t):
+    kiwi.draw_underside(c, st, 150, 300, 0.56, flap=0.0, phase=t * 2)
+    def sac(cc):
+        toffee.draw_sac(cc, st, 0, 30, 0.85, eggs=0.7, phase=t * 2, stalk=False, happy=0.3)
+    kiwi.draw_underside(c, st, 410, 300, 0.56, flap=1.0, lift=0.7, under=sac, phase=t * 2 + 1)
+
+
+def cell_toffee(c, st, t):
+    toffee.draw_larva(c, st, 150, 150, 2.4, phase=t, happy=0.5)
+    toffee.draw_male(c, st, 150, 250, 2.4, phase=t + 1)
+    toffee.draw_kentrogon(c, st, 400, 160, 2.2, inject=0.6)
+    toffee.draw_sac(c, st, 180, 420, 1.1, eggs=0.8, phase=t * 2, happy=0.5, males=1.0)
+    toffee.draw_roots(c, st, 420, 400, 0.9, grow=1.0, seed=2, arms=5, length=70)
+    for k in range(4):
+        toffee.draw_nauplius(c, st, 430 + 25 * (k % 2), 250 + 22 * k, 1.3, phase=t + k, ang=-0.4 * k)
+
+
 CELLS = {
     "mochi": [("Mochi", cell_mochi), ("Mochi (napping)", cell_mochi_sleep)],
     "pip": [("Pip", cell_pip), ("Pip (larva)", cell_pip_larva)],
@@ -180,6 +214,10 @@ CELLS = {
                 ("Biscuit x-ray: lungs, heart, Dilly", cell_biscuit_xray)],
     "poppy": [("Poppy flying", cell_poppy), ("Poppy biting, fed", cell_poppy_bite)],
     "dilly": [("Dilly + a male (coiled tail)", cell_dilly), ("Dilly: larva, nestled, babies", cell_dilly_small)],
+    "kiwi": [("Kiwi", cell_kiwi), ("Kiwi guards the sac", cell_kiwi_guard),
+             ("Kiwi x-ray: Toffee's roots", cell_kiwi_xray),
+             ("Belly: male flap · wide flap + sac", cell_kiwi_under)],
+    "toffee": [("Toffee: larva, male, needle, sac, roots", cell_toffee)],
 }
 
 
