@@ -1,4 +1,4 @@
-# Episode 004 — Kiwi & Toffee (the crab-hacker barnacle)
+# Episode 004 — Kiwi & Toffee (a parasitic barnacle)
 
 *Sacculina carcini*, a parasitic barnacle (Rhizocephala, "root-heads"); its host the shore crab / European green crab
 *Carcinus maenas*. Owner's idea (2026-11-01, pasted): a parasite that makes a crab raise the parasite's babies, even
@@ -10,7 +10,7 @@ males grow broad female-like abdomens and perform maternal care. It redirects th
 ## Cast (Kiwi approved 2026-11-01; "Button" rejected by the owner, renamed Toffee)
 - **Kiwi** — shore crab / green crab (*Carcinus maenas*), **male**. New. Green shell with five teeth each side,
   yellow-green underside, orange claw tips, narrow "lighthouse" tail flap that broadens over the episode.
-- **Toffee** — crab-hacker barnacle (*Sacculina carcini*), **female**: cypris larva → kentrogon → interna (roots)
+- **Toffee** — parasitic barnacle (*Sacculina carcini*), **female**: cypris larva → kentrogon → interna (roots)
   → externa (the "toffee" under Kiwi's tail). New. Cream-brown oval sac with a tiny face near the mantle opening.
   Her tiny dwarf males appear but are not named.
 
@@ -38,7 +38,7 @@ Teaser + first line: **"This crab is guarding a clutch of eggs. And they aren't 
 9. **The turn / cycle.** She doesn't just take his food. She takes his whole job of making babies, and hands him
    hers. The sac refills; more broods. The larvae drift off to find the next crab.
    Final line (owner, 2026-11-01): "For the rest of his life, Toffee is part of him."
-   End card: *Sacculina carcini* · the crab-hacker barnacle · *Carcinus maenas*, logo plate.
+   End card: *Sacculina carcini* · a parasitic barnacle (owner: no nicknames) · *Carcinus maenas*, logo plate.
 
 ## Owner decisions
 - 2026-11-01: style **illustrated** (approved). Never "moult": say "shed his shell". Hook without "And he's a boy". Closing line "A crab. A barnacle. And a family that

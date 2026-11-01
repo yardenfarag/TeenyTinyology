@@ -67,4 +67,4 @@ dwarf males, prevalence, mortality, the mechanism of the behaviour change.
 | tail flap wide + segmented at the "change" beat; claws small | #10 |
 | "tiny males" entering the sac's opening | #12 |
 | Kiwi on a high rock, bobbing/fanning; a cloud of larvae | #11 |
-| end card: *Sacculina carcini* · the crab-hacker barnacle · on *Carcinus maenas* | #2 |
+| end card: *Sacculina carcini* · a parasitic barnacle · on *Carcinus maenas* | #2 |

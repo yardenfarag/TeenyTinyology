@@ -1,4 +1,4 @@
-"""TOFFEE — the crab-hacker barnacle (Sacculina carcini), female.
+"""TOFFEE — the parasitic barnacle Sacculina carcini, female.
 
 A barnacle that looks nothing like one. Four looks, one character:
   larva (cypris)   a toffee-coloured speck: a bean-shaped two-valved shell, one dark eye, six pairs of tiny
@@ -26,7 +26,7 @@ import cairo
 from engine.core import TAU, Palette, ellipse, hexc, lerp, rng, rot_pt, smooth_path
 
 NAME = "Toffee"
-SPECIES = "crab-hacker barnacle"
+SPECIES = "parasitic barnacle"
 
 SAC = Palette("#dcc39a", "#f3e6cc", "#a8845a", "#6b5236")
 LARVA = Palette("#ecd39c", "#f9edcf", "#b2924e", "#6d5a34")

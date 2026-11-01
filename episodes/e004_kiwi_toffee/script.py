@@ -1,4 +1,4 @@
-"""Episode 004 narration — Kiwi & Toffee (Sacculina carcini, the crab-hacker barnacle, on a shore crab).
+"""Episode 004 narration — Kiwi & Toffee (the parasitic barnacle Sacculina carcini, on a shore crab).
 
 Pauses are seconds of silence after each line. "|" marks a caption line break (never spoken).
 Every claim is checked in facts.md; the hedges there are load-bearing:

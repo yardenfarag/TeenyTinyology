@@ -1,4 +1,4 @@
-"""Episode 004 — Kiwi & Toffee: the crab-hacker barnacle (Sacculina carcini) on a shore crab.
+"""Episode 004 — Kiwi & Toffee: the parasitic barnacle Sacculina carcini on a shore crab.
 
 Same bones as e001–e003: a Timeline of scenes whose starts and ends all come from the narration cues.
 The magnifying-glass "lens" is the device for anything too small to see; the parchment card is the device
@@ -585,7 +585,7 @@ def build(style_name):
         kiwi.draw(c, st, 540, 440, 0.78, phase=t, blink=blinking(t, 0.6), happy=0.8, claw=0.72, pinch=0.3,
                   sac=lambda cc: sac_under(cc, t, eggs=1.0, happy=0.7), alpha=ta)
         tx.center(c, "Sacculina carcini", 540, 700, 76, INK, alpha=ta, italic=True)
-        tx.center(c, "the crab-hacker barnacle", 540, 770, 40, hexc("#8a5a3a"), alpha=ta * 0.9, italic=True)
+        tx.center(c, "a parasitic barnacle", 540, 770, 40, hexc("#8a5a3a"), alpha=ta * 0.9, italic=True)
         tx.center(c, "on the shore crab, Carcinus maenas", 540, 826, 34, hexc("#8a5a3a"), alpha=ta * 0.9, italic=True)
         brand_plate(c, 540, 1000, ease(prog(t, t0 + 0.2, t0 + 0.7)))
         c.restore()
