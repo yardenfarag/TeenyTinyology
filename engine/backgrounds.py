@@ -682,3 +682,105 @@ def sunrays(c, t, x=820, y=260, n=9, length=900, a=0.10):
         g.add_color_stop_rgba(1, 1, 0.96, 0.8, 0)
         c.set_source(g)
         c.fill()
+
+
+# ================================================================ the shore (episode 004)
+def shore(seed=21):
+    """A shallow rocky shore, seen underwater at low tide: cool green water (north-east Atlantic, where
+    Carcinus maenas lives), surface at y~430, a pebbly sand floor at y~1380 (world), a dark rock with a
+    cluster of acorn barnacles on the left, and a taller rock on the right that a crab can climb.
+    Rock-top of the right rock: (820, 1060). Barnacle patch on the left rock: around (150, 1200)."""
+    def build():
+        s, c = new_surface(W, HH)
+        r = rng(seed)
+        _grad(c, 0, HH, [(0, "#d4ebe3"), (0.24, "#8fc4bb"), (0.6, "#4f8f8a"), (1, "#2c5b58")])
+        c.paint()
+        # the surface, seen from below
+        _grad(c, 0, 440, [(0, "#f2fbf6"), (1, "#bfe3d8")])
+        c.rectangle(0, 0, W, 420)
+        c.fill()
+        c.move_to(0, 420)
+        for x in range(0, W + 20, 20):
+            c.line_to(x, 420 + 9 * math.sin(x / 48) + 4 * math.sin(x / 19))
+        c.line_to(W, 470)
+        c.line_to(0, 470)
+        c.close_path()
+        c.set_source_rgba(1, 1, 1, 0.5)
+        c.fill()
+        for _ in range(7):   # light shafts
+            x0 = r.uniform(-140, W)
+            c.move_to(x0, 420)
+            c.line_to(x0 + 70, 420)
+            c.line_to(x0 + 280, HH)
+            c.line_to(x0 + 120, HH)
+            c.close_path()
+            g = cairo.LinearGradient(0, 420, 0, HH)
+            g.add_color_stop_rgba(0, 1, 1, 0.94, 0.15)
+            g.add_color_stop_rgba(1, 1, 1, 0.94, 0)
+            c.set_source(g)
+            c.fill()
+        # the floor: pebbly sand from y 1380 down
+        _grad(c, 1340, HH, [(0, "#c6b892"), (0.5, "#a89a74"), (1, "#7d7254")])
+        c.move_to(0, 1400)
+        c.curve_to(260, 1364, 700, 1412, W, 1372)
+        c.line_to(W, HH)
+        c.line_to(0, HH)
+        c.close_path()
+        c.fill()
+        for _ in range(140):   # pebbles and shell bits
+            ellipse(c, r.uniform(0, W), r.uniform(1390, HH - 10), r.uniform(6, 22), r.uniform(4, 12), r.uniform(0, 3))
+            c.set_source_rgba(*mix(hexc("#e8dfc4"), hexc("#7f7a66"), r.random())[:3], 0.8)
+            c.fill()
+
+        def rock(pts, base, light):
+            c.move_to(*pts[0])
+            for p in pts[1:]:
+                c.line_to(*p)
+            c.close_path()
+            g = cairo.LinearGradient(0, min(p[1] for p in pts), 0, max(p[1] for p in pts))
+            g.add_color_stop_rgba(0, *hexc(light))
+            g.add_color_stop_rgba(1, *hexc(base))
+            c.set_source(g)
+            c.fill()
+
+        # right rock: tall, climbable, flat top at (820, 1060)
+        rock([(600, 1420), (640, 1200), (700, 1080), (820, 1060), (960, 1090), (1040, 1180), (1080, 1300),
+              (1080, 1440)], "#454b48", "#7d867f")
+        # left rock: lower, with a patch of acorn barnacles
+        rock([(0, 1420), (0, 1180), (90, 1110), (230, 1130), (300, 1230), (280, 1420)], "#4a4f4b", "#858c86")
+        for _ in range(16):
+            bx, by = r.uniform(60, 240), r.uniform(1140, 1260)
+            rr = r.uniform(9, 16)
+            c.move_to(bx - rr, by + rr * 0.5)
+            c.line_to(bx - rr * 0.45, by - rr * 0.7)
+            c.line_to(bx + rr * 0.45, by - rr * 0.7)
+            c.line_to(bx + rr, by + rr * 0.5)
+            c.close_path()
+            c.set_source_rgba(*hexc("#e3dcc8")[:3], 1)
+            c.fill_preserve()
+            c.set_source_rgba(*hexc("#6a6558")[:3], 0.8)
+            c.set_line_width(1.6)
+            c.stroke()
+            ellipse(c, bx, by - rr * 0.55, rr * 0.3, rr * 0.16)
+            c.set_source_rgba(*hexc("#5a5648")[:3], 0.9)
+            c.fill()
+        # seaweed: bladderwrack fronds on the rocks, a little eelgrass on the sand
+        for x, y, h, sgn in ((300, 1240, 420, 1), (640, 1250, 360, -1), (1020, 1200, 300, -1), (250, 1300, 300, 1)):
+            for k in range(3):
+                c.move_to(x, y)
+                c.curve_to(x + sgn * 60 * (k + 1), y - h * 0.35, x - sgn * 30 * k, y - h * 0.7, x + sgn * 20 * k, y - h)
+                c.set_source_rgba(*mix(hexc("#6b6a2a"), hexc("#8a7a30"), k / 3)[:3], 0.9)
+                c.set_line_width(14 - 3 * k)
+                c.set_line_cap(cairo.LINE_CAP_ROUND)
+                c.stroke()
+        for _ in range(14):
+            x = r.uniform(330, 600)
+            h = r.uniform(120, 260)
+            c.move_to(x, 1395)
+            c.curve_to(x + 20, 1395 - h * 0.4, x - 20, 1395 - h * 0.7, x + r.uniform(-20, 20), 1395 - h)
+            c.set_source_rgba(*mix(hexc("#3f7a4a"), hexc("#6aa05a"), r.random())[:3], 0.9)
+            c.set_line_width(r.uniform(4, 8))
+            c.stroke()
+        return s
+
+    return _cached(("shore", seed), build)

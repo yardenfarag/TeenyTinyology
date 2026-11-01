@@ -25,14 +25,14 @@ SCRIPT = [
 
     # ---- the needle (the sound does the injection)
     Line("land", "She lands on Kiwi | and finds a soft spot in his shell.", 0.5),
-    Line("needle", "She sheds her own shell, | pushes a tiny hollow needle through... | and injects herself.", 1.0),
+    Line("needle", "She sheds her own shell, | pushes a tiny hollow needle | through... and injects herself.", 1.0),
 
     # ---- roots
     Line("roots", "Inside Kiwi, she grows roots. | Through his whole body. | And drinks from his blood.", 0.8),
     Line("fine", "Kiwi looks fine. | But he'll never shed his shell again. | Never grow. | Never have babies of his own.", 0.9),  # owner: not "moult"
 
     # ---- the sac
-    Line("months", "Months later, a sac pushes out | under his tail flap. | Right where a mother crab carries her eggs.", 0.9),
+    Line("months", "Months later, a sac pushes out | under his tail flap. | Right where a mother crab | carries her eggs.", 0.9),
 
     # ---- the change: his BODY changes shape...
     Line("body", "And Kiwi's body changes. | His narrow tail flap grows wide and round, | the shape a mother crab has.", 0.6),
