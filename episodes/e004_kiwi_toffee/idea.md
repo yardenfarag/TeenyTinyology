@@ -37,10 +37,11 @@ Teaser + first line: **"This crab is guarding a clutch of eggs. And they aren't 
    and a cloud of Toffee's larvae streams out.
 9. **The turn / cycle.** She doesn't just take his food. She takes his whole job of making babies, and hands him
    hers. The sac refills; more broods. The larvae drift off to find the next crab.
+   Final line (owner, 2026-11-01): "For the rest of his life, Toffee is part of him."
    End card: *Sacculina carcini* · the crab-hacker barnacle · *Carcinus maenas*, logo plate.
 
 ## Owner decisions
-- 2026-11-01: style **illustrated**. Hook without "And he's a boy". Closing line "A crab. A barnacle. And a family that
+- 2026-11-01: style **illustrated** (approved). Never "moult": say "shed his shell". Hook without "And he's a boy". Closing line "A crab. A barnacle. And a family that
   isn't his" rejected → "And Kiwi raises them all. Brood after brood." The belly-view tail flap must be understandable.
 - 2026-11-01: not "Button" → Toffee. Script must say clearly what happens to Kiwi: his body changes shape
   AND he behaves like a mother; he is still male.

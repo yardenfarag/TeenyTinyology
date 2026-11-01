@@ -9,7 +9,9 @@ Every claim is checked in facts.md; the hedges there are load-bearing:
     like a brooding mother (Høeg & Lützen 1995). He is not turned into a female — "He's still a boy."
   - "the wide flap shelters the sac" is the authors' hypothesis — always "scientists think"
   - no egg counts, no number of dwarf males, no prevalence, no "controls his brain" / "mating dance"
-  - "tail flap" = the crab's abdomen; "sac" = the externa
+  - "tail flap" = the crab's abdomen; "sac" = the externa; "shed his shell" = moult (owner: never "moult")
+  - "Toffee is part of him" for life: the roots are permanent; the sac itself can drop off and leave a scar (#14),
+    so the line names Toffee, not the sac
 """
 from engine.voice import Line
 
@@ -27,7 +29,7 @@ SCRIPT = [
 
     # ---- roots
     Line("roots", "Inside Kiwi, she grows roots. | Through his whole body. | And drinks from his blood.", 0.8),
-    Line("fine", "Kiwi looks fine. | But he'll never moult again. | Never grow. | Never have babies of his own.", 0.9),
+    Line("fine", "Kiwi looks fine. | But he'll never shed his shell again. | Never grow. | Never have babies of his own.", 0.9),  # owner: not "moult"
 
     # ---- the sac
     Line("months", "Months later, a sac pushes out | under his tail flap. | Right where a mother crab carries her eggs.", 0.9),
@@ -50,7 +52,8 @@ SCRIPT = [
 
     # ---- the turn + cycle
     Line("turn", "Toffee doesn't just take Kiwi's food. | She takes his whole job of making babies... | and hands him hers.", 1.0),
-    Line("end", "And Kiwi raises them all. | Brood after brood.", 1.4),  # owner: the "a family that isn't his" line sounded weird
+    Line("end", "And Kiwi raises them all. | Brood after brood.", 0.9),  # owner: the "a family that isn't his" line sounded weird
+    Line("life", "For the rest of his life, | Toffee is part of him.", 1.4),  # owner asked for this beat (facts #6, #14)
 ]
 
 # Sound effects anchored to the narration: (line id, word in that line or None = line start, effect, gain, offset s).
@@ -82,5 +85,6 @@ SFX = [
     ("burst", None, "shimmer", 0.09, 0.2),
     ("cloud", "cloud", "sparkle", 0.09, 0.0),
     ("turn", "hers", "chime", 0.09, 0.1),
-    ("end", "all", "chime", 0.10, 0.1),
+    ("end", "all", "sparkle", 0.09, 0.0),
+    ("life", "him", "chime", 0.10, 0.1),
 ]

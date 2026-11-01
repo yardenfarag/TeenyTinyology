@@ -25,7 +25,7 @@ Main sources:
 | 3 | Larvae: nauplius stages (do not feed: lecithotrophic), then a cypris that must find a crab; ~5 days to cypris. | ✅ | "a speck of a larva… swimming on what she was born with" (optional) | Trédez 2016 via search (108 h at 18 °C, five naupliar instars); Bangor thesis 1991 (lecithotrophic); ADW ("five or six days") |
 | 4 | The female cypris settles on the crab, walks to a spot (WP-Sc: base of a seta/bristle; WP-S: a joint; ADW: the antenna), sheds her shell, becomes a **kentrogon** with a retracted **hollow stylet**, and injects the **vermigon** (a soft, motile, multicellular stage) into the crab's haemolymph. | ✅ (site ⚠️ sources differ) | "finds a soft spot in his shell" (no antenna / seta / joint), "pushes a tiny hollow needle through… and injects herself" | Elumalai 2013 (citing Glenner 2001); Glenner & Høeg 1995 *Nature* 377:147 (title: "A new motile, multicellular stage involved in host invasion"); WP-Sc |
 | 5 | Inside, the parasite grows a root-like system (interna) throughout the crab's tissues; it is the nutrient-absorbing organ (feeds from the haemolymph). | ✅ | "roots… through his whole body… drinks from his blood" | Campos 2022 (O'Brien & Van Wyk 1985); Elumalai 2013 (Bresciani & Høeg 2001); MarLIN |
-| 6 | Infected ("sacculinized") crabs stop moulting and so stop growing; they cannot regenerate lost limbs. | ✅ | "he'll never moult again — so he'll never grow" | Campos 2022 (Høeg 1995); MarLIN; WP-Sc |
+| 6 | Infected ("sacculinized") crabs stop moulting and so stop growing; they cannot regenerate lost limbs. | ✅ | "he'll never shed his shell again — never grow" (owner: not "moult") | Campos 2022 (Høeg 1995); MarLIN; WP-Sc |
 | 7 | Parasitic castration / "parasitic sterilization" of both sexes; gonads degenerate. **Nuance:** Mouritsen 2018 dissections found ovaries reduced but **testes unaffected** in males; feminised males still don't reproduce (reduced copulatory appendages, Kristensen 2012). | ⚠️ | "He won't have babies of his own." **Never** "his testes are destroyed" / "sterilised" as a mechanism | Campos 2022 (Day 1935; Zetlmeisl 2011); MarLIN; Mouritsen 2018 |
 | 8 | Internal phase before the externa appears: MarLIN "about 5–34 months"; Mouritsen 2018 (full text, via search summary) "at least 33–34 months"; ADW "several weeks" (outlier). | ⚠️ sources disagree | "Months later…" (never a number) | MarLIN; Mouritsen 2018; ADW |
 | 9 | The externa emerges from under the crab's abdomen, **in the host's brood chamber** — where a female carries her egg mass. No egg-bearing female has ever been found sacculinized. Cream-brown oval, up to 2.5 cm wide. | ✅ | "exactly where a mother crab carries her eggs" | Campos 2022 (Glenner & Høeg 1995; Høeg 1995); MarLIN |
@@ -40,8 +40,10 @@ Main sources:
 
 ## Hook and closing line (judge-lessons checklist: can't / only / always / never)
 - "And they aren't even his." — true for the story's own crab (male hosts carry externae: #10, #11). ✅
-- "never moult again / never grow" — #6, stated by Høeg 1995 and MarLIN as a rule. ✅ (keep it to the story's crab:
-  "Kiwi will never grow again")
+- "never shed his shell again / never grow" — #6, stated by Høeg 1995 and MarLIN as a rule. ✅
+- "For the rest of his life, Toffee is part of him." — #6 (permanent: no more moults, no recovery) and #14 (the *sac*
+  can fall off and leave a scar, especially on large males, Mouritsen 2018; the roots remain). The line names
+  Toffee, not the sac, so it stays true either way. Never "the sac stays forever". ✅
 - "never have babies of his own" — #7 ✅ (never say how).
 - "Kiwi is still a boy. But now he behaves like a mother." — #10 (feminised *male*: Kristensen 2012 and Mouritsen
   2018 both call them "modified/feminized males"; testes intact in Mouritsen's dissections) + #11 (brood care by

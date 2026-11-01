@@ -30,9 +30,9 @@
   "hash": "60cd5227a0e19cba"
  },
  "uk7wwhXdWYHKKZ8KTCVw:fine": {
-  "text": "Kiwi looks fine. But he'll never moult again. Never grow. Never have babies of his own.",
+  "text": "Kiwi looks fine. But he'll never shed his shell again. Never grow. Never have babies of his own.",
   "take": 0,
-  "hash": "c9944fcdbbacc2fe"
+  "hash": "13e02b0a4abbd2a0"
  },
  "uk7wwhXdWYHKKZ8KTCVw:months": {
   "text": "Months later, a sac pushes out under his tail flap. Right where a mother crab carries her eggs.",
@@ -83,5 +83,10 @@
   "text": "And Kiwi raises them all. Brood after brood.",
   "take": 0,
   "hash": "0359398f9dd0b1c3"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:life": {
+  "text": "For the rest of his life, Toffee is part of him.",
+  "take": 0,
+  "hash": "b038c41c34941736"
  }
 }
