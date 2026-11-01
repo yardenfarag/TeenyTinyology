@@ -133,8 +133,7 @@ def build(style_name):
         tag(c, "Toffee", sx, sy - 16, window(t, q["toffee"].word("Toffee") + 0.1, q["land"].start, 0.3, 0.3),
             sub="a barnacle")
         # the rock barnacles on the left rock: what people think a barnacle is
-        bx, by = cam.screen(150, 1200)
-        label(c, "rock barnacles", bx + 10, by - 170, window(t, q["toffee"].word("guess") - 0.2, q["land"].start, 0.3, 0.3), size=34)
+        label(c, "those are rock barnacles", 330, 880, window(t, q["toffee"].word("barnacle") + 0.4, q["land"].start, 0.3, 0.3), size=34)
 
     tl.add(s_toffee, q["toffee"].start, q["land"].start)
 
@@ -234,7 +233,7 @@ def build(style_name):
                   xray_alpha=ease(prog(t, r_.start, r_.start + 0.7)) * 0.95)
         c.restore()
         sx, sy = cam.screen(KX, KY - 220)
-        label(c, "roots, through his whole body", sx, sy, window(t, r_.word("Through") - 0.1, q["fine"].start, 0.3, 0.3), size=36)
+        label(c, "her group is called the root-heads", sx, sy, window(t, r_.word("Through") - 0.1, q["fine"].start, 0.3, 0.3), size=36)
 
     tl.add(s_roots, q["roots"].start, q["fine"].start)
 
@@ -249,7 +248,6 @@ def build(style_name):
         kiwi.draw(c, st, KX, KY, KS, phase=t, blink=blinking(t, 0.6), happy=0.7, pinch=0.3)
         c.restore()
         sx, sy = cam.screen(KX, KY - 230)
-        label(c, "no babies of his own", 480, sy - 60, window(t, f.word("babies") - 0.1, q["months"].start, 0.3, 0.3), size=36)
 
     tl.add(s_fine, q["fine"].start, q["months"].start)
 
@@ -266,7 +264,6 @@ def build(style_name):
                   sac=lambda cc: sac_under(cc, t, eggs=0.0, happy=0.3, grow=grow))
         c.restore()
         a_m = window(t, m.start, m.word("sac") - 0.1, 0.3, 0.3)
-        label(c, "months later", 540, TOP_LABEL_Y, a_m, size=44)
         sx, sy = cam.screen(KX + 95, KY + 150)                  # bubble up-right of the sac, never over it
         tag(c, "a sac", sx + 150, sy - 70, window(t, m.word("sac") - 0.1, m.word("Right"), 0.3, 0.3),
             sub="Toffee, grown up", pointer=False)
@@ -300,8 +297,7 @@ def build(style_name):
         b = q["body"]
         flap = ease(prog(t, b.word("grows") - 0.2, b.word("round") + 0.4))
         belly_card(c, t, b.start, q["claws"].start, flap, 0.0, push=(0.94, 1.22))
-        label(c, "his tail flap", 540, TOP_LABEL_Y, window(t, b.word("tail") - 0.2, b.word("round") + 0.2, 0.3, 0.3), size=44)
-        label(c, "wide and round, like a mother's", 540, TOP_LABEL_Y, window(t, b.word("round") + 0.3, q["claws"].start, 0.3, 0.3), size=40)
+        label(c, "tail flap: a crab's folded-under abdomen", 540, TOP_LABEL_Y, window(t, b.word("tail") - 0.2, b.word("round") + 0.2, 0.3, 0.3), size=38)
 
     tl.add(s_body, q["body"].start, q["claws"].start, transition="cut")
 
@@ -314,14 +310,13 @@ def build(style_name):
         def sac(cc):
             toffee.draw_sac(cc, st, 0, 26, 1.0, eggs=0.0, phase=t * 2, stalk=False, happy=0.3, blink=blinking(t, 1.7))
 
-        cam = belly_card(c, t, cl.start, q["males"].start, 1.0, lift, under=sac, push=(1.22, 1.36), claw=0.72)
+        cam = belly_card(c, t, cl.start, q["males"].start, 1.0, lift, under=sac if lift > 0 else None, push=(1.22, 1.36), claw=0.72)
         sh = q["shell"]
         hx, hy = cam.screen(540 + 100 * 1.9, 900 + 98 * 1.9)             # his right hand on the card (true screen)
-        tag(c, "small claws", hx - 30, hy - 50 + 170, window(t, cl.word("claws") - 0.1, t_sci, 0.3, 0.3))
+        tag(c, "small claws", hx - 30, hy - 50 + 170, window(t, cl.word("claws") - 0.1, t_sci, 0.3, 0.3), sub="a male's are usually bigger")
         label(c, "scientists think: the wide flap shelters the sac", 540, TOP_LABEL_Y,
               window(t, t_sci + 0.2, sh.start, 0.3, 0.3), size=36)
-        label(c, "no more shell-shedding", 540, TOP_LABEL_Y, window(t, sh.word("shell") - 0.2, q["males"].start, 0.3, 0.3), size=40)
-        label(c, "no more growing", 540, TOP_LABEL_Y + 72, window(t, sh.word("grow") - 0.1, q["males"].start, 0.3, 0.3), size=40)
+        label(c, "shedding the shell is how a crab grows", 540, TOP_LABEL_Y, window(t, sh.word("shell") - 0.2, q["males"].start, 0.3, 0.3), size=38)
 
     tl.add(s_claws, q["claws"].start, q["males"].start, transition="cut")
 
@@ -343,8 +338,7 @@ def build(style_name):
                                      ang=math.atan2(y1 - y0, x1 - x0), alpha=1 - ease(prog(kk, 0.85, 1.0)))
 
         belly_card(c, t, m.start, q["still"].start, 1.0, 0.85, under=sac, push=(1.36, 1.48), claw=0.72)
-        label(c, "tiny males", 540, TOP_LABEL_Y, window(t, m.word("male") - 0.1, t_fill, 0.3, 0.3), size=44)
-        label(c, "Toffee's eggs", 540, TOP_LABEL_Y, window(t, t_fill + 0.2, q["still"].start, 0.3, 0.3), size=44)
+        label(c, "tiny males: they never grow up", 540, TOP_LABEL_Y, window(t, m.word("male") - 0.1, t_fill, 0.3, 0.3), size=40)
 
     tl.add(s_males, q["males"].start, q["still"].start, transition="cut")
 
@@ -359,8 +353,6 @@ def build(style_name):
         kiwi.draw(c, st, KX, KY, KS, phase=t, blink=blinking(t, 0.6), happy=0.6, claw=0.72, pinch=0.3,
                   sac=lambda cc: sac_under(cc, t, eggs=1.0, happy=0.6))
         c.restore()
-        label(c, "still a boy", 540, TOP_LABEL_Y, window(t, s_.word("boy") - 0.3, s_.word("But") - 0.1, 0.3, 0.3), size=44)
-        label(c, "but he behaves like a mother", 540, TOP_LABEL_Y, window(t, s_.word("behaves") - 0.2, q["care"].start, 0.3, 0.3), size=40)
 
     tl.add(s_still, q["still"].start, q["care"].start)
 
@@ -383,7 +375,6 @@ def build(style_name):
         if clean > 0:
             sparkles(c, sx - 40, sy, t, cr.word("cleans") + 0.1, n=6, r=70)
             sparkles(c, sx + 50, sy + 10, t, cr.word("cleans") + 0.7, n=6, r=70)
-        label(c, "like his own eggs", 540, TOP_LABEL_Y, window(t, cr.word("treats") - 0.1, q["launch"].start, 0.3, 0.3), size=40)
 
     tl.add(s_care, q["care"].start, q["launch"].start)
 
@@ -392,8 +383,13 @@ def build(style_name):
         la = q["launch"]
         k = ease(prog(t, la.word("climbs") - 0.3, la.word("high") + 0.4))
         # a curved path from the sand up the rock's left face to its top
-        x = lerp(KX, 720, k)                                   # the rock's left shoulder, inside the safe zone
-        y = lerp(KY, 1075 - 112 * KS, k) - 60 * math.sin(k * math.pi)
+        # from the sand to the foot of the rock, then up its left face (x 530-560) onto the crown (y ~1062)
+        if k < 0.35:
+            kk = k / 0.35
+            x, y = lerp(KX, 560, kk), KY
+        else:
+            kk = (k - 0.35) / 0.65
+            x, y = lerp(560, 740, kk), lerp(KY, 1062 - 112 * KS, kk)
         return x, y, k
 
     def bob_fan(t):
@@ -404,7 +400,7 @@ def build(style_name):
     def s_launch(c, t, ctx):
         x, y, k = climb_pos(t)
         b = bob_fan(t)
-        cam = framed(lerp(1.3, 1.0, ease(prog(t, q["launch"].start, q["launch"].word("high")))), lerp(KX, 560, k), lerp(KY, 1120, k))
+        cam = framed(lerp(1.3, 1.0, ease(prog(t, q["launch"].start, q["launch"].word("high")))), lerp(KX, 540, k), lerp(KY, 1120, k))
         c.save()
         cam.apply(c)
         shore(c, t)
@@ -438,19 +434,19 @@ def build(style_name):
     def s_burst(c, t, ctx):
         x, y, k = climb_pos(t)
         b = bob_fan(t)
-        cam = framed(1.0, 560, 1120)
+        cam = framed(1.0, 540, 1120)
         c.save()
         cam.apply(c)
         shore(c, t)
         hatch = window(t, q["burst"].start - 0.1, q["cloud"].word("barnacles"), 0.2, 0.8)
-        larvae(c, t, q["burst"].start, x, y + 150 * KS, spread=340)
+        larvae(c, t, q["burst"].start, x, y + 150 * KS, spread=300)
         kiwi.draw(c, st, x, y + 18 * math.sin(t * 5.5) * b, KS, ang=0.06 * math.sin(t * 5.5) * b, phase=t,
                   blink=blinking(t, 0.6), happy=0.9, claw=0.72, raise_=0.5 + 0.5 * math.sin(t * 5.5 + 1) * b, pinch=0.4,
                   sac=lambda cc: sac_under(cc, t, eggs=1.0 - 0.8 * ease(prog(t, q["burst"].start, q["cloud"].end)),
                                            happy=0.9, hatch=hatch))
         bg.bubbles(c, t, x, y + 150, n=10, seed=4, spread=60, speed=150, life=2.5, t0=q["burst"].start)
         c.restore()
-        label(c, "off to find crabs of their own", 540, TOP_LABEL_Y, window(t, q["cloud"].word("off") - 0.1, q["turn"].start, 0.3, 0.3), size=40)
+        label(c, "in a few days they'll be ready to find a crab", 540, TOP_LABEL_Y, window(t, q["cloud"].word("off") - 0.1, q["turn"].start, 0.3, 0.3), size=36)
 
     tl.add(s_burst, q["burst"].start, q["turn"].start)
 
@@ -476,8 +472,6 @@ def build(style_name):
         sx, sy = cam.screen(KX, KY + 190)
         if t > tu.word("hers"):
             sparkles(c, sx, sy, t, tu.word("hers"), n=8, r=110)
-        label(c, "his food", 540, TOP_LABEL_Y, food, size=44)
-        label(c, "his job: making babies", 540, TOP_LABEL_Y, window(t, tu.word("whole") - 0.1, tu.word("hers") - 0.2, 0.3, 0.3), size=40)
         label(c, "...now hers", 540, TOP_LABEL_Y, window(t, tu.word("hers") - 0.1, q["end"].start, 0.3, 0.3), size=44)
 
     tl.add(s_turn, q["turn"].start, q["end"].start, transition="cut")
@@ -506,8 +500,8 @@ def build(style_name):
                   xray=roots, xray_alpha=0.7 * ease(prog(t, li.word("part") - 0.2, li.word("him") + 0.3)),
                   sac=lambda cc: sac_under(cc, t, eggs=eggs, happy=0.7))
         c.restore()
-        label(c, "brood after brood", 540, TOP_LABEL_Y, window(t, e.word("Brood") - 0.1, li.start, 0.3, 0.3), size=44)
-        label(c, "for the rest of his life", 540, TOP_LABEL_Y, window(t, li.start, li.end + 0.6, 0.3, 0.3), size=44)
+        label(c, "several broods; a mother crab has one a year", 540, TOP_LABEL_Y, window(t, e.word("Brood") - 0.1, li.start, 0.3, 0.3), size=36)
+        label(c, "the sac may drop off one day; the roots never do", 540, TOP_LABEL_Y, window(t, li.word("Toffee") - 0.2, li.end + 0.6, 0.3, 0.3), size=36)
 
     tl.add(s_end_lines, q["end"].start, q["life"].end + 0.5)
 

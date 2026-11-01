@@ -59,7 +59,8 @@ probably become an engine default or a checklist item.
   seconds late (l001: up to 10 s) **(repeat ×3: l001 passes 1–3)**. Check with the lag test: board item start minus
   its cue word, and run it over the whole lesson, not just the start and end (mid-lesson stills of 6–10 s, pass 3).
 - **On-screen tags must add information, not repeat the caption** (e001 pass 2: the tag "like Pixie once was"
-  repeated the caption).
+  repeated the caption) **(repeat: e004 pass 2, ~15 labels)**. A label written as "the key words of the line" is an
+  echo by construction; write each label as the one fact the line did *not* say, or leave the line alone.
 
 ## Narration audio
 - **ElevenLabs clips carry stray sound at their edges** (l001 preview, owner: "cut midway", "missed heartbeats", "a
@@ -167,6 +168,9 @@ probably become an engine default or a checklist item.
   re-time what moved and re-scrub the shot it lives in.
 - **A label beside a caption needs about 2 s** (e003 pass 2: three labels read for 0.8–1 s). Measure on the MP4.
 - **Draw labels after `c.restore()`** (e003 pass 2). Inside a camera push they grow, drift and can leave the safe zone.
+  **(repeat: e004 pass 2)** A label anchored to a *world* point through `cam.screen()` drifts with the push just the
+  same: the pass-1 push-in carried "rock barnacles" off the left edge. Park labels at fixed scene coordinates, or clamp
+  the anchored centre into x 60+half-width .. 900-half-width.
 - **A second character on a travelling wave sweeps across the hero** (e003 pass 2: the male covered Dilly's face at
   the babies beat). Scan the whole window, not one still; draw the newcomer behind the hero. And know which end of a
   path is the head: `along(path, d, L)` puts the head at distance d, i.e. the far end when a worm "grows" along it.

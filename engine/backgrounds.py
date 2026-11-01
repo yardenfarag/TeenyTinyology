@@ -689,7 +689,7 @@ def shore(seed=21):
     """A shallow rocky shore, seen underwater at low tide: cool green water (north-east Atlantic, where
     Carcinus maenas lives), surface at y~430, a pebbly sand floor at y~1380 (world), a dark rock with a
     cluster of acorn barnacles on the left, and a taller rock on the right that a crab can climb.
-    Rock-top of the right rock: (820, 1060). Barnacle patch on the left rock: around (150, 1200)."""
+    Rock-top of the right rock: crown y~1060 from x 560 to 900. Barnacle patch on the left rock: around (150, 1200)."""
     def build():
         s, c = new_surface(W, HH)
         r = rng(seed)
@@ -744,7 +744,7 @@ def shore(seed=21):
             c.fill()
 
         # right rock: tall, climbable, flat top at (820, 1060)
-        rock([(600, 1420), (640, 1200), (700, 1080), (820, 1060), (960, 1090), (1040, 1180), (1080, 1300),
+        rock([(500, 1420), (530, 1200), (560, 1075), (740, 1055), (900, 1075), (1000, 1150), (1080, 1300),
               (1080, 1440)], "#454b48", "#7d867f")
         # left rock: lower, with a patch of acorn barnacles
         rock([(0, 1420), (0, 1180), (90, 1110), (230, 1130), (300, 1230), (280, 1420)], "#4a4f4b", "#858c86")
