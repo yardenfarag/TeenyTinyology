@@ -78,7 +78,7 @@ def build(style_name):
         kiwi.draw(c, st, KX, KY, KS, phase=t, blink=blinking(t, 0.6), happy=0.8, raise_=0.85, pinch=0.5,
                   claw=0.8, sac=lambda cc: sac_under(cc, t), look=(0.1, 0.2))
         c.restore()
-        fade = 1 - ease(prog(t, q["hook"].end, q["kiwi"].start))
+        fade = (1 - ease(prog(t, q["hook"].end, q["kiwi"].start))) * ctx.get("teaser_labels", 1.0)
         label(c, "A crab, raising babies...", 540, TOP_LABEL_Y, fade, size=52)
         label(c, "that aren't even his", 540, TOP_LABEL_Y + 90, fade, size=52)
 
