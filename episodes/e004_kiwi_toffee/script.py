@@ -5,6 +5,8 @@ Every claim is checked in facts.md; the hedges there are load-bearing:
   - never name where the larva settles (antenna / seta / joint: sources differ) — "a soft spot in his shell"
   - never a number of months for the hidden phase (5–34 months; "at least 33 months") — "months later"
   - "never have babies of his own", never a mechanism (male testes were found intact in one study)
+  - the "never shed his shell again" line comes AFTER the sac is out: the crab keeps moulting (and its flap widens)
+    during the hidden months; moulting stops at externa emergence (judge pass 1)
   - the change is BOTH: his body really changes shape (wide abdomen, small claws: Kristensen 2012) AND he behaves
     like a brooding mother (Høeg & Lützen 1995). He is not turned into a female — "He's still a boy."
   - "the wide flap shelters the sac" is the authors' hypothesis — always "scientists think"
@@ -29,7 +31,7 @@ SCRIPT = [
 
     # ---- roots
     Line("roots", "Inside Kiwi, she grows roots. | Through his whole body. | And drinks from his blood.", 0.8),
-    Line("fine", "Kiwi looks fine. | But he'll never shed his shell again. | Never grow. | Never have babies of his own.", 0.9),  # owner: not "moult"
+    Line("fine", "Kiwi looks fine. | But he'll never have babies of his own.", 0.9),  # judge pass 1: the shell beat moved after the sac (moulting stops when the sac is out)
 
     # ---- the sac
     Line("months", "Months later, a sac pushes out | under his tail flap. | Right where a mother crab | carries her eggs.", 0.9),
@@ -37,6 +39,7 @@ SCRIPT = [
     # ---- the change: his BODY changes shape...
     Line("body", "And Kiwi's body changes. | His narrow tail flap grows wide and round, | the shape a mother crab has.", 0.6),
     Line("claws", "His claws stay small. | Scientists think the wide flap | shelters the sac.", 0.9),
+    Line("shell", "And now the sac is out, | he'll never shed his shell again. | Never grow.", 0.9),  # owner: not "moult"; judge pass 1 placed it here
 
     # ---- her babies
     Line("males", "Tiny male larvae slip into the sac... | and it fills with eggs. | Toffee's eggs.", 0.8),
@@ -75,6 +78,8 @@ SFX = [
     ("months", "sac", "chime", 0.07, 0.0),
     ("body", "wide", "boing", 0.07, 0.0),
     ("claws", "small", "blip", 0.07, 0.0),
+    ("shell", "shell", "tick", 0.07, 0.0),
+    ("shell", "grow", "tick", 0.06, 0.0),
     ("males", "slip", "blip", 0.10, 0.0),
     ("males", "fills", "sparkle", 0.10, 0.0),
     ("still", "mother", "chime", 0.07, 0.0),

@@ -249,10 +249,7 @@ def build(style_name):
         kiwi.draw(c, st, KX, KY, KS, phase=t, blink=blinking(t, 0.6), happy=0.7, pinch=0.3)
         c.restore()
         sx, sy = cam.screen(KX, KY - 230)
-        for i, (w, txt) in enumerate((("shed", "no more shell-shedding"), ("grow", "no more growing"),
-                                       ("babies", "no babies of his own"))):
-            a = window(t, f.word(w) - 0.1, q["months"].start, 0.3, 0.3)
-            label(c, txt, 480, sy - 100 + i * 70, a, size=36)
+        label(c, "no babies of his own", 480, sy - 60, window(t, f.word("babies") - 0.1, q["months"].start, 0.3, 0.3), size=36)
 
     tl.add(s_fine, q["fine"].start, q["months"].start)
 
@@ -318,10 +315,13 @@ def build(style_name):
             toffee.draw_sac(cc, st, 0, 26, 1.0, eggs=0.0, phase=t * 2, stalk=False, happy=0.3, blink=blinking(t, 1.7))
 
         cam = belly_card(c, t, cl.start, q["males"].start, 1.0, lift, under=sac, push=(1.22, 1.36), claw=0.72)
+        sh = q["shell"]
         hx, hy = cam.screen(540 + 100 * 1.9, 900 + 98 * 1.9)             # his right hand on the card (true screen)
         tag(c, "small claws", hx - 30, hy - 50 + 170, window(t, cl.word("claws") - 0.1, t_sci, 0.3, 0.3))
         label(c, "scientists think: the wide flap shelters the sac", 540, TOP_LABEL_Y,
-              window(t, t_sci + 0.2, q["males"].start, 0.3, 0.3), size=36)
+              window(t, t_sci + 0.2, sh.start, 0.3, 0.3), size=36)
+        label(c, "no more shell-shedding", 540, TOP_LABEL_Y, window(t, sh.word("shell") - 0.2, q["males"].start, 0.3, 0.3), size=40)
+        label(c, "no more growing", 540, TOP_LABEL_Y + 72, window(t, sh.word("grow") - 0.1, q["males"].start, 0.3, 0.3), size=40)
 
     tl.add(s_claws, q["claws"].start, q["males"].start, transition="cut")
 
@@ -537,7 +537,7 @@ def build(style_name):
     def make_audio(path):
         moods = [(0.0, "curious"), (q["kiwi"].start, "cozy"), (q["toffee"].start, "playful"),
                  (q["land"].start, "mystery"), (q["roots"].start, "quiet"), (q["months"].start, "curious"),
-                 (q["body"].start, "wonder"), (q["males"].start, "playful"), (q["still"].start, "cozy"),
+                 (q["body"].start, "wonder"), (q["shell"].start, "quiet"), (q["males"].start, "playful"), (q["still"].start, "cozy"),
                  (q["launch"].start, "wonder"), (q["turn"].start, "mystery"), (q["end"].start, "finale")]
         HEAD = 0.4
         full = music.score(DUR + HEAD + 8.0, moods)
@@ -563,7 +563,7 @@ def build(style_name):
 
 
 LOOK = ["teaser", "kiwi", "toffee", "land", "needle", "roots", "fine", "months", "mother", "body", "claws",
-        "shelter", "males", "still", "care", "launch", "burst", "turn", "brood", "life", "end"]
+        "shelter", "shell", "males", "still", "care", "launch", "burst", "turn", "brood", "life", "end"]
 
 
 def look_times(Q):
@@ -572,7 +572,7 @@ def look_times(Q):
         0.0, q["kiwi"].word("Kiwi") + 0.9, q["toffee"].word("barnacle") + 0.3, q["land"].word("spot") + 0.3,
         q["needle"].word("injects") + 0.4, q["roots"].word("body") + 0.6, q["fine"].word("babies") + 0.3,
         q["months"].word("flap") + 0.2, q["months"].word("mother") + 0.6, q["body"].word("round") + 0.5,
-        q["claws"].word("small") + 0.3, q["claws"].word("shelters") + 0.3, q["males"].word("eggs") + 0.3,
+        q["claws"].word("small") + 0.3, q["claws"].word("shelters") + 0.3, q["shell"].word("grow") + 0.3, q["males"].word("eggs") + 0.3,
         q["still"].word("behaves") + 0.4, q["care"].word("guards") + 0.5, q["launch"].word("bobs") + 0.3,
         q["burst"].start + 0.9, q["turn"].word("hers") + 0.4, q["end"].word("Brood") + 0.4,
         q["life"].word("him") + 0.2, q["life"].end + 2.2]))

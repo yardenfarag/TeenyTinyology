@@ -25,7 +25,7 @@ Teaser + first line: **"This crab is guarding a clutch of eggs. And they aren't 
 3. **The needle.** Toffee lands on Kiwi, walks to a soft spot, sheds her shell, becomes a kentrogon with a hollow
    stylet, and injects herself — a soft wormlet — into his blood. (sfx, not spoken.)
 4. **Roots.** Inside Kiwi, she grows a network of roots through his body and drinks from his blood. Kiwi looks fine.
-   He stops moulting (so stops growing). He won't have babies of his own.
+   He won't have babies of his own. (The "never shed his shell again" beat moved to after the sac appears: judge pass 1.)
 5. **The sac.** Months later, a sac pushes out under his tail flap — exactly where a mother crab carries her eggs.
 6. **The change, part 1: his body.** Kiwi's narrow tail flap really grows wide and round, the shape a mother crab
    has; his claws stay small. Scientists think the wide flap shelters the sac (hypothesis, hedged).
