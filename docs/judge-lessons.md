@@ -257,3 +257,7 @@ probably become an engine default or a checklist item.
   frame stays on the painted background; scan every 0.25 s for black edge columns before rendering.
 - **Owner on sounds (e003):** the cartoon `buzz` (square wave) is not a mosquito. Use `sfx.whine` (wingbeat tone,
   fly-by). `purr` belongs to cats (Mochi); don't put it on a dog. Footsteps don't go on legless animals.
+
+- **Slow drifts on a cached bitmap tick.** A very slow zoom or push (e.g. 0.94→1.12 over 5 s) on a cached background
+  surface steps visibly at 30 fps ("moving in ticks", owner, E004). Either hold the camera still, or move fast enough
+  that the step per frame is well over a pixel. Never drift a static card.
