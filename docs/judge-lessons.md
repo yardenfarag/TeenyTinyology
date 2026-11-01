@@ -139,6 +139,15 @@ probably become an engine default or a checklist item.
   `tilt` that says how far above it the camera sits (e002).
 
 ## Animation & polish
+- **One setting, one camera** (owner, e004 v1: "a lot of scenes put together, not smooth"). Each scene had its own
+  `framed(...)` with its own zoom and focus, so every scene boundary re-framed the same crab and read as a jump even
+  with nothing moving in the story. Drive the camera from a keyframe list for the whole setting (`cam_at(t)` in e004)
+  and let scenes only change what is drawn; then boundaries can be plain cuts. Keep the character where he is
+  (Kiwi stays on the rock after the launch instead of jumping home). Measure it: mean grey change per 0.1 s on the
+  encoded file, captions masked, and list the biggest steps; anything that is not a planned transition is a jump.
+- **A transition needs an overlap or it is a cut.** `render_frame` draws the first live scene plainly; an iris or fade
+  only plays while the previous scene is still live, so extend the previous scene's end by `trans_dur` (e004:
+  both irises and the end-card fade were silently cuts).
 - **The climax needs real animation:** anticipation (crouch), action (leg kick, stretch), an eased arc, a landing
   into the effect. A pose sliding along a path looks flat **(repeat: e001 pass 1 + pass 2)**.
   Root cause in e001: the action had no time. Its window was squeezed between the end of a line and a sound cue, so
