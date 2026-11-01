@@ -336,7 +336,7 @@ def build(style_name):
         lens(c, 300, 700, 200, mother, a_mo)
         label(c, "a mother crab's eggs", 300, 990, a_mo, size=34)
 
-    tl.add(s_months, q["months"].start, q["body"].start, transition="cut")
+    tl.add(s_months, q["months"].start, q["body"].start + 1.0, transition="cut")     # overlaps the iris into the card
 
     # ---------------------------------------------------------- 8. his body changes: the belly card
     def belly_card(c, t, t0, t1, flap, lift, under=None, eggs=0.0, push=(0.94, 1.30), claw=1.0):
@@ -398,7 +398,7 @@ def build(style_name):
         belly_card(c, t, m.start, q["still"].start, 1.0, 0.85, under=sac, push=(1.36, 1.48), claw=0.72)
         label(c, "tiny males: they never grow up", 540, TOP_LABEL_Y, window(t, m.word("male") - 0.1, t_fill, 0.3, 0.3), size=40)
 
-    tl.add(s_males, q["males"].start, q["still"].start, transition="cut")
+    tl.add(s_males, q["males"].start, q["still"].start + 1.0, transition="cut")      # overlaps the iris back out
 
     # ---------------------------------------------------------- 11. still a boy; behaves like a mother
     def s_still(c, t, ctx):
