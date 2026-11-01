@@ -53,7 +53,7 @@ def card_cam(t, t0, t1, z0=0.94, z1=1.30, fx=540, fy=980):
 
 def build(style_name):
     st = styles.get(style_name)
-    TEASER = 1.5
+    TEASER = 1.35
     track, Q, caps, end = narrate(SCRIPT, os.path.join(HERE, "voice_cache"), t0=TEASER + 0.15)
     DUR = end + 4.9                      # end card fully readable >= 4 s
     tl = Timeline(DUR, captions=caps)
@@ -71,14 +71,14 @@ def build(style_name):
 
     # ---------------------------------------------------------- 0. teaser (frame 0 is the thumbnail)
     def s_teaser(c, t, ctx):
-        cam = framed(lerp(1.15, 1.22, ease(prog(t, 0.0, q["kiwi"].start))), KX + 40, KY - 20)
+        cam = framed(lerp(1.08, 1.30, ease(prog(t, 0.0, q["kiwi"].start))), KX + 40, KY - 20)
         c.save()
         cam.apply(c)
         shore(c, t)
         kiwi.draw(c, st, KX, KY, KS, phase=t, blink=blinking(t, 0.6), happy=0.8, raise_=0.85, pinch=0.5,
                   claw=0.8, sac=lambda cc: sac_under(cc, t), look=(0.1, 0.2))
         c.restore()
-        fade = (1 - ease(prog(t, q["hook"].end, q["kiwi"].start))) * ctx.get("teaser_labels", 1.0)
+        fade = (1 - ease(prog(t, q["hook"].word("they") - 0.3, q["hook"].word("they") + 0.3))) * ctx.get("teaser_labels", 1.0)  # gone before the caption repeats it
         label(c, "A crab, raising babies...", 540, TOP_LABEL_Y, fade, size=52)
         label(c, "that aren't even his", 540, TOP_LABEL_Y + 90, fade, size=52)
 
@@ -88,7 +88,7 @@ def build(style_name):
     def s_kiwi(c, t, ctx):
         k = ease_out(prog(t, q["kiwi"].start - 0.2, q["kiwi"].start + 1.6))
         x = lerp(-120, KX, k)
-        cam = framed(1.08, KX, 1180)
+        cam = framed(lerp(1.08, 1.16, k), KX, 1180)
         c.save()
         cam.apply(c)
         shore(c, t)
@@ -107,28 +107,34 @@ def build(style_name):
         return x, y
 
     def s_toffee(c, t, ctx):
-        cam = framed(1.08, KX, 1180)
+        kk = ease(prog(t, q["toffee"].start, q["land"].start))
+        cam = framed(lerp(1.08, 1.22, kk), lerp(KX, KX + 120, kk), lerp(1180, 1100, kk))
         c.save()
         cam.apply(c)
         shore(c, t)
-        kiwi.draw(c, st, KX, KY, KS, phase=t, blink=blinking(t, 0.6), happy=0.4, look=(0.6, -0.4))
         px, py = toffee_path(t, q["toffee"].start, q["land"].start)
+        look = (clamp((px - KX) / 300, -1, 1), clamp((py - KY) / 300, -1, 1))        # his eyes follow her
+        kiwi.draw(c, st, KX, KY, KS, phase=t, blink=blinking(t, 0.6), happy=0.4, look=look)
+        for rr, aa in ((26, 0.10), (16, 0.16)):                                       # a glint so the speck reads
+            c.arc(px, py, rr + 3 * math.sin(t * 4), 0, TAU)
+            c.set_source_rgba(1, 1, 0.9, aa)
+            c.fill()
         toffee.draw_larva(c, st, px, py, 0.22, phase=t, ang=0.5, blink=blinking(t, 1.0))   # a true speck
         c.restore()
         sx, sy = cam.screen(px, py)
         # the lens shows who the speck is
         def inner(cc):
             cc.save()
-            cc.translate(sx + 20, sy - 330)
+            cc.translate(300, 640)                # fixed: left of her path, above Kiwi, clear of the badge
             toffee.draw_larva(cc, st, 0, 0, 3.0, phase=t, ang=0.15, blink=blinking(t, 1.0), happy=0.6)
             cc.restore()
         a_lens = window(t, q["toffee"].word("speck") - 0.1, q["land"].start + 0.2, 0.35, 0.3)
-        lens(c, sx + 20, sy - 330, 170, inner, a_lens)
+        lens(c, 300, 640, 160, inner, a_lens)
         tag(c, "Toffee", sx, sy - 16, window(t, q["toffee"].word("Toffee") + 0.1, q["land"].start, 0.3, 0.3),
             sub="a barnacle")
         # the rock barnacles on the left rock: what people think a barnacle is
         bx, by = cam.screen(150, 1200)
-        label(c, "rock barnacles", bx + 60, by - 120, window(t, q["toffee"].word("guess") - 0.2, q["land"].start, 0.3, 0.3), size=34)
+        label(c, "rock barnacles", bx + 10, by - 170, window(t, q["toffee"].word("guess") - 0.2, q["land"].start, 0.3, 0.3), size=34)
 
     tl.add(s_toffee, q["toffee"].start, q["land"].start)
 
@@ -155,21 +161,21 @@ def build(style_name):
 
         def inner(cc):
             cc.save()
-            cc.translate(sx, sy - 250)
+            cc.translate(sx, sy - 300)
             cc.set_source_rgba(*kiwi.SHELL.base)
             cc.paint()
             toffee.draw_larva(cc, st, 0, 10, 3.0, phase=t * (1 + 2 * (1 - k2)), ang=0.1, blink=blinking(t, 1.0), happy=0.4)
             cc.restore()
 
-        lens(c, sx, sy - 250, 170, inner, window(t, q["land"].start + 0.4, q["needle"].start + 0.3, 0.35, 0.3))
-        label(c, "a soft spot in his shell", sx, sy - 250 - 170 - 70, window(t, q["land"].word("soft") - 0.1, q["needle"].start, 0.3, 0.3), size=36)
+        lens(c, sx, sy - 300, 170, inner, window(t, q["land"].start + 0.4, q["needle"].start + 0.3, 0.35, 0.3))
+        label(c, "a soft spot in his shell", sx, sy - 300 - 170 - 70, window(t, q["land"].word("soft") - 0.1, q["needle"].start, 0.3, 0.3), size=36)
 
     tl.add(s_land, q["land"].start, q["needle"].start)
 
     # ---------------------------------------------------------- 4. the needle (inside the lens, big)
     def s_needle(c, t, ctx):
         n = q["needle"]
-        cam = framed(1.55, KX - 60, KY - 80)
+        cam = framed(lerp(1.55, 1.75, ease(prog(t, n.start, q["roots"].start))), KX - 60, KY - 80)
         c.save()
         cam.apply(c)
         shore(c, t)
@@ -196,11 +202,7 @@ def build(style_name):
             if shed < 1:            # the larva, still whole, crouched on the shell
                 toffee.draw_larva(cc, st, 0, -20, 4.2 * (1 - 0.3 * shed), phase=t, ang=0.1, blink=blinking(t, 1.0),
                                   alpha=1 - shed)
-            toffee.draw_kentrogon(cc, st, 0, 0, 4.2, inject=inject, phase=t, alpha=min(1.0, shed * 1.5))
-            if push < 1:            # the needle pushes down as the word lands
-                cc.set_source_rgba(*kiwi.SHELL.light)
-                cc.rectangle(-16, lerp(4, 120, push), 32, 140)
-                cc.fill()
+            toffee.draw_kentrogon(cc, st, 0, 0, 4.2, inject=inject, phase=t, alpha=min(1.0, shed * 1.5), needle=push)
             cc.restore()
 
         lens(c, sx, sy - 250, 210, inner, 1.0)
@@ -268,8 +270,9 @@ def build(style_name):
         c.restore()
         a_m = window(t, m.start, m.word("sac") - 0.1, 0.3, 0.3)
         label(c, "months later", 540, TOP_LABEL_Y, a_m, size=44)
-        sx, sy = cam.screen(KX, KY + 180)
-        tag(c, "a sac", sx, sy, window(t, m.word("sac") - 0.1, m.word("Right"), 0.3, 0.3), sub="under his tail flap")
+        sx, sy = cam.screen(KX + 95, KY + 150)                  # bubble up-right of the sac, never over it
+        tag(c, "a sac", sx + 150, sy - 70, window(t, m.word("sac") - 0.1, m.word("Right"), 0.3, 0.3),
+            sub="Toffee, grown up", pointer=False)
         # inset: a mother crab, belly up, her eggs under her wide tail flap
 
         def mother(cc):
@@ -280,26 +283,26 @@ def build(style_name):
 
         a_mo = window(t, m.word("mother") - 0.3, q["body"].start + 0.2, 0.35, 0.3)
         lens(c, 300, 700, 200, mother, a_mo)
-        label(c, "a mother crab's eggs", 300, 940, a_mo, size=34)
+        label(c, "a mother crab's eggs", 300, 990, a_mo, size=34)
 
-    tl.add(s_months, q["months"].start, q["body"].start)
+    tl.add(s_months, q["months"].start, q["body"].start, transition="cut")
 
     # ---------------------------------------------------------- 8. his body changes: the belly card
-    def belly_card(c, t, t0, t1, flap, lift, under=None, eggs=0.0, push=(0.94, 1.30)):
+    def belly_card(c, t, t0, t1, flap, lift, under=None, eggs=0.0, push=(0.94, 1.30), claw=1.0):
         cam = card_cam(t, t0, t1, *push)
         c.save()
         c.translate(0, ctx.get("lift", 170))                      # full-screen card: undo the stage lift
         paint(c, bg.parchment())
         cam.apply(c)
         kiwi.draw_underside(c, st, 540, 900, 1.9, flap=flap, lift=lift, under=under, eggs=eggs, phase=t,
-                            blink=blinking(t, 0.6))
+                            blink=blinking(t, 0.6), claw=claw)
         c.restore()
         return cam
 
     def s_body(c, t, ctx):
         b = q["body"]
         flap = ease(prog(t, b.word("grows") - 0.2, b.word("round") + 0.4))
-        belly_card(c, t, b.start, q["claws"].start, flap, 0.0)
+        belly_card(c, t, b.start, q["claws"].start, flap, 0.0, push=(0.94, 1.22))
         label(c, "his tail flap", 540, TOP_LABEL_Y, window(t, b.word("tail") - 0.2, b.word("round") + 0.2, 0.3, 0.3), size=44)
         label(c, "wide and round, like a mother's", 540, TOP_LABEL_Y, window(t, b.word("round") + 0.3, q["claws"].start, 0.3, 0.3), size=40)
 
@@ -309,24 +312,18 @@ def build(style_name):
     def s_claws(c, t, ctx):
         cl = q["claws"]
         t_sci = cl.word("Scientists") - 0.2
-        if t < t_sci:
-            k = ease(prog(t, cl.start, t_sci))
-            cam = framed(lerp(1.15, 1.3, k), KX, KY - 20)
-            c.save()
-            cam.apply(c)
-            shore(c, t)
-            kiwi.draw(c, st, KX, KY, KS, phase=t, blink=blinking(t, 0.6), happy=0.4, claw=0.72, raise_=0.6,
-                      pinch=0.5, sac=lambda cc: sac_under(cc, t, eggs=0.0, happy=0.3))
-            c.restore()
-            sx, sy = cam.screen(KX + 150, KY - 50)
-            tag(c, "small claws", sx, sy, window(t, cl.word("claws") - 0.1, t_sci, 0.3, 0.3))
-        else:
-            def sac(cc):
-                toffee.draw_sac(cc, st, 0, 26, 1.0, eggs=0.0, phase=t * 2, stalk=False, happy=0.3, blink=blinking(t, 1.7))
-            belly_card(c, t, t_sci, q["males"].start, 1.0, 0.85, under=sac, push=(1.0, 1.28))
-            label(c, "scientists think: the wide flap shelters her", 540, TOP_LABEL_Y, window(t, t_sci + 0.2, q["males"].start, 0.3, 0.3), size=36)
+        lift = 0.85 * ease(prog(t, t_sci, t_sci + 0.8))                 # the flap folds open to show the sac
 
-    tl.add(s_claws, q["claws"].start, q["males"].start)
+        def sac(cc):
+            toffee.draw_sac(cc, st, 0, 26, 1.0, eggs=0.0, phase=t * 2, stalk=False, happy=0.3, blink=blinking(t, 1.7))
+
+        cam = belly_card(c, t, cl.start, q["males"].start, 1.0, lift, under=sac, push=(1.22, 1.36), claw=0.72)
+        hx, hy = cam.screen(540 + 100 * 1.9, 900 + 98 * 1.9)             # his right hand on the card (true screen)
+        tag(c, "small claws", hx - 30, hy - 50 + 170, window(t, cl.word("claws") - 0.1, t_sci, 0.3, 0.3))
+        label(c, "scientists think: the wide flap shelters the sac", 540, TOP_LABEL_Y,
+              window(t, t_sci + 0.2, q["males"].start, 0.3, 0.3), size=36)
+
+    tl.add(s_claws, q["claws"].start, q["males"].start, transition="cut")
 
     # ---------------------------------------------------------- 10. tiny males slip in; the sac fills with eggs
     def s_males(c, t, ctx):
@@ -339,13 +336,13 @@ def build(style_name):
             toffee.draw_sac(cc, st, 0, 26, 1.0, eggs=eggs, phase=t * 2, stalk=False, happy=0.5 + 0.4 * eggs,
                             males=ease(prog(t, m.word("slip") - 0.2, m.word("slip") + 0.8)), blink=blinking(t, 1.7))
             # two male larvae swim in from the sides to the opening (local coords of the belly view)
-            for i, (x0, y0, x1, y1) in enumerate(((-230, 120, -16, 72), (240, 140, 18, 70))):
+            for i, (x0, y0, x1, y1) in enumerate(((-135, 165, -16, 72), (140, 170, 18, 70))):   # start inside the safe zone
                 kk = ease(prog(t, m.start + 0.1 + 0.2 * i, m.word("slip") + 0.1 + 0.2 * i))
                 if kk < 1:
                     toffee.draw_male(cc, st, lerp(x0, x1, kk), lerp(y0, y1, kk), 0.7, phase=t + i,
                                      ang=math.atan2(y1 - y0, x1 - x0), alpha=1 - ease(prog(kk, 0.85, 1.0)))
 
-        belly_card(c, t, m.start, q["still"].start, 1.0, 0.85, under=sac, push=(1.28, 1.42))
+        belly_card(c, t, m.start, q["still"].start, 1.0, 0.85, under=sac, push=(1.36, 1.48), claw=0.72)
         label(c, "tiny males", 540, TOP_LABEL_Y, window(t, m.word("male") - 0.1, t_fill, 0.3, 0.3), size=44)
         label(c, "Toffee's eggs", 540, TOP_LABEL_Y, window(t, t_fill + 0.2, q["still"].start, 0.3, 0.3), size=44)
 
@@ -370,7 +367,7 @@ def build(style_name):
     # ---------------------------------------------------------- 12. he cleans the sac, guards it
     def s_care(c, t, ctx):
         cr = q["care"]
-        cam = framed(1.3, KX, KY + 20)
+        cam = framed(lerp(1.3, 1.45, ease(prog(t, cr.start, q["launch"].start))), KX, KY + 20)
         clean = window(t, cr.word("cleans") - 0.2, cr.word("guards") - 0.2, 0.3, 0.3)
         guard = ease(prog(t, cr.word("guards") - 0.2, cr.word("guards") + 0.5))
         c.save()
@@ -395,8 +392,8 @@ def build(style_name):
         la = q["launch"]
         k = ease(prog(t, la.word("climbs") - 0.3, la.word("high") + 0.4))
         # a curved path from the sand up the rock's left face to its top
-        x = lerp(KX, ROCK_TOP[0] - 30, k)
-        y = lerp(KY, ROCK_TOP[1] - 112 * KS, k) - 60 * math.sin(k * math.pi)
+        x = lerp(KX, 720, k)                                   # the rock's left shoulder, inside the safe zone
+        y = lerp(KY, 1075 - 112 * KS, k) - 60 * math.sin(k * math.pi)
         return x, y, k
 
     def bob_fan(t):
@@ -407,7 +404,7 @@ def build(style_name):
     def s_launch(c, t, ctx):
         x, y, k = climb_pos(t)
         b = bob_fan(t)
-        cam = framed(lerp(1.3, 1.05, ease(prog(t, q["launch"].start, q["launch"].word("high")))), lerp(KX, 620, k), lerp(KY, 1120, k))
+        cam = framed(lerp(1.3, 1.0, ease(prog(t, q["launch"].start, q["launch"].word("high")))), lerp(KX, 560, k), lerp(KY, 1120, k))
         c.save()
         cam.apply(c)
         shore(c, t)
@@ -434,19 +431,19 @@ def build(style_name):
             ax, ay = r.uniform(-spread, spread), r.uniform(-up, -up * 0.3)
             # out of the opening first (sideways and a little down), then up and away around the crab
             px = x + ax * ease_out(k) + 14 * math.sin(t * 3 + i)
-            py = y + 60 * math.sin(min(1.0, k * 3) * math.pi / 2) * (1 - k) + ay * ease(k) - 40 * k
+            py = y + ay * ease_out(k) - 40 * k                       # straight up and out of the opening
             toffee.draw_nauplius(c, st, px, py, s * (0.7 + 0.3 * r.random()), phase=t + i, ang=r.uniform(-1.2, 1.2),
                                  alpha=min(1.0, (1 - k) * 2.5))
 
     def s_burst(c, t, ctx):
         x, y, k = climb_pos(t)
         b = bob_fan(t)
-        cam = framed(1.05, 620, 1120)
+        cam = framed(1.0, 560, 1120)
         c.save()
         cam.apply(c)
         shore(c, t)
         hatch = window(t, q["burst"].start - 0.1, q["cloud"].word("barnacles"), 0.2, 0.8)
-        larvae(c, t, q["burst"].start, x, y + 150 * KS)
+        larvae(c, t, q["burst"].start, x, y + 150 * KS, spread=340)
         kiwi.draw(c, st, x, y + 18 * math.sin(t * 5.5) * b, KS, ang=0.06 * math.sin(t * 5.5) * b, phase=t,
                   blink=blinking(t, 0.6), happy=0.9, claw=0.72, raise_=0.5 + 0.5 * math.sin(t * 5.5 + 1) * b, pinch=0.4,
                   sac=lambda cc: sac_under(cc, t, eggs=1.0 - 0.8 * ease(prog(t, q["burst"].start, q["cloud"].end)),
@@ -483,7 +480,7 @@ def build(style_name):
         label(c, "his job: making babies", 540, TOP_LABEL_Y, window(t, tu.word("whole") - 0.1, tu.word("hers") - 0.2, 0.3, 0.3), size=40)
         label(c, "...now hers", 540, TOP_LABEL_Y, window(t, tu.word("hers") - 0.1, q["end"].start, 0.3, 0.3), size=44)
 
-    tl.add(s_turn, q["turn"].start, q["end"].start)
+    tl.add(s_turn, q["turn"].start, q["end"].start, transition="cut")
 
     # ---------------------------------------------------------- 17. brood after brood + 18. for life
     def s_end_lines(c, t, ctx):
@@ -521,11 +518,13 @@ def build(style_name):
         c.save()
         c.translate(0, ctx.get("lift", 170))
         paint(c, bg.parchment())
-        z = lerp(0.97, 1.02, ease(prog(t, t0, DUR)))
+        z = lerp(0.94, 1.12, ease(prog(t, t0, DUR)))
         c.translate(540, 900)
         c.scale(z, z)
         c.translate(-540, -900)
         ta = ease(prog(t, t0, t0 + 0.4))
+        kiwi.draw(c, st, 540, 440, 0.78, phase=t, blink=blinking(t, 0.6), happy=0.8, claw=0.72, pinch=0.3,
+                  sac=lambda cc: sac_under(cc, t, eggs=1.0, happy=0.7), alpha=ta)
         tx.center(c, "Sacculina carcini", 540, 700, 76, INK, alpha=ta, italic=True)
         tx.center(c, "the crab-hacker barnacle", 540, 770, 40, hexc("#8a5a3a"), alpha=ta * 0.9, italic=True)
         tx.center(c, "on the shore crab, Carcinus maenas", 540, 826, 34, hexc("#8a5a3a"), alpha=ta * 0.9, italic=True)

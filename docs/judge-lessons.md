@@ -17,7 +17,10 @@ probably become an engine default or a checklist item.
   it is *Paragordius varius*). The judge missed this, so check it explicitly.
 - **Hedge open science honestly.** "Scientists think so… but how is still a mystery" is fine. Never state a
   hypothesis as settled (e001 pass 1: an overstated claim had to be reworded).
-- **Every narrated beat needs a visual payoff** **(repeat ×4: e001 pass 2, l001 pass 1, e003 pass 1 twice)**.
+- **Every narrated beat needs a visual payoff** **(repeat ×5: e001 pass 2, l001 pass 1, e003 pass 1 twice, e004 pass 1)**.
+  e004: the "a sac" tag was placed *at* the sac's own coordinates, so the sac grew out behind its own name tag.
+  A tag's pointer tip goes at the thing; the bubble must not sit on it. When the thing is the beat, use
+  `pointer=False` and put the bubble beside it, and make the sub-line add a fact the caption does not say.
   e003: "the heart is just a stop" played over nothing (Dilly was drawn *under* the heart), and "Poppy doesn't
   inject her" had no Dilly on screen at all. Root cause both times: drawing order and late entrances, not the
   idea. Engine fix: `biscuit.draw_chest` now draws the worm callback last. Check: for each line, name the thing
@@ -27,6 +30,10 @@ probably become an engine default or a checklist item.
   tags; a dividing cell). Before rendering, list every line whose time on screen adds nothing new to the board.
 - **Closing summaries are claims too.** "All of them, single cells" was false for one item in its own list
   (*Streptomyces* threads, l001 pass 1). Re-check every word of the recap against facts.md.
+- **An absolute "never" is true only from the moment it becomes true** (e004 pass 1). "He'll never shed his shell
+  again" was said at infection; the crab keeps moulting (and changes shape) for months until the sac emerges, and
+  only then stops. Place each "never / no more" line at the point in the story where it starts to hold, and check
+  the order of the beats against the timeline in facts.md, not just each claim on its own.
 - **Hooks and closing lines must survive the host list on Wikipedia** **(repeat of the l001 "absolute claim" lesson:
   e003 pass 1)**. "This worm can't grow up without a dog" was the owner-approved hook, and false: coyotes, foxes and
   wolves are normal hosts, cats occasional. The same overstatement sat in the thumbnail label and the closing line,
@@ -110,6 +117,9 @@ probably become an engine default or a checklist item.
   the uncovered part hung outside her head as a dark smear (e002). It read as a shadow, and two rounds of
   hunting `st.shadow` went nowhere. Build the shape **from** the live parameter instead — the cavity is now
   the wedge between the two biting edges at the current jaw angle, so it cannot leak at any value.
+- **Never hide a growing thing with a mask rectangle** (e004 pass 1: the needle "pushed in" by sliding a
+  shell-coloured rectangle down over it; once in, the rectangle sat inside the crab as a green pillar for 6 s).
+  Draw the thing to its current length from the live parameter instead.
 - **Never stride an outline polyline.** Dilly's ink line used every 5th point, so it cut straight chords across
   tight bends and the long worm looked faceted (e003 pass 1). Draw outlines through every point.
 - **Paint occlusion before the occupant, never after.** The throat vignette inside Mango's mouth was painted

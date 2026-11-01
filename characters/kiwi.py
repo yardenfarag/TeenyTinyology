@@ -217,7 +217,7 @@ def _claws(c, st, phase, pinch, raise_, claw, real):
 
 # ================================================================ belly view
 def draw_underside(c, st, x, y, s, flap=0.0, lift=0.0, under=None, eggs=0.0, phase=0.0, ang=0.0,
-                   alpha=1.0, blink=False):
+                   alpha=1.0, blink=False, claw=1.0):
     """Kiwi on his back / seen from below: the yellow-olive sternum with the tail flap folded over it.
 
     flap 0 → a male's narrow "lighthouse" (a slim triangle with a rounded tip), 1 → a female's wide, round,
@@ -233,7 +233,7 @@ def draw_underside(c, st, x, y, s, flap=0.0, lift=0.0, under=None, eggs=0.0, pha
     real = st.realistic
     st.shadow(c, 0, 96, 200, 24, 0.16)
     _legs(c, st, phase, 0.0)
-    _claws(c, st, phase, 0.0, 0.0, 1.0, real)
+    _claws(c, st, phase, 0.0, 0.0, claw, real)
     st.part(c, lambda cc: _rim(cc, 0.0), BELLY, 0, 0, 160, seed=721)
     c.save()
     _rim(c, 0.0)

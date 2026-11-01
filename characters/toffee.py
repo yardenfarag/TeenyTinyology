@@ -97,7 +97,7 @@ def draw_male(c, st, x, y, s, phase=0.0, ang=0.0, alpha=1.0):
 
 
 # ================================================================ kentrogon: the needle
-def draw_kentrogon(c, st, x, y, s, inject=0.0, phase=0.0, ang=0.0, alpha=1.0):
+def draw_kentrogon(c, st, x, y, s, inject=0.0, phase=0.0, ang=0.0, alpha=1.0, needle=1.0):
     """(x, y) is the point on the crab's shell where the needle goes in; the needle points down (+y).
     inject 0: the dome sits on the shell with the needle just in; 0..1: the soft parasite (a pale droplet)
     travels down the needle and the dome empties."""
@@ -121,8 +121,9 @@ def draw_kentrogon(c, st, x, y, s, inject=0.0, phase=0.0, ang=0.0, alpha=1.0):
     k = 1.0 - 0.45 * inject
     st.ellipse(c, 0, -10 * k, 16 * k, 11 * k, 0.0, LARVA, seed=811)
     # the hollow needle: a thin tube, pushed through the shell
-    st.line(c, [(0, -4), (0, 26)], 3.4, LARVA.dark)
-    st.line(c, [(0, -4), (0, 26)], 1.4, LARVA.light, alpha=0.8)
+    tip = lerp(2, 26, needle)                       # the needle pushes in; draw it to length, never mask it
+    st.line(c, [(0, -4), (0, tip)], 3.4, LARVA.dark)
+    st.line(c, [(0, -4), (0, tip)], 1.4, LARVA.light, alpha=0.8)
     # the droplet travelling down: the soft body being injected
     if inject > 0:
         dy = lerp(-8, 34, inject)
