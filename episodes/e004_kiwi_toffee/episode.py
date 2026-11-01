@@ -22,7 +22,7 @@ from engine import render
 from engine import style as styles
 from engine.audio import mix, music, sfx
 from engine.audio.common import SR, Bus
-from engine.core import TAU, back_out, clamp, ease, ease_out, ellipse, hexc, lerp, prog, rng, window
+from engine.core import TAU, back_out, clamp, ease, ease_out, ellipse, hexc, lerp, prog, rng, squash, window
 from engine.scene import Timeline, label, sparkles, tag
 from engine.voice import narrate, sfx_events
 from episodes.e002_roly_mango.episode import Cam, blinking, brand_plate, paint
@@ -108,7 +108,7 @@ def build(style_name):
 
     def s_toffee(c, t, ctx):
         kk = ease(prog(t, q["toffee"].start, q["land"].start))
-        cam = framed(lerp(1.08, 1.22, kk), lerp(KX, KX + 120, kk), lerp(1180, 1100, kk))
+        cam = framed(lerp(1.08, 1.18, kk), KX, lerp(1180, 1120, kk))
         c.save()
         cam.apply(c)
         shore(c, t)
@@ -130,10 +130,12 @@ def build(style_name):
             cc.restore()
         a_lens = window(t, q["toffee"].word("speck") - 0.1, q["land"].start + 0.2, 0.35, 0.3)
         lens(c, 300, 640, 160, inner, a_lens)
-        tag(c, "Toffee", sx, sy - 16, window(t, q["toffee"].word("Toffee") + 0.1, q["land"].start, 0.3, 0.3),
+        tag(c, "Toffee", min(sx + 120, 800), sy - 16, window(t, q["toffee"].word("Toffee") + 0.1, q["land"].start, 0.3, 0.3),
             sub="a barnacle")
         # the rock barnacles on the left rock: what people think a barnacle is
-        label(c, "those are rock barnacles", 330, 880, window(t, q["toffee"].word("barnacle") + 0.4, q["land"].start, 0.3, 0.3), size=34)
+        bx, by = cam.screen(150, 1200)                                    # the cones on the left rock
+        tag(c, "rock barnacles", max(240, bx), by - 30, window(t, q["toffee"].word("barnacle") + 0.4, q["land"].start, 0.3, 0.3),
+            size=34, sub="the kind you know")
 
     tl.add(s_toffee, q["toffee"].start, q["land"].start)
 
@@ -381,14 +383,14 @@ def build(style_name):
     # ---------------------------------------------------------- 13. the launch: up the rock, bob and fan
     def climb_pos(t):
         la = q["launch"]
-        k = ease(prog(t, la.word("climbs") - 0.3, la.word("high") + 0.4))
+        k = ease(prog(t, la.word("climbs") - 0.3, la.word("high") + 0.9))
         # a curved path from the sand up the rock's left face to its top
         # from the sand to the foot of the rock, then up its left face (x 530-560) onto the crown (y ~1062)
-        if k < 0.35:
-            kk = k / 0.35
+        if k < 0.22:
+            kk = k / 0.22
             x, y = lerp(KX, 560, kk), KY
         else:
-            kk = (k - 0.35) / 0.65
+            kk = (k - 0.22) / 0.78
             x, y = lerp(560, 740, kk), lerp(KY, 1062 - 112 * KS, kk)
         return x, y, k
 
@@ -400,18 +402,25 @@ def build(style_name):
     def s_launch(c, t, ctx):
         x, y, k = climb_pos(t)
         b = bob_fan(t)
+        land_t = q["launch"].word("high") + 0.9
+        sqx, sqy = squash(t, land_t, 0.35, 0.12)                 # a small landing squash on the crown
         cam = framed(lerp(1.3, 1.0, ease(prog(t, q["launch"].start, q["launch"].word("high")))), lerp(KX, 540, k), lerp(KY, 1120, k))
         c.save()
         cam.apply(c)
         shore(c, t)
         bobbing = 18 * math.sin(t * 5.5) * b
+        c.save()
+        c.translate(x, y + kiwi.GROUND * KS)                      # squash about the feet
+        c.scale(sqx, sqy)
+        c.translate(-x, -(y + kiwi.GROUND * KS))
         kiwi.draw(c, st, x, y + bobbing, KS, ang=0.06 * math.sin(t * 5.5) * b - 0.12 * k * (1 - k) * 4,
                   phase=t * (1 + 2 * (1 - k)), walk=1.0 - k, blink=blinking(t, 0.6), happy=0.6, claw=0.72,
                   raise_=0.5 + 0.5 * math.sin(t * 5.5 + 1) * b if b > 0 else 0.0, pinch=0.4,
                   sac=lambda cc: sac_under(cc, t, eggs=1.0, happy=0.8))
         c.restore()
+        c.restore()
         sx, sy = cam.screen(x, y - 160)
-        label(c, "bobbing and fanning, like a mother hatching her eggs", 540, TOP_LABEL_Y, window(t, q["launch"].word("bobs") - 0.1, q["burst"].end, 0.3, 0.3), size=32)
+        label(c, "bobbing and fanning, like a mother hatching eggs", 540, TOP_LABEL_Y, window(t, q["launch"].word("bobs") - 0.1, q["burst"].end, 0.3, 0.3), size=34)
 
     tl.add(s_launch, q["launch"].start, q["burst"].start)
 
@@ -446,7 +455,7 @@ def build(style_name):
                                            happy=0.9, hatch=hatch))
         bg.bubbles(c, t, x, y + 150, n=10, seed=4, spread=60, speed=150, life=2.5, t0=q["burst"].start)
         c.restore()
-        label(c, "in a few days they'll be ready to find a crab", 540, TOP_LABEL_Y, window(t, q["cloud"].word("off") - 0.1, q["turn"].start, 0.3, 0.3), size=36)
+        label(c, "in a few days they'll be ready to find a crab", 540, TOP_LABEL_Y, window(t, q["cloud"].word("off") - 0.1, q["turn"].start, 0.3, 0.3), size=34)
 
     tl.add(s_burst, q["burst"].start, q["turn"].start)
 
@@ -494,14 +503,12 @@ def build(style_name):
             cc.paint()
             toffee.draw_roots(cc, st, SPOT[0], SPOT[1], 1.0, grow=1.0, seed=1, arms=6, length=105, width=7.5)
 
-        if e.start <= t < li.start:
-            larvae(c, t, e.start + 0.4, KX, KY + 150 * KS, n=40, seed=5, up=400, spread=300, life=3.0, s=0.8)
         kiwi.draw(c, st, KX, KY, KS, phase=t, blink=blinking(t, 0.6), happy=0.7, claw=0.72,
                   xray=roots, xray_alpha=0.7 * ease(prog(t, li.word("part") - 0.2, li.word("him") + 0.3)),
                   sac=lambda cc: sac_under(cc, t, eggs=eggs, happy=0.7))
         c.restore()
-        label(c, "several broods; a mother crab has one a year", 540, TOP_LABEL_Y, window(t, e.word("Brood") - 0.1, li.start, 0.3, 0.3), size=36)
-        label(c, "the sac may drop off one day; the roots never do", 540, TOP_LABEL_Y, window(t, li.word("Toffee") - 0.2, li.end + 0.6, 0.3, 0.3), size=36)
+        label(c, "several broods a year; a mother crab has one or two", 540, TOP_LABEL_Y, window(t, e.word("Brood") - 0.1, li.start, 0.3, 0.3), size=34)
+        label(c, "the sac may drop off one day; the roots stay", 540, TOP_LABEL_Y, window(t, li.word("Toffee") - 0.2, li.end + 0.6, 0.3, 0.3), size=36)
 
     tl.add(s_end_lines, q["end"].start, q["life"].end + 0.5)
 

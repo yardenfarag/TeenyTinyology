@@ -163,7 +163,9 @@ probably become an engine default or a checklist item.
   board: light up each region as it is named, underline, draw the teaser (l001). **Checklist item:** before
   rendering, list the stretches where nothing new appears on the board (board item starts, camera moves, erasers)
   and fix every one over 5 s at the start or end of a lesson.
-- **A fix is checked like new work** **(repeat: e003 pass 2)**. e003 moved two labels away from the badge but kept
+- **A fix is checked like new work** **(repeat ×4: e003 pass 2, e004 passes 2 and 3)**. e004: the pass-1 push-in carried a
+  label off the frame; the pass-2 parked label then collided with a tag that still drifted with the camera. After a
+  fix, re-scrub the whole window the fix lives in, with every other moving element in it, not just the fixed item. e003 moved two labels away from the badge but kept
   their 0.8 s windows, and a new "heart" tag covered the very worm the fix was meant to show. After every fix pass,
   re-time what moved and re-scrub the shot it lives in.
 - **A label beside a caption needs about 2 s** (e003 pass 2: three labels read for 0.8–1 s). Measure on the MP4.
