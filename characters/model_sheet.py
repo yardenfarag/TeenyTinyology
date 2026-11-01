@@ -178,10 +178,14 @@ def cell_kiwi_xray(c, st, t):
 
 
 def cell_kiwi_under(c, st, t):
-    kiwi.draw_underside(c, st, 150, 300, 0.56, flap=0.0, phase=t * 2)
+    # left: a male's narrow flap · middle: a mother crab's wide flap opened off her eggs · right: Kiwi's
+    # widened flap opened off Toffee's sac
+    kiwi.draw_underside(c, st, 100, 300, 0.40, flap=0.0, phase=t * 2)
+    kiwi.draw_underside(c, st, 280, 300, 0.40, flap=1.0, lift=0.85, eggs=1.0, phase=t * 2 + 0.5)
+
     def sac(cc):
-        toffee.draw_sac(cc, st, 0, 30, 0.85, eggs=0.7, phase=t * 2, stalk=False, happy=0.3)
-    kiwi.draw_underside(c, st, 410, 300, 0.56, flap=1.0, lift=0.7, under=sac, phase=t * 2 + 1)
+        toffee.draw_sac(cc, st, 0, 28, 1.0, eggs=0.7, phase=t * 2, stalk=False, happy=0.3)
+    kiwi.draw_underside(c, st, 460, 300, 0.40, flap=1.0, lift=0.85, under=sac, phase=t * 2 + 1)
 
 
 def cell_toffee(c, st, t):
@@ -216,7 +220,7 @@ CELLS = {
     "dilly": [("Dilly + a male (coiled tail)", cell_dilly), ("Dilly: larva, nestled, babies", cell_dilly_small)],
     "kiwi": [("Kiwi", cell_kiwi), ("Kiwi guards the sac", cell_kiwi_guard),
              ("Kiwi x-ray: Toffee's roots", cell_kiwi_xray),
-             ("Belly: male flap · wide flap + sac", cell_kiwi_under)],
+             ("Belly: male · mother · Kiwi", cell_kiwi_under)],
     "toffee": [("Toffee: larva, male, needle, sac, roots", cell_toffee)],
 }
 

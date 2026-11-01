@@ -222,7 +222,8 @@ def draw_underside(c, st, x, y, s, flap=0.0, lift=0.0, under=None, eggs=0.0, pha
 
     flap 0 → a male's narrow "lighthouse" (a slim triangle with a rounded tip), 1 → a female's wide, round,
     seven-segmented flap. The flap hinges at the rear (bottom) and its tip points forward (up). `under`
-    draws between sternum and flap; `lift` folds the flap back toward its hinge so what is under it shows.
+    draws between sternum and flap; `lift` swings the flap open on its hinge like a door (0.5 = edge-on,
+    1 = folded right back below the body) so what is under it shows.
     `eggs` draws a mother crab's own orange-brown egg mass under the flap (for the comparison beat)."""
     c.save()
     c.translate(x, y)
@@ -268,15 +269,22 @@ def draw_underside(c, st, x, y, s, flap=0.0, lift=0.0, under=None, eggs=0.0, pha
     c.restore()
 
 
+FLAP = Palette("#a9a94e", "#d2d088", "#6c6b26", "#3a3a14")
+HINGE_Y = 84.0
+
+
 def flap_outline(flap=0.0, lift=0.0):
-    """Local points of the tail flap, hinge at (0, 84), tip pointing up. Interpolates male → female."""
-    male = ((0.0, -36.0), (16.0, -30.0), (22.0, 10.0), (26.0, 50.0), (28.0, 84.0))
-    female = ((0.0, -48.0), (46.0, -40.0), (76.0, 0.0), (86.0, 46.0), (88.0, 84.0))
+    """Local points of the tail flap. It hinges on the rear edge of the body at y = HINGE_Y and lies folded
+    forward over the belly, tip pointing up. Interpolates the male (slim, pointed) → female (wide, round)
+    shape. lift swings it open on its hinge like a door: 0 closed over the belly, 0.5 edge-on, 1 folded
+    right back below the body — so what was under it is uncovered."""
+    male = ((0.0, -40.0), (14.0, -34.0), (22.0, 0.0), (28.0, 44.0), (30.0, HINGE_Y))
+    female = ((0.0, -52.0), (52.0, -42.0), (84.0, 0.0), (92.0, 46.0), (94.0, HINGE_Y))
+    k = 1.0 - 2.0 * lift                                   # signed foreshortening of the door
     pts = []
     for (mx, my), (fx, fy) in zip(male, female):
         px, py = lerp(mx, fx, flap), lerp(my, fy, flap)
-        py = lerp(py, 84.0 - (84.0 - py) * 0.1, lift)        # folding back = shrinking toward the hinge
-        pts.append((px, py))
+        pts.append((px, HINGE_Y + (py - HINGE_Y) * k))
     right = pts
     left = [(-px, py) for px, py in reversed(pts[:-1])]
     return right + left
@@ -284,33 +292,53 @@ def flap_outline(flap=0.0, lift=0.0):
 
 def _flap(c, st, flap, lift, real):
     pts = flap_outline(flap, lift)
+    k = 1.0 - 2.0 * lift
+    if abs(k) < 0.08:                                       # edge-on: just the hinge line
+        st.line(c, [(pts[-1][0], HINGE_Y), (pts[4][0], HINGE_Y)], 6.0, FLAP.dark)
+        return
 
     def path(cc):
         smooth_path(cc, pts, closed=True)
 
-    st.part(c, path, BELLY, 0, 30, 90, seed=731)
+    # a soft shadow where it lies on (or hangs off) the belly
+    st.shadow(c, 0, HINGE_Y + (pts[0][1] - HINGE_Y) * 0.5 + 6, abs(pts[2][0]) + 10,
+              abs(pts[0][1] - HINGE_Y) * 0.5 + 8, 0.18)
+    st.part(c, path, FLAP, 0, HINGE_Y + (pts[0][1] - HINGE_Y) * 0.5, 100, seed=731)
     c.save()
     path(c)
     c.clip()
-    c.set_source_rgba(*BELLY.dark[:3], 0.14)
+    g = cairo.LinearGradient(0, pts[0][1], 0, HINGE_Y)
+    g.add_color_stop_rgba(0.0, *FLAP.light[:3], 0.30)
+    g.add_color_stop_rgba(1.0, *FLAP.dark[:3], 0.30)
+    c.set_source(g)
     c.paint()
-    # segments: a female's flap shows seven, a male's shows fewer (some fused)
+    # segments: a female's flap shows seven, a male's fewer (some fused). Drawn as plate boundaries.
     n = 7 if flap > 0.5 else 5
-    top, bot = pts[0][1], 84.0
-    for k in range(1, n):
-        yy = lerp(top, bot, k / n)
-        c.move_to(-100, yy + 3)
-        c.curve_to(-40, yy - 4, 40, yy - 4, 100, yy + 3)
-        c.set_source_rgba(*BELLY.dark[:3], 0.45)
-        c.set_line_width(2.8)
+    top = pts[0][1]
+    for i in range(1, n):
+        yy = lerp(top, HINGE_Y, i / n)
+        hw = 110
+        c.move_to(-hw, yy + 4 * k)
+        c.curve_to(-hw * 0.4, yy - 3 * k, hw * 0.4, yy - 3 * k, hw, yy + 4 * k)
+        c.set_source_rgba(*FLAP.dark[:3], 0.55)
+        c.set_line_width(3.0)
         c.stroke()
     c.restore()
-    if flap > 0.5 and not real:   # the fringe of marginal setae a broadened flap grows
-        for i in range(12):
-            t = i / 11.0
-            px, py = lerp(pts[1][0], pts[3][0], t), lerp(pts[1][1], pts[3][1], t)
+    # a firm outline so the flap reads as a plate, not a stain
+    path(c)
+    c.set_source_rgba(*FLAP.line[:3], 0.85)
+    c.set_line_width(3.6)
+    c.set_line_join(cairo.LINE_JOIN_ROUND)
+    c.stroke()
+    # the hinge: a dark seam along the rear edge of the body
+    st.line(c, [(pts[-1][0] - 4, HINGE_Y), (pts[4][0] + 4, HINGE_Y)], 5.0, FLAP.line, alpha=0.9)
+    if flap > 0.5:                                          # the fringe of hairs a broadened flap grows
+        for i in range(14):
+            u = i / 13.0
+            px, py = lerp(pts[1][0], pts[3][0], u), lerp(pts[1][1], pts[3][1], u)
             for sgn in (-1, 1):
-                st.line(c, [(sgn * px, py), (sgn * (px + 7), py + 2)], 1.6, BELLY.dark, alpha=0.6 * (flap - 0.5) * 2)
+                st.line(c, [(sgn * px, py), (sgn * (px + 9), py + 2 * k)], 1.8, FLAP.dark,
+                        alpha=0.7 * (flap - 0.5) * 2)
 
 
 def _egg_mass(c, st, eggs):

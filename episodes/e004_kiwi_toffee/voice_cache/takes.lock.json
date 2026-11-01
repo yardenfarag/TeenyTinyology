@@ -1,8 +1,8 @@
 {
  "uk7wwhXdWYHKKZ8KTCVw:hook": {
-  "text": "This crab is guarding a clutch of eggs. They aren't his. And he's a boy.",
+  "text": "This crab is guarding a clutch of eggs. And they aren't even his.",
   "take": 0,
-  "hash": "d2d9a91fa9a38858"
+  "hash": "5e653023d77b4dc4"
  },
  "uk7wwhXdWYHKKZ8KTCVw:kiwi": {
   "text": "This is Kiwi. He's a shore crab.",
@@ -80,8 +80,8 @@
   "hash": "8889cca3cb71eaa4"
  },
  "uk7wwhXdWYHKKZ8KTCVw:end": {
-  "text": "A crab. A barnacle. And a family that isn't his.",
+  "text": "And Kiwi raises them all. Brood after brood.",
   "take": 0,
-  "hash": "aa789def37028ae0"
+  "hash": "0359398f9dd0b1c3"
  }
 }

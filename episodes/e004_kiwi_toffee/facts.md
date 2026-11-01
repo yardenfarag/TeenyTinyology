@@ -39,7 +39,7 @@ Main sources:
 | 17 | The "mating dance"/hormone-control story (WP-S) and "control of the nervous system" (WP-Sc, from The Conversation) are popular-science claims; mechanism of behaviour change is not established. | ❌ don't use | — | WP-S (section flagged for quality) |
 
 ## Hook and closing line (judge-lessons checklist: can't / only / always / never)
-- "They aren't his. And he's a boy." — true for the story's own crab (male hosts carry externae: #10, #11). ✅
+- "And they aren't even his." — true for the story's own crab (male hosts carry externae: #10, #11). ✅
 - "never moult again / never grow" — #6, stated by Høeg 1995 and MarLIN as a rule. ✅ (keep it to the story's crab:
   "Kiwi will never grow again")
 - "never have babies of his own" — #7 ✅ (never say how).
@@ -49,7 +49,7 @@ Main sources:
   *lost* the parasite (WP-Sc, from Cheng 2012) — not used.
 - "Scientists think the wide flap shelters the sac" — #10, the Kristensen 2012 authors' own hypothesis, hedged. ✅
 - Closing: "She doesn't just take his food. She takes his whole job of making babies — and hands him hers." — #5, #7,
-  #11. ✅
+  #11. ✅ "And Kiwi raises them all. Brood after brood." — #11, #13 (several successive broods). ✅
 
 Not claimed: the settlement site (antenna vs seta vs joint), the length of the internal phase, egg counts, number of
 dwarf males, prevalence, mortality, the mechanism of the behaviour change.

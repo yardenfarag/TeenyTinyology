@@ -15,7 +15,7 @@ from engine.voice import Line
 
 SCRIPT = [
     # ---- hook
-    Line("hook", "This crab is guarding a clutch of eggs. | They aren't his. | And he's a boy.", 0.9),
+    Line("hook", "This crab is guarding a clutch of eggs. | And they aren't even his.", 0.9),  # owner: "his" already says he's a boy
 
     # ---- meet them
     Line("kiwi", "This is Kiwi. He's a shore crab.", 0.5),
@@ -50,7 +50,7 @@ SCRIPT = [
 
     # ---- the turn + cycle
     Line("turn", "Toffee doesn't just take Kiwi's food. | She takes his whole job of making babies... | and hands him hers.", 1.0),
-    Line("end", "A crab. A barnacle. | And a family that isn't his.", 1.4),
+    Line("end", "And Kiwi raises them all. | Brood after brood.", 1.4),  # owner: the "a family that isn't his" line sounded weird
 ]
 
 # Sound effects anchored to the narration: (line id, word in that line or None = line start, effect, gain, offset s).
@@ -58,7 +58,7 @@ SCRIPT = [
 # Never anchor to a word that appears twice in its line.
 SFX = [
     ("hook", "eggs", "sparkle", 0.09, 0.0),
-    ("hook", "boy", "blip", 0.10, 0.1),
+    ("hook", "even", "blip", 0.10, 0.1),
     ("kiwi", "Kiwi", "click", 0.07, 0.0),
     ("toffee", "speck", "blip", 0.10, 0.0),
     ("toffee", "barnacle", "sparkle", 0.09, 0.0),
@@ -82,5 +82,5 @@ SFX = [
     ("burst", None, "shimmer", 0.09, 0.2),
     ("cloud", "cloud", "sparkle", 0.09, 0.0),
     ("turn", "hers", "chime", 0.09, 0.1),
-    ("end", "family", "chime", 0.10, 0.1),
+    ("end", "all", "chime", 0.10, 0.1),
 ]

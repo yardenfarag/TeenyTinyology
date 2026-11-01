@@ -15,7 +15,7 @@ males grow broad female-like abdomens and perform maternal care. It redirects th
   Her tiny dwarf males appear but are not named.
 
 ## Hook
-Teaser + first line: **"This crab is guarding a clutch of eggs. They aren't his. And he's a boy."**
+Teaser + first line: **"This crab is guarding a clutch of eggs. And they aren't even his."** (owner, 2026-11-01: "his" already says he is male)
 (Checked against the hedge column of facts.md: infected males carry and care for the externa — #10, #11.)
 
 ## The story in beats
@@ -40,5 +40,7 @@ Teaser + first line: **"This crab is guarding a clutch of eggs. They aren't his.
    End card: *Sacculina carcini* · the crab-hacker barnacle · *Carcinus maenas*, logo plate.
 
 ## Owner decisions
+- 2026-11-01: style **illustrated**. Hook without "And he's a boy". Closing line "A crab. A barnacle. And a family that
+  isn't his" rejected → "And Kiwi raises them all. Brood after brood." The belly-view tail flap must be understandable.
 - 2026-11-01: not "Button" → Toffee. Script must say clearly what happens to Kiwi: his body changes shape
   AND he behaves like a mother; he is still male.
