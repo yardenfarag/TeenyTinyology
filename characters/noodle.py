@@ -9,13 +9,14 @@ worm_curve(anchor, end, t)     a gently swaying path between two points
 """
 import math
 
-from engine.core import TAU, Palette, clamp, ellipse, hexc, lerp, rng, rounded_rect
+from engine.core import TAU, Palette, clamp, ellipse, hexc, lerp, rng
 
 NAME = "Noodle"
 SPECIES = "tapeworm"
 SEG = Palette("#fbf3e1", "#ffffff", "#dcc9a2", "#a88f62")
 EGG = Palette("#f3dc9a", "#fff4cc", "#c9a24e", "#8a6a2e")
 SEG_MAX = 22
+NECK = 34       # head centre -> first segment (the head itself has radius ~20 * size)
 
 
 def worm_curve(anchor, end, t, amp=150, n=400, waves=3.0):
@@ -55,29 +56,48 @@ def _at(pts, cum, a):
 def segment_layout(pts, nseg, length_frac=1.0, size=1.0):
     cum = _cum(pts)
     total = cum[-1] * length_frac
-    neck = 26 * size
+    neck = (NECK - 6) * size        # segments start just before the neck ends, covering its end
     base = [lerp(12, 66, (i / (SEG_MAX - 1)) ** 1.1) * size for i in range(nseg)]
     scale = min((total - neck) / (sum(base) or 1), 1.25)
     out, a = [], neck
     for i in range(nseg):
         l = base[i] * scale
         px, py, ang = _at(pts, cum, a + l / 2)
-        out.append((px, py, ang, l, lerp(12, 74, i / (SEG_MAX - 1)) * size))
+        out.append((px, py, ang, l, lerp(11, 44, (i / (SEG_MAX - 1)) ** 0.8) * size))  # ripe ones longer than wide (cucumber seed)
         a += l
     return out
 
 
-def draw_segment(c, st, l, w, mature, alpha=1.0, seed=0):
-    def path(cc):
-        rounded_rect(cc, -l / 2, -w / 2, l * 0.94, w, min(8, w / 3))
+def _seed_shape(cc, l, w):
+    """A proglottid: a soft barrel / cucumber-seed shape — sides bulge, ends narrower (joined to neighbours)."""
+    L = l * 0.47
+    e = w * 0.30
+    cc.move_to(-L, -e)
+    cc.curve_to(-L * 0.45, -w * 0.56, L * 0.45, -w * 0.56, L, -e)
+    cc.curve_to(L + w * 0.08, -e * 0.5, L + w * 0.08, e * 0.5, L, e)
+    cc.curve_to(L * 0.45, w * 0.56, -L * 0.45, w * 0.56, -L, e)
+    cc.curve_to(-L - w * 0.08, e * 0.5, -L - w * 0.08, -e * 0.5, -L, -e)
+    cc.close_path()
 
+
+def draw_segment(c, st, l, w, mature, alpha=1.0, seed=0):
+    path = lambda cc: _seed_shape(cc, l, w)  # noqa: E731
     st.part(c, path, SEG, 0, 0, max(l, w) * 0.6, seed=seed, alpha=alpha)
     if mature:
-        for ix in (-0.25, 0.1):
-            for iy in (-0.22, 0.22):
-                c.arc(ix * l, iy * w, w * 0.11, 0, TAU)
-                c.set_source_rgba(*hexc("#e0a24c")[:3], 0.85 * alpha)
-                c.fill()
+        # egg packets showing through the skin: a loose, irregular cluster of soft honey blobs (owner: a neat
+        # 2x2 grid of dots read as dominoes)
+        rnd = rng(seed * 7 + 3)
+        c.save()
+        path(c)
+        c.clip()
+        for _ in range(9):
+            ex = rnd.uniform(-0.36, 0.36) * l
+            ey = rnd.uniform(-0.3, 0.3) * w * (1 - abs(ex) / l)
+            r = w * rnd.uniform(0.07, 0.12)
+            ellipse(c, ex, ey, r, r * rnd.uniform(0.8, 1.0))
+            c.set_source_rgba(*hexc("#e6b765")[:3], 0.42 * alpha)
+            c.fill()
+        c.restore()
 
 
 def draw_scolex(c, st, x, y, ang, s, alpha=1.0, detail=False, blink=False, happy=0.0):
@@ -91,8 +111,8 @@ def draw_scolex(c, st, x, y, ang, s, alpha=1.0, detail=False, blink=False, happy
     for row in range(3 if detail else 2):
         for k in range(7):
             a = math.pi + (k - 3) * 0.3
-            r0 = 9 + row * 2.5
-            rx0, ry0 = -24 + math.cos(a) * r0, math.sin(a) * r0
+            r0 = 8 + row * 2.5
+            rx0, ry0 = -25 + math.cos(a) * r0, math.sin(a) * r0
             dx, dy = math.cos(a), math.sin(a)
             c.move_to(rx0, ry0)
             c.curve_to(rx0 + dx * 3, ry0 + dy * 3, rx0 + dx * 5 - dy * 2, ry0 + dy * 5 + dx * 2,
@@ -100,25 +120,29 @@ def draw_scolex(c, st, x, y, ang, s, alpha=1.0, detail=False, blink=False, happy
             c.set_source_rgba(*hook)
             c.set_line_width(1.4 if s < 2 else 2.6 / s)
             c.stroke()
-    st.ellipse(c, -24, 0, 10, 9, 0.0, SEG, seed=81)
-    st.ellipse(c, 0, 0, 26, 22, 0.0, SEG, seed=82)
-    for sy in (-10, 10):
-        c.arc(-2, sy, 8, 0, TAU)
-        c.set_source_rgba(*hexc("#d9c29a"))
+    st.ellipse(c, -23, 0, 9, 8, 0.0, SEG, seed=81)          # rostellum (the hooked tip)
+    st.ellipse(c, 0, 0, 25, 22, 0.0, SEG, seed=82)
+    # suckers: shallow cups on the rim of the head, low contrast so they never read as a second pair of eyes
+    for sy in (-1, 1):
+        ellipse(c, -9, sy * 15, 8, 5, sy * 0.35)
+        c.set_source_rgba(*hexc("#e8d6b2")[:3], 0.95)
         c.fill_preserve()
-        c.set_source_rgba(*hexc("#9c7f50"))
-        c.set_line_width(1.6 if s < 2 else 3 / s)
+        c.set_source_rgba(*hexc("#b89c6c")[:3], 0.55)
+        c.set_line_width(1.2 if s < 2 else 2.2 / s)
         c.stroke()
-        c.arc(-2, sy, 4, 0, TAU)
-        c.set_source_rgba(*hexc("#a8865a"))
+        ellipse(c, -9, sy * 15, 4, 2.4, sy * 0.35)
+        c.set_source_rgba(*hexc("#cdb588")[:3], 0.8)
         c.fill()
     if st.faces and not detail:
-        # a tiny face on the back of the head so Noodle reads as a character
+        # a small, centred face so Noodle reads as a character (kept upright)
         c.save()
-        c.rotate(-ang)  # keep the face upright
-        st.eye(c, 6, -6, 4.2, 0.1 if blink else 1.0)
-        st.eye(c, 16, -5, 3.8, 0.1 if blink else 1.0)
-        st.smile(c, 12, 4, 8, k=1 + happy)
+        c.translate(3, 0)
+        c.rotate(-ang)
+        st.eye(c, -6, -3, 3.6, 0.1 if blink else 1.0)
+        st.eye(c, 7, -3, 3.6, 0.1 if blink else 1.0)
+        st.blush(c, -10, 5, 3.2, 0.35)
+        st.blush(c, 11, 5, 3.2, 0.35)
+        st.smile(c, 0.5, 4, 7, k=1 + happy)
         c.restore()
     c.pop_group_to_source()
     c.paint_with_alpha(alpha)
@@ -128,8 +152,30 @@ def draw_scolex(c, st, x, y, ang, s, alpha=1.0, detail=False, blink=False, happy
 def draw(c, st, pts, nseg=SEG_MAX, length_frac=1.0, skip_tail=0, alpha=1.0, size=1.0, blink=False, happy=0.0):
     lay = segment_layout(pts, nseg, length_frac, size)
     cum = _cum(pts)
-    x1, y1, _ = _at(pts, cum, 26 * size)
-    st.line(c, [pts[0], (x1, y1)], 10 * size, SEG.dark, alpha)
+    # the neck: a short pale unsegmented stretch that tapers from the head into the first segment
+    # (owner, e005: a thin dark stalk made the body look detached from the head)
+    neck = [pts[0]] + [_at(pts, cum, NECK * size * k / 6)[:2] for k in range(1, 7)]
+    w0, w1 = 13 * size, 6.5 * size
+
+    def neck_path(cc):
+        left, right = [], []
+        for k, (x, y) in enumerate(neck):
+            xa, ya = neck[max(0, k - 1)]
+            xb, yb = neck[min(len(neck) - 1, k + 1)]
+            dx, dy = xb - xa, yb - ya
+            ln = math.hypot(dx, dy) or 1
+            nx, ny = -dy / ln, dx / ln
+            w = lerp(w0, w1, k / (len(neck) - 1))
+            left.append((x + nx * w, y + ny * w))
+            right.append((x - nx * w, y - ny * w))
+        cc.move_to(*left[0])
+        for p in left[1:]:
+            cc.line_to(*p)
+        for p in reversed(right):
+            cc.line_to(*p)
+        cc.close_path()
+    st.part(c, neck_path, SEG, *neck[3], 20 * size, seed=89, alpha=alpha)
+    # segments on top of the neck's far end (it disappears under the first one)
     for i in reversed(range(nseg - skip_tail)):
         px, py, ang, l, w = lay[i]
         c.save()
@@ -139,7 +185,7 @@ def draw(c, st, pts, nseg=SEG_MAX, length_frac=1.0, skip_tail=0, alpha=1.0, size
         c.restore()
     x0, y0 = pts[0]
     xa, ya = pts[3]
-    draw_scolex(c, st, x0, y0, math.atan2(ya - y0, xa - x0), 1.4 * size, alpha, blink=blink, happy=happy)
+    draw_scolex(c, st, x0, y0, math.atan2(ya - y0, xa - x0), 0.8 * size, alpha, blink=blink, happy=happy)  # a small head on a long body (owner, e005: the scolex is tiny)
     return lay
 
 

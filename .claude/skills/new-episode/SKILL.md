@@ -37,7 +37,7 @@ Then read `docs/judge-lessons.md` — mistakes earlier episodes made; design thi
 
 ## 4. Look frames — **owner approves backgrounds / characters / text before the full render**
 - Render ~10 full-resolution frames (one per scene: teaser, each setting, key moments, end card) plus an overview
-  sheet into `for-review/<episode>_look_frames/`. Check them against the UI/UX rules first.
+  sheet into `for-review/<pkg>/3_look_frames/`. Check them against the UI/UX rules first.
 - Wait for the owner's feedback on backgrounds, characters, fonts, bubbles and layout; iterate on frames (cheap)
   rather than on rendered video (slow).
 

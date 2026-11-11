@@ -784,3 +784,248 @@ def shore(seed=21):
         return s
 
     return _cached(("shore", seed), build)
+
+
+# ================================================================ a cat at home (episode 005)
+CUSHION_Y = 1300      # room(): top of Mochi's cushion where she lies (world)
+CUSHION_X = 520
+
+
+def room(seed=31):
+    """A warm living-room corner in the afternoon: peach wall with a window (soft light falling in), a skirting
+    board, honey floorboards from y~1190, and Mochi's cushion — a sage-green oval pillow with cream piping whose
+    top is at y CUSHION_Y (1300), centred at x CUSHION_X (520). She lies on it; nothing covers her."""
+    def build():
+        s, c = new_surface(W, HH)
+        r = rng(seed)
+        _grad(c, 0, 1180, [(0, "#f7e3cf"), (0.6, "#f1d6bd"), (1, "#e8c7aa")])
+        c.rectangle(0, 0, W, 1180)
+        c.fill()
+        # window, upper left: soft sky and a sill
+        wx, wy, ww, wh = 70, 300, 380, 470
+        c.rectangle(wx - 18, wy - 18, ww + 36, wh + 36)
+        c.set_source_rgba(*hexc("#fbf3e8"))
+        c.fill()
+        _grad(c, wy, wy + wh, [(0, "#cfe6ef"), (1, "#f4ead8")])
+        c.rectangle(wx, wy, ww, wh)
+        c.fill()
+        for k in range(3):   # far hills through the glass
+            c.save()
+            c.rectangle(wx, wy, ww, wh)
+            c.clip()
+            ellipse(c, wx + 60 + k * 140, wy + wh - 40, 130, 70)
+            c.set_source_rgba(*mix(hexc("#a9c79a"), hexc("#cddcb4"), k / 3)[:3], 0.8)
+            c.fill()
+            c.restore()
+        c.set_source_rgba(*hexc("#fbf3e8"))
+        c.rectangle(wx + ww / 2 - 7, wy, 14, wh)
+        c.rectangle(wx, wy + wh / 2 - 7, ww, 14)
+        c.fill()
+        c.rectangle(wx - 40, wy + wh + 14, ww + 80, 26)   # sill
+        c.set_source_rgba(*hexc("#f6ecdf"))
+        c.fill()
+        # light falling from the window across the wall and floor
+        c.move_to(wx, wy)
+        c.line_to(wx + ww, wy)
+        c.line_to(980, 1500)
+        c.line_to(260, 1600)
+        c.close_path()
+        g = cairo.LinearGradient(wx, wy, 700, 1500)
+        g.add_color_stop_rgba(0, 1, 0.97, 0.86, 0.30)
+        g.add_color_stop_rgba(1, 1, 0.97, 0.86, 0.0)
+        c.set_source(g)
+        c.fill()
+        # a framed picture, right (a little leaf print)
+        c.rectangle(720, 380, 220, 280)
+        c.set_source_rgba(*hexc("#c99a6a"))
+        c.fill()
+        c.rectangle(736, 396, 188, 248)
+        c.set_source_rgba(*hexc("#fbf3e6"))
+        c.fill()
+        for k in range(5):
+            ellipse(c, 830 + (k % 2 * 2 - 1) * 16, 450 + k * 34, 26, 12, 0.6 if k % 2 else -0.6)
+            c.set_source_rgba(*hexc("#8fae84")[:3], 0.9)
+            c.fill()
+        c.move_to(830, 440)
+        c.line_to(830, 620)
+        c.set_source_rgba(*hexc("#6f8a62"))
+        c.set_line_width(4)
+        c.stroke()
+        # skirting board and floor
+        c.rectangle(0, 1150, W, 40)
+        c.set_source_rgba(*hexc("#fbf1e4"))
+        c.fill()
+        _grad(c, 1190, HH, [(0, "#d6a874"), (0.5, "#c69462"), (1, "#a8764a")])
+        c.rectangle(0, 1190, W, HH - 1190)
+        c.fill()
+        y = 1190
+        while y < HH:          # floorboards, wider towards the viewer
+            h = 40 + (y - 1190) * 0.12
+            c.move_to(0, y)
+            c.line_to(W, y)
+            c.set_source_rgba(0.45, 0.28, 0.14, 0.25)
+            c.set_line_width(2)
+            c.stroke()
+            for _ in range(2):
+                x = r.uniform(0, W)
+                c.move_to(x, y)
+                c.line_to(x, y + h)
+                c.stroke()
+            y += h
+        for _ in range(60):     # grain
+            x, yy = r.uniform(0, W), r.uniform(1200, HH)
+            c.move_to(x, yy)
+            c.curve_to(x + 40, yy + 3, x + 90, yy - 3, x + 140, yy)
+            c.set_source_rgba(0.5, 0.3, 0.15, 0.10)
+            c.set_line_width(1.5)
+            c.stroke()
+        # a soft rug under the cushion
+        ellipse(c, CUSHION_X, 1430, 520, 150)
+        c.set_source_rgba(*hexc("#e9d6bd"))
+        c.fill()
+        ellipse(c, CUSHION_X, 1430, 480, 128)
+        c.set_source_rgba(*hexc("#d9bf9c")[:3], 0.6)
+        c.set_line_width(5)
+        c.set_dash([14, 10])
+        c.stroke()
+        c.set_dash([])
+        # the cushion: shadow, body, top, piping
+        ellipse(c, CUSHION_X + 10, 1418, 450, 70)
+        c.set_source_rgba(0.25, 0.15, 0.05, 0.22)
+        c.fill()
+        c.move_to(CUSHION_X - 450, CUSHION_Y + 10)        # plump sides, bulging out a little
+        c.curve_to(CUSHION_X - 476, CUSHION_Y + 50, CUSHION_X - 462, CUSHION_Y + 96, CUSHION_X - 420, CUSHION_Y + 110)
+        c.curve_to(CUSHION_X - 200, CUSHION_Y + 160, CUSHION_X + 200, CUSHION_Y + 160, CUSHION_X + 420, CUSHION_Y + 110)
+        c.curve_to(CUSHION_X + 462, CUSHION_Y + 96, CUSHION_X + 476, CUSHION_Y + 50, CUSHION_X + 450, CUSHION_Y + 10)
+        c.close_path()
+        _grad(c, CUSHION_Y, CUSHION_Y + 150, [(0, "#9dbcaa"), (0.5, "#7e9f8c"), (1, "#5f8473")])
+        c.fill()
+        ellipse(c, CUSHION_X, CUSHION_Y, 450, 72)
+        g = cairo.RadialGradient(CUSHION_X - 60, CUSHION_Y - 30, 20, CUSHION_X, CUSHION_Y, 460)
+        g.add_color_stop_rgba(0, *hexc("#d2e2d6"))
+        g.add_color_stop_rgba(1, *hexc("#93b4a1"))
+        c.set_source(g)
+        c.fill()
+        ellipse(c, CUSHION_X, CUSHION_Y + 2, 300, 36)   # the dip where she lies
+        c.set_source_rgba(0.3, 0.45, 0.38, 0.18)
+        c.fill()
+        ellipse(c, CUSHION_X, CUSHION_Y, 450, 72)
+        c.set_source_rgba(*hexc("#f6ecda"))
+        c.set_line_width(11)
+        c.stroke()
+        for _ in range(140):     # fabric fluff
+            a = r.uniform(0, TAU)
+            rr = r.uniform(0, 1)
+            ellipse(c, CUSHION_X + math.cos(a) * 420 * rr, CUSHION_Y + math.sin(a) * 60 * rr, 3, 1.5, r.uniform(0, 3))
+            c.set_source_rgba(1, 1, 1, 0.18)
+            c.fill()
+        return s
+
+    return _cached(("room", seed), build)
+
+
+FIBRE_Y = 1240        # bedding(): the fabric floor the larva crawls on (world)
+
+
+def bedding(seed=32):
+    """Down among the cushion's fibres, magnified: big soft woven threads in sage and cream crossing in the
+    dim warm light, a fabric floor at y~FIBRE_Y with dark specks (dried flea droppings) and pale crumbs on it.
+    Open space above (y 400-1100) for things to drift down into."""
+    def build():
+        s, c = new_surface(W, HH)
+        r = rng(seed)
+        _grad(c, 0, HH, [(0, "#4a5a4c"), (0.35, "#6f8574"), (0.62, "#93a892"), (1, "#5d725f")])
+        c.paint()
+        g = cairo.RadialGradient(620, 520, 40, 620, 520, 900)    # warm light from above
+        g.add_color_stop_rgba(0, 1, 0.93, 0.78, 0.45)
+        g.add_color_stop_rgba(1, 1, 0.93, 0.78, 0.0)
+        c.set_source(g)
+        c.paint()
+
+        def thread(x0, y0, x1, y1, w, col, a):
+            c.move_to(x0, y0)
+            mx, my = (x0 + x1) / 2 + r.uniform(-80, 80), (y0 + y1) / 2 + r.uniform(-60, 60)
+            c.curve_to(mx, my, mx, my, x1, y1)
+            c.set_line_cap(cairo.LINE_CAP_ROUND)
+            c.set_source_rgba(*col[:3], a)
+            c.set_line_width(w)
+            c.stroke_preserve()
+            c.set_source_rgba(1, 1, 1, 0.12 * a)
+            c.set_line_width(w * 0.35)
+            c.stroke()
+
+        cols = [hexc("#c9dccd"), hexc("#a9c3b0"), hexc("#efe6d2"), hexc("#88a592")]
+        for _ in range(16):      # far threads, soft with depth
+            y = r.uniform(250, 1100)
+            thread(-100, y, W + 100, y + r.uniform(-300, 300), r.uniform(30, 60), r.choice(cols), 0.22)
+        for _ in range(9):       # near threads, crossing
+            x = r.uniform(-100, W + 100)
+            thread(x, 150, x + r.uniform(-500, 500), 1250, r.uniform(28, 46), r.choice(cols), 0.5)
+        # the fabric floor
+        c.move_to(0, FIBRE_Y)
+        for x in range(0, W + 40, 40):
+            c.line_to(x, FIBRE_Y + 10 * math.sin(x / 70) + 6 * math.sin(x / 23))
+        c.line_to(W, HH)
+        c.line_to(0, HH)
+        c.close_path()
+        _grad(c, FIBRE_Y - 20, HH, [(0, "#a7bea9"), (0.4, "#7f9a84"), (1, "#4e6553")])
+        c.fill()
+        for _ in range(26):      # woven texture on the floor
+            y = r.uniform(FIBRE_Y + 20, HH)
+            thread(-50, y, W + 50, y + r.uniform(-40, 40), r.uniform(18, 34), r.choice(cols), 0.35)
+        for _ in range(70):      # specks of dried flea droppings and pale crumbs
+            x, y = r.uniform(20, W - 20), r.uniform(FIBRE_Y + 10, FIBRE_Y + 380)
+            dark = r.random() < 0.6
+            ellipse(c, x, y, r.uniform(5, 11), r.uniform(4, 8), r.uniform(0, 3))
+            c.set_source_rgba(*(hexc("#3a2016") if dark else hexc("#efe2c4"))[:3], 0.85)
+            c.fill()
+        return s
+
+    return _cached(("bedding", seed), build)
+
+
+GUT_FLOOR = 1330      # gut(): top of the villi along the bottom wall (world)
+GUT_ROOF = 520        # gut(): tips of the villi hanging from the top wall
+
+
+def gut(seed=33):
+    """Inside a cat's small intestine, magnified: a warm pink tunnel; soft finger-like villi along the floor
+    (tips at y~GUT_FLOOR) and the roof (tips at y~GUT_ROOF); a paler channel between them where food flows."""
+    def build():
+        s, c = new_surface(W, HH)
+        r = rng(seed)
+        _grad(c, 0, HH, [(0, "#7a3240"), (0.25, "#c8707a"), (0.5, "#f0b4a8"), (0.75, "#c8707a"), (1, "#6e2c38")])
+        c.paint()
+        g = cairo.RadialGradient(540, 930, 60, 540, 930, 760)
+        g.add_color_stop_rgba(0, 1, 0.9, 0.82, 0.45)
+        g.add_color_stop_rgba(1, 1, 0.9, 0.82, 0.0)
+        c.set_source(g)
+        c.paint()
+
+        def villi(base, tip_y, sign, col, a, wid=(34, 52)):
+            x = -30
+            while x < W + 40:
+                w = r.uniform(*wid)
+                h = abs(tip_y - base) * r.uniform(0.85, 1.05)
+                tip = base - sign * h
+                c.move_to(x - w / 2, base)
+                c.curve_to(x - w / 2, base - sign * h * 0.6, x - w * 0.42, tip, x + r.uniform(-6, 6), tip)
+                c.curve_to(x + w * 0.42, tip, x + w / 2, base - sign * h * 0.6, x + w / 2, base)
+                c.close_path()
+                gg = cairo.LinearGradient(0, base, 0, tip)
+                gg.add_color_stop_rgba(0, *col[:3], a)
+                gg.add_color_stop_rgba(1, *mix(col, hexc("#ffe2d6"), 0.55)[:3], a)
+                c.set_source(gg)
+                c.fill()
+                x += w * 0.78
+        villi(HH, GUT_FLOOR + 60, 1, hexc("#b45a66"), 0.9)            # back row, floor
+        villi(HH, GUT_FLOOR, 1, hexc("#d8848a"), 1.0, (40, 60))        # front row, floor
+        villi(0, GUT_ROOF - 60, -1, hexc("#a24c5a"), 0.9)
+        villi(0, GUT_ROOF, -1, hexc("#c87078"), 1.0, (40, 60))
+        for _ in range(40):          # soft wet glints
+            ellipse(c, r.uniform(0, W), r.uniform(560, 1300), r.uniform(20, 70), r.uniform(6, 18), r.uniform(-0.3, 0.3))
+            c.set_source_rgba(1, 0.95, 0.9, 0.06)
+            c.fill()
+        return s
+
+    return _cached(("gut", seed), build)

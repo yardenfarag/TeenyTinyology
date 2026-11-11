@@ -29,7 +29,7 @@ in `lessons/`, `engine/board.py`), has its own rules: read `docs/lessons.md` bef
 ## The cast (permanent names — never rename)
 | Name | Species | Look | Personality | File |
 |---|---|---|---|---|
-| **Mochi** | cat | cream fur, caramel patches, sea-green eyes | sleepy, gentle, a bit vain | `characters/mochi.py` |
+| **Mochi** | cat (female) | cream fur, caramel saddle + head cap, sea-green eyes, pink nose over soft whisker pads; lying sphinx pose with forelegs forward, tail curled over the hind paw. Rig (e005 rebuild): torso + haunch + neck are one `Style.silhouette`, the head turns by yaw (3/4 → camera → looking back), `turn`/`lick`/`tongue` for grooming | sleepy, gentle, a bit vain | `characters/mochi.py` |
 | **Pip** | flea (+ larva, cocoon) | amber-brown, chubby | curious, cheeky, springy | `characters/pip.py` |
 | **Peanut** | ant | glossy black-brown, big eyes | busy, brave | `characters/peanut.py` |
 | **Noodle** | tapeworm (*Dipylidium caninum*) | cream segments, tiny face on the scolex | calm, patient, always hungry | `characters/noodle.py` |
@@ -48,6 +48,9 @@ in `lessons/`, `engine/board.py`), has its own rules: read `docs/lessons.md` bef
 New characters get a short, cute name in the same spirit (Biscuit, Toffee, Bean, Poppy, Button, Kiwi…) and are
 added with the `new-character` skill. Every character draws through a `Style` (`engine/style.py`) so it works in all
 three looks; the `real` style may switch to anatomically correct drawings and has no cartoon faces.
+A character that bends (a neck turning, a body curling) draws its overlapping body parts with `st.silhouette(c, [paths…])`:
+one outline around the union, one continuous fill. Stacked separately outlined ovals read as "a pile of lumps" and
+can't move (owner, Mochi rebuild, e005).
 Roly is a **protandrous hermaphrodite**: `roly.draw(..., female=False)` is the smaller male stage, and the
 same character becomes the larger female. She is an **isopod, not a louse** — never call her one.
 
@@ -109,6 +112,10 @@ Setup on a new machine: `python -m venv .venv && .venv/Scripts/python -m pip ins
 ```
 The owner reviews files in `for-review/` at the project root (git-ignored): copy review images, videos and MP3s
 there and give the full path when asking for feedback. (The owner can't open chat attachments or other app folders.)
+Keep it organised (owner request): one folder per episode/lesson named like its package (`for-review/e005_mochi_noodle/`),
+with numbered stage folders `1_cast/`, `2_narration/`, `3_look_frames/`, `4_final/` (lessons: `1_plan/`, `2_narration/`,
+`3_board/`, `4_final/`). Versions go in the file name (`e005_narration_v2.mp3`). Engine/format experiments go in `_setup/`.
+Never drop files loose at the top level.
 
 ## Quality checklist (before showing anything)
 1. Contact sheet of the *encoded MP4* (`render.sample_frames`) — every scene, transition and caption checked by eye.
@@ -120,5 +127,3 @@ there and give the full path when asking for feedback. (The owner can't open cha
    `episodes/<pkg>/judge_reports/` and new lessons are added to `docs/judge-lessons.md`.
 7. `docs/judge-lessons.md` re-read: none of the known mistakes repeat in this episode.
 
-## Backlog (owner feedback to address later)
-- Mochi: nose and mouth look weird / out of place — redesign the muzzle (placement, size, shape) before Mochi's next episode.

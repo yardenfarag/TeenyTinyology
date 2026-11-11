@@ -1,0 +1,92 @@
+{
+ "uk7wwhXdWYHKKZ8KTCVw:hook": {
+  "text": "There's a grain of rice on this cat's fur. And it's moving.",
+  "take": 0,
+  "hash": "090b841438b46d72"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:mochi": {
+  "text": "This is Mochi. She's a cat.",
+  "take": 0,
+  "hash": "5630e53a5a17e1d7"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:grain": {
+  "text": "That grain isn't rice. It's a tiny piece of a tapeworm... packed with eggs.",
+  "take": 0,
+  "hash": "21c6732a0af4e274"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:dry": {
+  "text": "It dries, breaks open, and the eggs spill into Mochi's bed.",
+  "take": 0,
+  "hash": "0a1739a23b6d40b1"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:pip": {
+  "text": "Down in the bed lives Pip. He's a flea. Well... a baby flea.",
+  "take": 0,
+  "hash": "ba3062049e2bd1a5"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:eats": {
+  "text": "Pip eats the crumbs he finds. Including a tapeworm egg.",
+  "take": 0,
+  "hash": "989b559cc9565926"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:inside": {
+  "text": "Inside Pip, the egg hatches. A young worm slips into his body... and waits.",
+  "take": 0,
+  "hash": "8c740416c8ebca6b"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:cocoon": {
+  "text": "Pip spins a cocoon, and comes out a grown-up flea.",
+  "take": 0,
+  "hash": "bd481d83a44542e8"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:warm": {
+  "text": "In Mochi's warm fur, the tiny worm inside him gets ready.",
+  "take": 0,
+  "hash": "88c78da8acc264f4"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:itch": {
+  "text": "Pip's bite itches. So Mochi licks her fur clean...",
+  "take": 0,
+  "hash": "813bf04af5af3f83"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:swallow": {
+  "text": "and swallows Pip, along with the worm inside him.",
+  "take": 0,
+  "hash": "4eef8604d9eb3ab7"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:noodle": {
+  "text": "This is Noodle. She's a tapeworm.",
+  "take": 0,
+  "hash": "d69d8d300bdf59a6"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:hooks": {
+  "text": "She holds on to Mochi's gut with a crown of tiny hooks and four suckers.",
+  "take": 0,
+  "hash": "4a51eb35e4e9d75c"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:mouth": {
+  "text": "Noodle has no mouth. She soaks up Mochi's food through her skin.",
+  "take": 0,
+  "hash": "981200a7403904ae"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:grow": {
+  "text": "And she grows. Segment after segment. She can get longer than a ruler.",
+  "take": 0,
+  "hash": "6aac8073ce31c372"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:eggs": {
+  "text": "Each new segment fills with eggs.",
+  "take": 0,
+  "hash": "e69313b72e3ad72f"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:leave": {
+  "text": "The oldest ones break off, crawl out... and end up on Mochi's fur.",
+  "take": 0,
+  "hash": "fb4b5b39ea7d7f3a"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:cycle": {
+  "text": "Little grains of rice. Waiting for the next Pip.",
+  "take": 0,
+  "hash": "28b1301d449dd6d9"
+ }
+}

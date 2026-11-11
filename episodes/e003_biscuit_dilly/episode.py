@@ -836,7 +836,7 @@ def main():
             print(f"{cap.start:6.2f}-{cap.end:6.2f} ({cap.end - cap.start:4.2f}s)  {' '.join(w for w, _, _ in cap.words)}")
         return
     if a.cmd == "look":
-        out = os.path.join(os.path.dirname(os.path.dirname(HERE)), "for-review", "e003_look_frames")
+        out = os.path.join(os.path.dirname(os.path.dirname(HERE)), "for-review", "e003_biscuit_dilly", "3_look_frames")
         shutil.rmtree(out, ignore_errors=True)
         lt = look_times(Q)
         paths = render.stills(tl, ctx, list(lt.values()), out, prefix="look")

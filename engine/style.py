@@ -22,6 +22,53 @@ class Style:
         """Fill the path produced by path(c) with material pal."""
         raise NotImplementedError
 
+    def fill_only(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0):
+        """The fill of part() without its outline (used by silhouette)."""
+        raise NotImplementedError
+
+    def outline(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0, k=1.0):
+        """The outline of part() (k widens it; silhouette uses k=2 and erases the inner half)."""
+
+    def silhouette(self, c, paths, pal, cx, cy, r, seed=0, alpha=1.0):
+        """Draw several overlapping shapes as ONE body: one outline around their union and one continuous fill,
+        no seams where they overlap. Lets a character bend (a neck turning, a leg folding) without lumps.
+        Each path(c) must draw one closed shape; orientation does not matter."""
+        x0, y0, x1, y1 = None, None, None, None
+        for p in paths:
+            p(c)
+            a, b, cc_, d = c.fill_extents()
+            c.new_path()
+            x0 = a if x0 is None else min(x0, a)
+            y0 = b if y0 is None else min(y0, b)
+            x1 = cc_ if x1 is None else max(x1, cc_)
+            y1 = d if y1 is None else max(y1, d)
+        if x0 is None:
+            return
+        # union mask: each shape painted on its own, so overlaps never cancel
+        c.push_group()
+        for p in paths:
+            p(c)
+            c.set_source_rgba(1, 1, 1, 1)
+            c.fill()
+        mask = c.pop_group()
+        c.push_group()
+        for i, p in enumerate(paths):  # outlines of every shape...
+            self.outline(c, p, pal, cx, cy, r, seed + i, 1.0, k=2.0)
+        c.save()  # ...minus everything inside the union: only the outer silhouette stays
+        c.set_operator(cairo.OPERATOR_DEST_OUT)
+        c.set_source_rgba(0, 0, 0, 1)
+        c.mask(mask)
+        c.restore()
+        c.push_group()  # one continuous fill, clipped to the union
+        m = 4
+        self.fill_only(c, lambda cc: cc.rectangle(x0 - m, y0 - m, x1 - x0 + 2 * m, y1 - y0 + 2 * m),
+                       pal, cx, cy, r, seed, 1.0)
+        fill = c.pop_group()
+        c.set_source(fill)
+        c.mask(mask)
+        c.pop_group_to_source()
+        c.paint_with_alpha(alpha)
+
     def ellipse(self, c, cx, cy, rx, ry, rot, pal, seed=0, alpha=1.0):
         self.part(c, lambda cc: ellipse(cc, cx, cy, rx, ry, rot), pal, cx, cy, max(rx, ry), seed, alpha)
 
@@ -129,15 +176,23 @@ class Cute(Style):
     eye_scale = 1.25
 
     def part(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0):
+        self.fill_only(c, path, pal, cx, cy, r, seed, alpha)
+        self.outline(c, path, pal, cx, cy, r, seed, alpha)
+
+    def fill_only(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0):
         path(c)
         g = cairo.RadialGradient(cx - r * 0.3, cy - r * 0.42, 0, cx, cy, r * 1.08)
         g.add_color_stop_rgba(0, *with_alpha(pal.light, alpha))
         g.add_color_stop_rgba(0.5, *with_alpha(pal.base, alpha))
         g.add_color_stop_rgba(1, *with_alpha(pal.dark, alpha))
         c.set_source(g)
-        c.fill_preserve()
+        c.fill()
+
+    def outline(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0, k=1.0):
+        path(c)
         c.set_source_rgba(*with_alpha(pal.line, 0.28 * alpha))
-        c.set_line_width(max(1.5, r * 0.035))
+        w = max(1.5, r * 0.035) if k <= 1 else max(1.5, min(r * 0.035, 3.0)) * k  # silhouette: a line, not a halo
+        c.set_line_width(w)
         c.stroke()
 
     def limb(self, c, pts, w, pal, alpha=1.0):
@@ -156,6 +211,15 @@ class Real(Style):
     faces = False
     eye_scale = 0.55
     realistic = True
+
+    def fill_only(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0):
+        self.part(c, path, pal, cx, cy, r, seed, alpha)  # the rim light sits inside the shape
+
+    def outline(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0, k=1.0):
+        path(c)
+        c.set_source_rgba(*with_alpha(shade(pal.dark, -0.3), 0.35 * alpha))
+        c.set_line_width(1.2 * k)
+        c.stroke()
 
     def part(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0):
         path(c)
@@ -245,6 +309,21 @@ class Illustrated(Style):
     ink = hexc("#2a1a10")
 
     def part(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0):
+        self.fill_only(c, path, pal, cx, cy, r, seed, alpha)
+        self.outline(c, path, pal, cx, cy, r, seed, alpha)
+
+    def outline(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0, k=1.0):
+        if k <= 1:
+            path(c)  # pigment pooling at the edge (inside the shape; a silhouette has no single path for it)
+            c.set_source_rgba(*with_alpha(pal.dark, 0.3 * alpha))
+            c.set_line_width(max(3.0, r * 0.07))
+            c.stroke()
+            self.ink_path(c, path, seed, alpha, w=max(2.2, min(4.2, r * 0.05)), amt=max(1.5, r * 0.025))
+        else:  # silhouette: only the outer half survives, so keep the wobble smaller than half the width
+            w = max(2.2, min(4.2, r * 0.05)) * k
+            self.ink_path(c, path, seed, alpha, w=w, amt=min(max(1.5, r * 0.025), w * 0.3))
+
+    def fill_only(self, c, path, pal, cx, cy, r, seed=0, alpha=1.0):
         rnd = rng(seed + 3)
         path(c)
         c.set_source_rgba(*with_alpha(shade(pal.base, 0.08), 0.88 * alpha))
@@ -262,11 +341,7 @@ class Illustrated(Style):
         c.set_source(g)
         c.paint()
         c.restore()
-        path(c)  # pigment pooling at the edge
-        c.set_source_rgba(*with_alpha(pal.dark, 0.3 * alpha))
-        c.set_line_width(max(3.0, r * 0.07))
-        c.stroke()
-        self.ink_path(c, path, seed, alpha, w=max(2.2, min(4.2, r * 0.05)), amt=max(1.5, r * 0.025))
+        c.new_path()
 
     def ink_path(self, c, path, seed, alpha=1.0, w=3.2, amt=2.5):
         pts = _wobble(_flat_points(c, path), seed, amt)

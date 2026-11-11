@@ -17,7 +17,7 @@ probably become an engine default or a checklist item.
   it is *Paragordius varius*). The judge missed this, so check it explicitly.
 - **Hedge open science honestly.** "Scientists think so… but how is still a mystery" is fine. Never state a
   hypothesis as settled (e001 pass 1: an overstated claim had to be reworded).
-- **Every narrated beat needs a visual payoff** **(repeat ×5: e001 pass 2, l001 pass 1, e003 pass 1 twice, e004 pass 1)**.
+- **Every narrated beat needs a visual payoff** **(repeat ×6: e001 pass 2, l001 pass 1, e003 pass 1 twice, e004 pass 1, e005 pass 1 three times)**. e005: "holds on with a crown of hooks" over a head floating in open gut (now sunk among villi drawn IN FRONT of the crown, with a tug on "hooks"/"suckers"); "the oldest ones break off" while the tail was off frame (now the body ends inside the frame and the last two segments pop free on "break"); "swallows Pip" with no swallow (now eyes shut, chin dip on the gulp, a lip lick). Verbs of action (holds, breaks, swallows, hatches) are the ones that go missing: list every verb in the script and name the frame that shows it.
   e004: the "a sac" tag was placed *at* the sac's own coordinates, so the sac grew out behind its own name tag.
   A tag's pointer tip goes at the thing; the bubble must not sit on it. When the thing is the beat, use
   `pointer=False` and put the bubble beside it, and make the sub-line add a fact the caption does not say.
@@ -101,7 +101,7 @@ probably become an engine default or a checklist item.
   underwater, not out of the back (e001 pass 1).
 - **Keep scale consistent across scenes.** If a diagram says "several times longer", every later shot must show
   that length (e001 pass 2). Larvae are tiny; draw them at true relative scale (e001 pass 1).
-- **Background props are rulers too** **(repeat of true relative scale: e003 pass 1)**. Red blood cells drawn at
+- **Background props are rulers too** **(repeat of true relative scale: e003 pass 1; repeat e005 pass 1 twice)**. e005: a 30 cm ruler drawn inside the magnified gut made the gut ~35 cm wide (a cat's is ~1 cm): a size comparison goes on a card of its own, never inside a magnified setting. And egg packets drawn 1/7 of the larva and 4x the crumbs reversed real sizes (120-200 µm vs a 2-5 mm larva): keep one hero item with a glint instead of drawing everything big. Red blood cells drawn at
   one size in every blood shot made the babies 1/7 of their mother's length and as thick as her, made the foot-long
   adult thinner than one cell, and made the young adult shorter than the babies. Set the prop's size per shot from
   the subject's real size: a red cell is about as wide as a microfilaria and a speck next to an adult worm.
@@ -138,6 +138,12 @@ probably become an engine default or a checklist item.
 - **Foreshorten a body seen end-on.** Drawn at its true length, a head-on isopod is a tall cone; it needs a
   `tilt` that says how far above it the camera sits (e002).
 
+- **Build animals that move on a structure, not out of stacked ovals** (owner, e005 Mochi). A body made of separately
+  outlined ellipses (torso, chest, neck stroke, head) looked like "a pile of lumps", and every pose that moved the
+  head exposed a bulge or a floating head; three patch rounds failed. Fix: a rig (anchor points for neck root, head,
+  legs, tail) whose body parts are drawn as one `Style.silhouette`, and a head that turns by yaw (face morphs 3/4 →
+  front → 3/4) instead of a squashed `scale(fx)`. Check every new pose in a short motion test, not only stills.
+
 ## Animation & polish
 - **One setting, one camera** (owner, e004 v1: "a lot of scenes put together, not smooth"). Each scene had its own
   `framed(...)` with its own zoom and focus, so every scene boundary re-framed the same crab and read as a jump even
@@ -172,12 +178,13 @@ probably become an engine default or a checklist item.
   board: light up each region as it is named, underline, draw the teaser (l001). **Checklist item:** before
   rendering, list the stretches where nothing new appears on the board (board item starts, camera moves, erasers)
   and fix every one over 5 s at the start or end of a lesson.
-- **A fix is checked like new work** **(repeat ×4: e003 pass 2, e004 passes 2 and 3)**. e004: the pass-1 push-in carried a
+- **A fix is checked like new work** **(repeat ×6: e003 pass 2, e004 passes 2 and 3, e005 passes 2 and 3)**. e005 pass 3: lengthening a label window (to reach 2 s) parked it on the worm's tail exactly when the segments broke off. When you extend a label, re-scrub its new END against the camera framing at that moment, not just its start. e005: sinking Noodle's head among villi (to show her grip) put her face behind the caption bubble in every wide shot and gave the new foreground villi flat rectangular bottoms. **Check after moving a character:** scrub the whole setting and make sure its face stays out of the caption band (y 1340–1460 screen) in every frame; foreground props run off the background or fade out, never end in a straight edge. e004: the pass-1 push-in carried a
   label off the frame; the pass-2 parked label then collided with a tag that still drifted with the camera. After a
   fix, re-scrub the whole window the fix lives in, with every other moving element in it, not just the fixed item. e003 moved two labels away from the badge but kept
   their 0.8 s windows, and a new "heart" tag covered the very worm the fix was meant to show. After every fix pass,
   re-time what moved and re-scrub the shot it lives in.
-- **A label beside a caption needs about 2 s** (e003 pass 2: three labels read for 0.8–1 s). Measure on the MP4.
+- **A label beside a caption needs about 2 s** (e003 pass 2: three labels read for 0.8–1 s) **(repeat ×3: e004, e005 pass 1: five labels 0.6–1.5 s)**. Measure on the MP4. Root cause every time: a window from one word to the next line's start. Run a label from its cue to the NEXT label's cue (chain them), not to the end of its own line.
+- **A tag must not appear before its subject is on screen** (e005 pass 1). The "Pip" tag was anchored to the larva's x and clamped to the screen edge while he was still off frame, so for 2 s it pointed at an egg packet. Start the character on screen (or start the tag when he enters), never clamp a pointer onto something else.
 - **Draw labels after `c.restore()`** (e003 pass 2). Inside a camera push they grow, drift and can leave the safe zone.
   **(repeat: e004 pass 2)** A label anchored to a *world* point through `cam.screen()` drifts with the push just the
   same: the pass-1 push-in carried "rock barnacles" off the left edge. Park labels at fixed scene coordinates, or clamp
