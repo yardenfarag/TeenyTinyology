@@ -1,0 +1,317 @@
+{
+ "uk7wwhXdWYHKKZ8KTCVw:a1": {
+  "text": "On a moonlit night, this squid has a problem: its own shadow.",
+  "take": 0,
+  "hash": "1a19deda8b90133a"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:a2": {
+  "text": "This is the Hawaiian bobtail squid. It's active at night. And seen from below, it would be a dark shape against the moon.",
+  "take": 0,
+  "hash": "28718c05827d1bfd"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:a3": {
+  "text": "So it glows from underneath, matching the moonlight above. And the shadow disappears.",
+  "take": 0,
+  "hash": "cc409b31f042ab78"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:a4": {
+  "text": "Biologists call this counter-illumination.",
+  "take": 0,
+  "hash": "5c44dbe707d81a31"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:a5": {
+  "text": "But the light isn't made by the squid. It's made by bacteria.",
+  "take": 0,
+  "hash": "ab5137cc34b6ee55"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:a5b": {
+  "text": "They live in a pouch on the squid's underside, called the light organ. It even has a reflector, and a lens, to aim their glow downwards.",
+  "take": 0,
+  "hash": "29d56aac9c0cba8a"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:a6": {
+  "text": "They're called Aliivibrio fischeri. Until 2007, they were Vibrio fischeri.",
+  "take": 0,
+  "hash": "1c663d27025476fc"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:a7": {
+  "text": "And here's the strange part. These bacteria only glow when there are lots of them. Alone in the open sea, they stay dark.",
+  "take": 0,
+  "hash": "9886181e54cfc29d"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:a8": {
+  "text": "So how does a single cell know it's in a crowd?",
+  "take": 0,
+  "hash": "6666076d00aff154"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:b1": {
+  "text": "Each cell leaks a little signal molecule into the water around it.",
+  "take": 0,
+  "hash": "f8cd62ff1d6b99c3"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:b2": {
+  "text": "When cells are few, the signal drifts away.",
+  "take": 0,
+  "hash": "85b3aa43e8c32af5"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:b3": {
+  "text": "When many cells are packed together, it builds up.",
+  "take": 0,
+  "hash": "c85300d8152755c2"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:b4": {
+  "text": "And past a certain level, a threshold, the genes switch on across the whole crowd.",
+  "take": 0,
+  "hash": "6bc412ffe7c6fe52"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:b5": {
+  "text": "This is called quorum sensing.",
+  "take": 0,
+  "hash": "c96df656409cccb7"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:b6": {
+  "text": "A quorum is the smallest number of members who must be present before a meeting can make decisions.",
+  "take": 0,
+  "hash": "7f185725f4c62b41"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:b7": {
+  "text": "The word is Latin, for 'of whom'.",
+  "take": 0,
+  "hash": "1064686f92a56024"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:b8": {
+  "text": "The signal itself is called an autoinducer.",
+  "take": 0,
+  "hash": "76ce9d0d3c57030e"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:b9": {
+  "text": "The first clue came in 1970, from glowing marine bacteria. Their light only switched on once the cells had built up something in their own broth: a substance they made themselves.",
+  "take": 0,
+  "hash": "9b6ea2165f11b8c1"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c1": {
+  "text": "So what's going on inside one of those cells?",
+  "take": 0,
+  "hash": "652641d70d5b3d50"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c2": {
+  "text": "An enzyme called LuxI makes the signal. It's called an AHL, short for acyl-homoserine lactone: a small ring, with a fatty tail.",
+  "take": 0,
+  "hash": "f7a6ffbc4aadfb2a"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c3": {
+  "text": "In the squid's bacteria, it's small enough to slip straight through the cell's membrane. In and out.",
+  "take": 0,
+  "hash": "415c972ab55c2665"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c4": {
+  "text": "Inside, a protein called LuxR waits.",
+  "take": 0,
+  "hash": "01f495d2f9784c77"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c5": {
+  "text": "When enough signal has built up, LuxR grabs it, and switches on the light genes.",
+  "take": 0,
+  "hash": "50d0d34b66759cfd"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c6": {
+  "text": "And one of those genes is luxI itself.",
+  "take": 0,
+  "hash": "fe70c0529f6154a2"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c7": {
+  "text": "So the more signal there is, the more signal gets made.",
+  "take": 0,
+  "hash": "2dee437e6eb2c14b"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c8": {
+  "text": "In the open sea, the signal never builds up. Packed into the squid's light organ, it does. And they glow.",
+  "take": 0,
+  "hash": "fc961039d4aba475"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c9": {
+  "text": "The bacteria pay their rent in light.",
+  "take": 0,
+  "hash": "43a5c68337b12928"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c10": {
+  "text": "Every dawn, the squid evicts most of them anyway. Ninety percent or more, vented into the sea.",
+  "take": 0,
+  "hash": "feed9850ded6d753"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c11": {
+  "text": "The rest regrow by nightfall.",
+  "take": 0,
+  "hash": "c2ae554522bccb27"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:d1": {
+  "text": "Not every bacterium speaks the same chemical language.",
+  "take": 0,
+  "hash": "8d3d8f95555ef71b"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:d2": {
+  "text": "The squid's bacteria use AHLs. So does Pseudomonas aeruginosa.",
+  "take": 0,
+  "hash": "f5e54209b0ef3574"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:d3": {
+  "text": "Staphylococcus and Streptococcus use something else: short chains of amino acids. Tiny protein fragments.",
+  "take": 0,
+  "hash": "40be2665204c53d8"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:d4": {
+  "text": "The cell pumps them out, and they're mostly caught by receptors on the cell's surface.",
+  "take": 0,
+  "hash": "47133205defc3d75"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:d5": {
+  "text": "And one signal, called AI-2, is made by many different kinds of bacteria.",
+  "take": 0,
+  "hash": "59609ce789608e64"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:d6": {
+  "text": "Some scientists think it may work as a shared word between species. That's still debated.",
+  "take": 0,
+  "hash": "c4340ebeeccc1110"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e1": {
+  "text": "So what do bacteria do, once they know they're a crowd?",
+  "take": 0,
+  "hash": "b7c79d93d630c69f"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e2": {
+  "text": "Pseudomonas aeruginosa uses its count to time an attack.",
+  "take": 0,
+  "hash": "f29d8185d2ab8e33"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e3": {
+  "text": "While it's few, it holds back most of its weapons.",
+  "take": 0,
+  "hash": "3846fe1485fadbd0"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e4": {
+  "text": "Once there are enough, it switches on toxins, and enzymes that damage tissue. Virulence factors: the tools a microbe uses to cause disease.",
+  "take": 0,
+  "hash": "b7ac01aae157ed7b"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e5": {
+  "text": "And it builds a biofilm: a slimy, protected city of cells.",
+  "take": 0,
+  "hash": "f9b4b94e54be170f"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e6": {
+  "text": "Scientists think waiting may keep it from being noticed too early. Attack with a few cells, and the immune system wins.",
+  "take": 0,
+  "hash": "2883f4d57ce0c289"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e7": {
+  "text": "Patience, it turns out, is a virulence factor.",
+  "take": 0,
+  "hash": "da016e5a48012582"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e8": {
+  "text": "Vibrio cholerae, the bacterium behind cholera, does the opposite.",
+  "take": 0,
+  "hash": "334aeea24b1b543b"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e9": {
+  "text": "When there are few of them, they stick to the gut wall, and make their toxin.",
+  "take": 0,
+  "hash": "0b302e9fe19d2035"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e10": {
+  "text": "When the crowd gets big, the same switch turns all that off. Scientists think it helps them let go, and leave.",
+  "take": 0,
+  "hash": "d384a2cd86c97b7e"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e11": {
+  "text": "And its way out of the body is the disease itself. The toxin it made earlier causes the diarrhoea that carries it out.",
+  "take": 0,
+  "hash": "dc3bc9dcb9d0b545"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:e12": {
+  "text": "Same switch. Opposite decision.",
+  "take": 0,
+  "hash": "48f3b11e964f60a7"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f1": {
+  "text": "If bacteria act on a signal, can the signal be jammed?",
+  "take": 0,
+  "hash": "794b1b5a7753f374"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f2": {
+  "text": "It can. Some bacteria make enzymes that break the AHL's ring open. This is called quorum quenching.",
+  "take": 0,
+  "hash": "c61032d58de82367"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f3": {
+  "text": "One, from a Bacillus, was given to a bacterium that rots plants. The rot became much weaker.",
+  "take": 0,
+  "hash": "a26766fb34ca9db6"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f4": {
+  "text": "A red seaweed from Australian waters, Delisea pulchra, makes molecules shaped like the signal. They jam the receiver.",
+  "take": 0,
+  "hash": "edf2c82ffde2da67"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f5": {
+  "text": "And its surface stays remarkably clean of bacteria.",
+  "take": 0,
+  "hash": "86139371a597d1a0"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f6": {
+  "text": "Drugs that jam the signal, instead of killing the bacteria, are being studied. None is a standard treatment yet.",
+  "take": 0,
+  "hash": "445159ada7206173"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f7": {
+  "text": "One last thing. Bacteria don't actually count heads.",
+  "take": 0,
+  "hash": "c2cff5a35a8c3aab"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f8": {
+  "text": "They sense how concentrated the signal is.",
+  "take": 0,
+  "hash": "bc3838cf82aedd9b"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f9": {
+  "text": "So a few cells in a tight space can reach the threshold. And a big crowd in open, flowing water may never reach it.",
+  "take": 0,
+  "hash": "c5e079363c652beb"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f10": {
+  "text": "In one experiment, a single Staphylococcus aureus cell, sealed in a tiny droplet, switched on its quorum-sensing genes all by itself.",
+  "take": 0,
+  "hash": "ba69f6fba8f9967d"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f11": {
+  "text": "No crowd. Just a very small room.",
+  "take": 0,
+  "hash": "49ab165a14acaead"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:f12": {
+  "text": "The scientists think this may happen inside the body, too: when a bacterium is swallowed by an immune cell, and trapped in a tiny pocket.",
+  "take": 0,
+  "hash": "a6bf81f52f3bacd9"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:w1": {
+  "text": "That's quorum sensing. One small molecule, building up in the dark, until a crowd of cells knows it's time.",
+  "take": 0,
+  "hash": "89ad11bd5c14bb5d"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:a6b": {
+  "text": "Then a study of their DNA showed they sit on a branch of their own, so they got a new name: Aliivibrio. The other Vibrio.",
+  "take": 0,
+  "hash": "aaad4503251c0028"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:a6c": {
+  "text": "Many researchers still use the old one.",
+  "take": 0,
+  "hash": "e482c477bd27bc95"
+ },
+ "uk7wwhXdWYHKKZ8KTCVw:c7b": {
+  "text": "And the cells make this inducer themselves. That's the 'auto' in autoinducer.",
+  "take": 0,
+  "hash": "2cf838f6521fa074"
+ }
+}

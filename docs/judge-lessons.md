@@ -28,6 +28,11 @@ probably become an engine default or a checklist item.
   "until she finds the water", start her far away from the water (e001). On a whiteboard: when the narrator states a
   rule ("split in two directions, and you get…"), draw the rule, not just its result (l001: "1 way / 2 ways / 3 ways"
   tags; a dividing cell). Before rendering, list every line whose time on screen adds nothing new to the board.
+- **An etymology must fit the history, not just the mechanism** (l002 pass 1). "That loop is the 'auto' in
+  autoinducer" sounded right and was false: "autoinduction" was named in 1970 because the cells make their own
+  inducer; the *luxI* feedback loop was found in the 1980s. A name can't come from a mechanism discovered after it.
+  facts.md had marked it "confirmed" from sources that only supported the loop. Check every "that's why it's called…"
+  against a source about the *naming*, with its date.
 - **Closing summaries are claims too.** "All of them, single cells" was false for one item in its own list
   (*Streptomyces* threads, l001 pass 1). Re-check every word of the recap against facts.md.
 - **An absolute "never" is true only from the moment it becomes true** (e004 pass 1). "He'll never shed his shell
@@ -93,6 +98,19 @@ probably become an engine default or a checklist item.
   said "1347 to 1351" from peer-reviewed sources). Where reliable sources disagree, write what is true under all of
   them: "mid-1300s", "at least a third", "the 1890s", "thought to kill" for estimates. An adversarial fact audit
   before the final render found 12 such fragile claims that five judge passes had accepted.
+
+- **A colour that means one thing across the board must mean it in every region** (l002 pass 1). Gold dots were
+  the signal in five regions and cholera toxin in one, so that region showed "few cells: lots of dots, many: none",
+  the opposite of the lesson. Before drawing a region, list the throughline symbols and their meaning; a new thing
+  gets a new mark.
+- **Draw fills before the outlines they sit under** (l002 pass 2). A gold hatch drawn after blue cells tinted them
+  slate grey, the colour that meant "dark, alone" elsewhere on the board. Hatch the area first, then the cells.
+- **A re-voiced line that gets longer needs new board content** (l002 pass 2, repeat of "a fix is checked like new
+  work"). Correcting b9 added 3 s and left 8.6 s with a still board. After any re-voice, re-run the still-stretch check.
+- **The thumbnail must not contradict the lesson** (l002, own QA). "How bacteria COUNT themselves" for a lesson whose
+  point is "they don't count heads". Read the thumbnail text against the misconception step.
+- **Re-check the cue order after inserting an item** (l002 pass 1 fixes). A new underline cued to a later line was
+  queued before two earlier labels and held them back 10 s. Run the lag test after every fix pass.
 
 ## Science in the pictures
 - **Check each insect's resting posture, not just its anatomy.** Mayflies rest with their wings *upright*, pressed

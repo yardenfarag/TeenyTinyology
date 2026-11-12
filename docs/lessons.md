@@ -84,3 +84,4 @@ saying that calmly. A joke lands on a pause plus a visual, and every dark line i
 | P1 | Board engine: camera, eraser, titles, logo intro + jingle, voice-only mix, thumbnail (demo `lessons/bake_p1`) | done, approved 2026-10-26 |
 | P2 | These rules, the `new-lesson` skill, the `lesson-judge` agent + `engine/lesson_kit.py` | done 2026-10-26 |
 | P3 | Pilot lesson: **Bacteria shapes and names** (`lessons/l001_bacteria_shapes/`) | next |
+| L002 | **Quorum sensing** (`lessons/l002_quorum_sensing/`), owner request, out of the topic order | judge passes 1–2, v3 for owner review 2026-11-11 |
