@@ -25,6 +25,12 @@ You are given an episode package (e.g. `episodes/e001_pickle_doodle`) and its MP
 
 You cannot hear audio; judge sound only from the packet's measurements and the SFX list vs. what is on screen.
 
+The packet includes the **automatic checks** (`engine.checks`: safe zone / app UI, labels on captions or the badge
+or each other, label time < 2 s, caption echoes, black and frozen frames, loudness, peaks, silence, script rules).
+Don't spend your pass re-measuring those. Say if you disagree with one, and list any that are still ERROR. Put your
+time into what a program cannot see: facts, anatomy, whether each narrated verb is shown, a tag pointing at the
+wrong thing, a face under the caption band, a fix that broke something nearby, story clarity.
+
 ## What to judge (be specific, cite timestamps and file names)
 1. **Facts** — verify every factual claim in the narration and on-screen labels with reliable sources
    (university, museum, government, veterinary, peer-reviewed). Flag anything wrong, overstated, or misleading by

@@ -23,7 +23,7 @@ in `lessons/`, `engine/board.py`), has its own rules: read `docs/lessons.md` bef
 | Font | **Nunito** (rounded, SIL OFL) via `engine/text.py` — alternatives on file: Quicksand, Fredoka, Baloo 2 |
 | Brand | Profile picture + YouTube banner in `assets/brand/` (made by `branding/logo.py` `final` and `branding/banner.py` `m1_midnight`). Palette "midnight": navy `#1e2a3a`, cream `#f3ead8`, gold `#f2b84b`. Wordmark font **Outfit** semibold; the "o" of "ology" is a magnifying glass. Channel description in `assets/brand/channel.md` |
 | Watermark | small round badge, top-left: navy disc with the gold magnifying-glass "o" and a thin cream keyline — `scene.watermark()`, centre (112, 254), r 52, alpha 0.85. Opt in per episode with `ctx["watermark"] = True`; it rides above the captions and fades with the open/close. `watermark(art=True)` swaps in the profile picture instead. Owner picked the lens mark over the wordmark and over the avatar (e002) |
-| End card | the series logo plate (navy pill, "teeny tiny ology" with the lens "o"): `brand_plate()` in `episodes/e001_pickle_doodle/episode.py`, centred in the safe zone at y≈1400. No tagline (owner removed "Teeny creatures. Big stories.") |
+| End card | the series logo plate (navy pill, "teeny tiny ology" with the lens "o"): `brand_plate()` in `engine/kit.py`, centred in the safe zone at y≈1400. No tagline (owner removed "Teeny creatures. Big stories.") |
 | API key | `ELEVENLABS_API_KEY` in `.env` (git-ignored). Never print it, never commit it |
 
 ## The cast (permanent names — never rename)
@@ -93,9 +93,11 @@ same character becomes the larger female. She is an **isopod, not a louse** — 
 engine/          core.py (math/geometry/text) · style.py (3 looks) · scene.py (timeline, captions, tags)
                  render.py (stills, contact sheets, MP4) · voice.py (ElevenLabs + timing)
                  audio/ music.py (theme) · sfx.py · mix.py (ducking, loudness) · common.py
+                 kit.py (shared Shorts blocks: cameras, lens, end-card plate, worm paths, episode audio mix)
+                 ep.py (one command per stage) · checks.py (automatic pre-judge checks)
                  board.py (Lessons whiteboard) · judge_kit.py / lesson_kit.py (review packets)
 characters/      one module per cast member + model_sheet.py
-episodes/NNN-slug/  idea.md · facts.md · script.py · episode.py · voice_cache/ · review/ · out/
+episodes/eNNN_slug/ idea.md · facts.md · script.py · episode.py · approvals.json · voice_cache/ · review/ · out/
 lessons/lNNN_slug/  plan.md · facts.md · script.py · lesson.py · voice_cache/ · out/   (bake_* = engine tests)
 .claude/skills/  new-episode · new-character · new-lesson      .claude/agents/  video-judge · lesson-judge
 for-review/      copies for the owner to watch (git-ignored)
@@ -107,17 +109,52 @@ Setup on a new machine: `python -m venv .venv && .venv/Scripts/python -m pip ins
 `.env.example` to `.env` and add the ElevenLabs key.
 ```
 .venv/Scripts/python -m characters.model_sheet review.png [--only mochi,pip]
-.venv/Scripts/python -m episodes.<pkg>.episode stills --style cute        # storyboard stills + contact sheet
-.venv/Scripts/python -m episodes.<pkg>.episode render --style cute        # full MP4 (+ music-only variant)
+.venv/Scripts/python -m engine.ep status [e006]          # where every episode is, and the next step
+.venv/Scripts/python -m engine.ep new 6 slug-words       # scaffold an episode + its for-review/ folders
+.venv/Scripts/python -m engine.ep preview e006           # narration preview -> for-review/<pkg>/2_narration/eNNN_narration_vN.mp3
+.venv/Scripts/python -m engine.ep look e006              # look frames -> for-review/<pkg>/3_look_frames/
+.venv/Scripts/python -m engine.ep stills e006            # storyboard stills + contact sheet
+.venv/Scripts/python -m engine.ep check e006             # automatic checks -> episodes/<pkg>/review/checks.md
+.venv/Scripts/python -m engine.ep render e006            # MP4 + QA sheet, then the automatic checks
+.venv/Scripts/python -m engine.ep judge-kit e006         # packet for the video-judge agent
+.venv/Scripts/python -m engine.ep final e006             # deliverables -> for-review/<pkg>/4_final/
+.venv/Scripts/python -m engine.ep approve e006 narration "note"   # record an owner approval (script|narration|look|final)
+.venv/Scripts/python -m engine.ep review                 # the owner's review page, http://localhost:8765 (Shorts + Lessons);
+                                                         # the owner also starts and continues Claude runs from it
+.venv/Scripts/python -m engine.ep feedback e006          # the owner's open comments from the review page (lessons: l002)
+.venv/Scripts/python -m engine.ep resolve e006 7 "what was done"   # close comment #7; the owner sees the reply
 ```
-The owner reviews files in `for-review/` at the project root (git-ignored): copy review images, videos and MP3s
-there and give the full path when asking for feedback. (The owner can't open chat attachments or other app folders.)
+`--style` defaults to `illustrated`. `python -m episodes.<pkg>.episode stills|look|render|captions|check` still works.
+Shared building blocks live in `engine/kit.py`. Import them from there, never from another episode. When a helper
+shows up in a second episode, move it into `engine/kit.py`.
+The owner reviews files in `for-review/` at the project root (git-ignored), on the **review page**
+(`python -m engine.ep review`, computer browser only). It shows every stage folder as a tab with players, timestamped
+and per-line comments, and an Approve button per gate. When asking for feedback, put the files in `for-review/` and
+give a deep link, e.g. `http://localhost:8765/#e006/2_narration` or `#l002/3_board`, plus the full file path as a
+fallback. (The owner can't open chat attachments or other app folders.) Before every iteration, read the owner's
+comments (`engine.ep feedback <ep>`, stored in `<episodes|lessons>/<pkg>/feedback.json`). Close each one you address
+with `engine.ep resolve <ep> <id> "what was done"`. Approvals clicked on the page land in `approvals.json`; check
+`engine.ep status <ep>` rather than assuming a gate is approved.
+
+**Runs started from the page** (`engine/agent.py`): the owner can write a **New idea** (Short or Lesson) and press
+Start, or press **Continue** on a project (optionally approving the current gate and adding a note). The server then
+runs Claude Code headless (`claude -p … --permission-mode dontAsk`, project Python / file tools / web research
+allowed, git commit/push/reset/checkout denied), one run at a time, with a live log on the page. Ideas are kept in
+`docs/ideas.json`; run logs in `.cache/agent/`. In such a run nobody can answer questions, so:
+work only up to the **next owner gate** and stop; never pass a gate `engine.ep status` doesn't show approved; read
+`engine.ep feedback` first, fix and `resolve` every open comment, and produce new versioned files; put everything to
+review in `for-review/<pkg>/<stage>/`; new characters stop at `1_cast/`; never commit. **End every run with a short
+plain-language note to the owner** (≤ 6 sentences, no code): what was done, which tab to look at, any question. The
+page shows that note.
 Keep it organised (owner request): one folder per episode/lesson named like its package (`for-review/e005_mochi_noodle/`),
 with numbered stage folders `1_cast/`, `2_narration/`, `3_look_frames/`, `4_final/` (lessons: `1_plan/`, `2_narration/`,
 `3_board/`, `4_final/`). Versions go in the file name (`e005_narration_v2.mp3`). Engine/format experiments go in `_setup/`.
 Never drop files loose at the top level.
 
 ## Quality checklist (before showing anything)
+0. `python -m engine.ep check <ep>` (runs after every `render`): **zero ERRORs**, and every WARN read and either
+   fixed or explained. The checks cover safe zone / app UI, overlaps, label time, caption echoes, black / frozen
+   frames, transitions, end-card hold, loudness / peaks / silence and the script rules. The judge sees the report.
 1. Contact sheet of the *encoded MP4* (`render.sample_frames`) — every scene, transition and caption checked by eye.
 2. No text or key action outside the safe zone; no caption overlapping a label.
 3. Characters on-model (compare with `model_sheet`), eyes blink, nothing frozen for > 2 s.

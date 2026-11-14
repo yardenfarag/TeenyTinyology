@@ -53,3 +53,6 @@ branding/out/
 
 # review copies for the owner
 for-review/
+
+# --- review page thumbnails (engine/review.py) ---
+.cache/

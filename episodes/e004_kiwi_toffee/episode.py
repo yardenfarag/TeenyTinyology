@@ -8,25 +8,17 @@ Run:
     .venv/Scripts/python -m episodes.e004_kiwi_toffee.episode stills --style illustrated
     .venv/Scripts/python -m episodes.e004_kiwi_toffee.episode render --style illustrated
 """
-import argparse
 import math
 import os
-import shutil
 
-import cairo
-import numpy as np
 
 from characters import kiwi, toffee
 from engine import backgrounds as bg
-from engine import render
 from engine import style as styles
-from engine.audio import mix, music, sfx
-from engine.audio.common import SR, Bus
 from engine.core import TAU, back_out, clamp, ease, ease_out, ellipse, hexc, lerp, prog, rng, squash, window
 from engine.scene import Timeline, label, sparkles, tag
-from engine.voice import narrate, sfx_events
-from episodes.e002_roly_mango.episode import Cam, blinking, brand_plate, paint
-from episodes.e003_biscuit_dilly.episode import framed, lens
+from engine.voice import narrate
+from engine.kit import blinking, brand_plate, card_cam, episode_audio, keyed_cam, lens, paint
 from episodes.e004_kiwi_toffee.script import SCRIPT, SFX
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -40,15 +32,6 @@ ROCK_TOP = (820, 1060)            # the climbable rock (engine/backgrounds.shore
 # Scene coordinates are screen + 170 (STAGE_LIFT). Safe zone in scene coords: x 60..900, y 370..1630.
 TOP_LABEL_Y = 560                 # top labels (true y 390): clear of the watermark badge and the app's top bar
 
-
-def drift(t, x, y, ax=10, ay=6, sp=0.7):
-    return x + ax * math.sin(t * sp), y + ay * math.sin(t * sp * 1.37 + 1.1)
-
-
-def card_cam(t, t0, t1, z0=0.94, z1=1.30, fx=540, fy=980):
-    """A diagram card needs a big push-in (judge lessons: 1.0→1.17 over 11 s was invisible)."""
-    z = lerp(z0, z1, ease(prog(t, t0, t1)))
-    return Cam(z, fx, fy + 20 * ease(prog(t, t0, t1)), 540, 980)
 
 
 def build(style_name):
@@ -86,13 +69,7 @@ def build(style_name):
         (q["life"].end + 0.5, 1.0, 540, 1120),                    # hold: no slow push (owner: it ticked)
     ]
 
-    def cam_at(t):
-        for (t0, z0, x0, y0), (t1, z1, x1, y1) in zip(KEYS, KEYS[1:]):
-            if t < t1:
-                k = ease(prog(t, t0, t1))
-                return framed(lerp(z0, z1, k), lerp(x0, x1, k), lerp(y0, y1, k))
-        t0, z0, x0, y0 = KEYS[-1]
-        return framed(z0, x0, y0)
+    cam_at = keyed_cam(KEYS)
 
     def shore(c, t):
         paint(c, bg.shore())
@@ -588,30 +565,11 @@ def build(style_name):
     tl.add(s_end, q["life"].end + 0.5, DUR + 0.1, trans_dur=0.7)
 
     # ---------------------------------------------------------- audio
-    def make_audio(path):
-        moods = [(0.0, "curious"), (q["kiwi"].start, "cozy"), (q["toffee"].start, "playful"),
-                 (q["land"].start, "mystery"), (q["roots"].start, "quiet"), (q["months"].start, "curious"),
-                 (q["body"].start, "wonder"), (q["shell"].start, "quiet"), (q["males"].start, "playful"), (q["still"].start, "cozy"),
-                 (q["launch"].start, "wonder"), (q["turn"].start, "mystery"), (q["end"].start, "finale")]
-        HEAD = 0.4
-        full = music.score(DUR + HEAD + 8.0, moods)
-        i0 = int(HEAD * SR)
-        bed = full[i0:i0 + int(DUR * SR)]
-        fx = Bus(DUR, 5)
-        for t0, name, gain in sfx_events(SFX, Q):
-            fx.add(t0, sfx.LIB[name](), 0.0, gain)
-        for ln in SCRIPT:
-            if ln.sfx:
-                fx.add(Q[ln.id].start, sfx.LIB[ln.sfx](), 0.0, 0.5)
-        n = int(DUR * SR)
-        out = mix.mixdown(n, music=bed, sfx=fx.buf, voice=track, music_gain=0.5)
-        tail = int(0.8 * SR)
-        out[-tail:] *= np.linspace(1.0, 0.0, tail)[:, None] ** 1.5
-        raw = path.replace(".wav", "_raw.wav")
-        mix.write_wav(raw, out)
-        mix.loudnorm(raw, path)
-        os.remove(raw)
-        return path
+    moods = [(0.0, "curious"), (q["kiwi"].start, "cozy"), (q["toffee"].start, "playful"),
+             (q["land"].start, "mystery"), (q["roots"].start, "quiet"), (q["months"].start, "curious"),
+             (q["body"].start, "wonder"), (q["shell"].start, "quiet"), (q["males"].start, "playful"), (q["still"].start, "cozy"),
+             (q["launch"].start, "wonder"), (q["turn"].start, "mystery"), (q["end"].start, "finale")]
+    make_audio = episode_audio(DUR, Q, SCRIPT, SFX, track, moods)
 
     return tl, ctx, make_audio, Q
 
@@ -637,52 +595,9 @@ def key_times(Q):
 
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["stills", "look", "render", "captions"])
-    ap.add_argument("--style", default="illustrated", choices=list(styles.STYLES))
-    ap.add_argument("--copy-to", default=None)
-    ap.add_argument("--times", default=None, help="comma separated seconds (stills)")
-    a = ap.parse_args()
-    tl, ctx, make_audio, Q = build(a.style)
-    if a.cmd == "captions":
-        for cap in tl.captions:
-            print(f"{cap.start:6.2f}-{cap.end:6.2f} ({cap.end - cap.start:4.2f}s)  {' '.join(w for w, _, _ in cap.words)}")
-        return
-    if a.cmd == "look":
-        out = os.path.join(os.path.dirname(os.path.dirname(HERE)), "for-review", "e004_kiwi_toffee", "3_look_frames")
-        shutil.rmtree(out, ignore_errors=True)
-        lt = look_times(Q)
-        paths = render.stills(tl, ctx, list(lt.values()), out, prefix="look")
-        named = []
-        for (name, _), p in zip(lt.items(), paths):
-            dst = os.path.join(out, f"{len(named) + 1:02d}_{name}.png")
-            os.replace(p, dst)
-            named.append(dst)
-        sheet = render.contact_sheet(named, os.path.join(out, "00_overview.png"), cols=6, width=2800)
-        print("look frames", out, "sheet", sheet)
-        return
-    review = os.path.join(HERE, "review", a.style)
-    if a.cmd == "stills":
-        shutil.rmtree(review, ignore_errors=True)
-        times = [float(x) for x in a.times.split(",")] if a.times else key_times(Q)
-        paths = render.stills(tl, ctx, times, review)
-        sheet = render.contact_sheet(paths, os.path.join(HERE, "review", f"storyboard_{a.style}.png"),
-                                     cols=6, width=2800)
-        print("sheet", sheet)
-        if a.copy_to:
-            shutil.copy(sheet, a.copy_to)
-        return
-    outdir = os.path.join(HERE, "out")
-    os.makedirs(outdir, exist_ok=True)
-    wav = make_audio(os.path.join(outdir, f"audio_{a.style}.wav"))
-    mp4 = os.path.join(outdir, f"{SLUG}_{a.style}.mp4")
-    render.video(tl, ctx, mp4, wav)
-    os.remove(wav)
-    print("video", mp4, "LUFS", mix.measure_lufs(mp4))
-    qa = render.sample_frames(mp4, os.path.join(HERE, "review", f"qa_{a.style}.png"), every=1.0, cols=10)
-    if a.copy_to:
-        shutil.copy(mp4, a.copy_to)
-        shutil.copy(qa, a.copy_to)
+    """`python -m episodes.<pkg>.episode stills|look|render|captions|check` — same as `python -m engine.ep <cmd> <ep>`."""
+    from engine.ep import episode_main
+    episode_main(__file__)
 
 
 if __name__ == "__main__":

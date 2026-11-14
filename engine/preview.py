@@ -53,9 +53,18 @@ def main():
     if a.batches:
         batches(mod.SCRIPT, cues, wav, a.out, os.path.join(cache, "qa.json"))
     os.remove(wav)
+    write_lines(mod.SCRIPT, cues, a.out)
     for c in cues.values():
         print(f"{c.id:10s} {c.start:6.2f}-{c.end:6.2f}  {' '.join(w for w, _, _ in c.words)}")
     print(f"total {dur:.1f}s -> {a.out}")
+
+
+def write_lines(script, cues, mp3):
+    """<mp3>.lines.json: each line's id, text and start/end in the MP3 — the review page highlights and seeks by it."""
+    rows = [{"id": ln.id, "text": ln.text.replace("|", "").replace("  ", " ") or f"[sound: {ln.sfx}]",
+             "start": round(cues[ln.id].start, 3), "end": round(cues[ln.id].end, 3)} for ln in script]
+    with open(mp3 + ".lines.json", "w", encoding="utf8") as f:
+        json.dump(rows, f, indent=1)
 
 
 def batches(script, cues, wav, out, qa_path):

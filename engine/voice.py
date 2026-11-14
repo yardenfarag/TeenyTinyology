@@ -74,6 +74,9 @@ def api_key():
     return key
 
 
+OFFLINE = False      # True: never call ElevenLabs; a line that is not cached raises instead (review tools, backfills)
+
+
 def _synth(text, prev, nxt, cache_dir, take=0, h=None):
     body = {"text": text, "model_id": MODEL, "previous_text": prev or None, "next_text": nxt or None,
             "voice_settings": SETTINGS}
@@ -83,6 +86,8 @@ def _synth(text, prev, nxt, cache_dir, take=0, h=None):
     os.makedirs(cache_dir, exist_ok=True)
     jpath = os.path.join(cache_dir, f"{h}.json")
     if not os.path.exists(jpath):
+        if OFFLINE:
+            raise LookupError(f"not in the voice cache: {text[:60]}")
         req = urllib.request.Request(
             f"https://api.elevenlabs.io/v1/text-to-speech/{VOICE_ID}/with-timestamps?output_format=mp3_44100_128",
             data=json.dumps(body).encode(), method="POST",

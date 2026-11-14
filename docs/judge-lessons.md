@@ -6,6 +6,38 @@ After every judge pass: save the full report in `episodes/<ep>/judge_reports/pas
 lessons here (cite the episode). When a lesson is caught a second time, mark it **(repeat)**. It should
 probably become an engine default or a checklist item.
 
+## Now automatic (`python -m engine.ep check <ep>`, runs after every render)
+`engine/checks.py` catches these lessons by itself. They are still listed below so the reasons stay on record.
+A failing check cites its lesson. When a new lesson can be measured, add a check rather than another paragraph,
+and plant the mistake in a tiny timeline to prove the check catches it.
+
+| Lesson below | Check |
+|---|---|
+| Never say a sound; SFX anchored to words in the line | script · spoken sound, sfx |
+| ElevenLabs stray sound (voice QA must be empty) | script · voice QA |
+| Hooks and closing lines must survive the host list | script · absolute claim (WARN: re-read facts.md hedges) |
+| Introduce characters as "This is <Name>." | script · intro |
+| Assert the timeline has no holes | timeline · hole |
+| A transition needs an overlap or it is a cut | timeline · transition |
+| End card readable for at least 4 s | timeline · end card |
+| Frame 0 must not be black | timeline / layout / mp4 · frame 0 |
+| No caption < 0.9 s; no weak line endings; no one-word orphans | timeline · caption |
+| Safe zones; nothing under the app UI | layout · app UI (ERROR), safe zone (WARN) |
+| No caption overlapping a label; top labels vs the watermark; tag/label collisions | layout · on caption, on watermark, overlap |
+| A label beside a caption needs about 2 s | layout · label time |
+| On-screen labels must not repeat the caption | layout · echo (labels only; name tags are exempt) |
+| Draw labels after `c.restore()` | layout · zoomed label |
+| Labels ≥ 34 px | layout · text size |
+| A camera must never show past its background | layout · black edge |
+| Black frames; frozen > 2 s (captions + badge masked; the still end card is exempt) | layout / mp4 · black frame, frozen |
+| Judge a scene against the episode's own baseline | layout · still scene |
+| Loudness, true peak, sample peak, silence | mp4 · loudness, true peak, clipping, silence |
+| Format (1080×1920, 30 fps, H.264 + AAC); an MP4 older than the code | mp4 · format, stale |
+
+Not automatic (still the judge's and your job): facts, anatomy, "every narrated verb has a visual payoff", a tag
+pointing at the wrong thing, faces under the caption band, scale consistency, story clarity.
+The per-episode `verify.py` scripts in e002/e004 are superseded by `engine.checks`.
+
 ## Story & script
 - **Hook in the first 2 s.** Open on a teaser frame with the episode's big question on screen before the narrator
   starts (e001 pass 1).

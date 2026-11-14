@@ -24,71 +24,16 @@ from engine.core import (TAU, H, W, back_out, clamp, ease, ease_out, ellipse, he
                          rounded_rect, window)
 from engine.scene import Timeline, tag, wordmark
 from engine.voice import narrate, sfx_events
+from engine.kit import Cam, blinking, brand_plate, paint  # noqa: F401  (e003 used to import them from here)
 from episodes.e002_roly_mango.script import SCRIPT, SFX
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SLUG = "002-roly-and-mango"
 
 
-class Cam:
-    """Show world point (wx, wy) at screen point (sx, sy), zoomed by z."""
-
-    def __init__(self, z=1.0, wx=540.0, wy=960.0, sx=540.0, sy=960.0):
-        self.z, self.wx, self.wy, self.sx, self.sy = z, wx, wy, sx, sy
-
-    def apply(self, c):
-        c.translate(self.sx, self.sy)
-        c.scale(self.z, self.z)
-        c.translate(-self.wx, -self.wy)
-
-    def screen(self, x, y):
-        return (x - self.wx) * self.z + self.sx, (y - self.wy) * self.z + self.sy
-
-
-def blinking(t, off=0.0, every=3.1):
-    return ((t + off) % every) < 0.13
-
-
-def paint(c, surf):
-    c.set_source_surface(surf, 0, 0)
-    c.paint()
-
-
 def drift(t, x, y, ax=16, ay=10, sp=0.7):
     """Everything in water sways a little, always."""
     return x + ax * math.sin(t * sp), y + ay * math.sin(t * sp * 1.37 + 1.1)
-
-
-def brand_plate(c, x, y, a, max_w=640):
-    """Series logo plate for the end card (navy pill + the wordmark with the lens 'o')."""
-    if a <= 0:
-        return
-    from branding.banner import NAVY
-    k = back_out(min(1.0, a * 1.3))
-    size = 100
-    c.save()
-    c.translate(x, y)
-    c.scale(0.9 + 0.1 * k, 0.9 + 0.1 * k)
-    c.push_group()
-    # measure through the shared wordmark helper by drawing it once into a scratch group
-    c.push_group()
-    tot = wordmark(c, 0, 0, size, alpha=0.0)
-    c.pop_group()
-    size *= min(1.0, max_w / tot)
-    c.push_group()
-    tot = wordmark(c, 0, 0, size, alpha=0.0)
-    c.pop_group()
-    pw, ph = tot + size * 0.9, size * 1.55
-    rounded_rect(c, -pw / 2, -ph / 2 + 6, pw, ph, ph / 2)
-    c.set_source_rgba(0.1, 0.08, 0.05, 0.18)
-    c.fill()
-    rounded_rect(c, -pw / 2, -ph / 2, pw, ph, ph / 2)
-    c.set_source_rgba(*NAVY[:3], 1)
-    c.fill()
-    wordmark(c, 0, size * 0.3, size, alpha=1.0)
-    c.pop_group_to_source()
-    c.paint_with_alpha(a)
-    c.restore()
 
 
 def species_line(c, y, a):

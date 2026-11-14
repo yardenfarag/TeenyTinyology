@@ -5,7 +5,7 @@ Writes episodes/<pkg>/review/judge/ :
   sheet_XX.png        contact sheets, one frame every 0.5 s from the ENCODED video (12 frames per sheet, timestamped)
   key_XXX.XX.png      full-resolution stills: every scene start/middle, caption handoffs, first/last second
   safezone_XXX.png    the same stills with TikTok / YouTube Shorts UI overlays drawn on top
-  packet.md           script, SFX list, scene + caption timeline, loudness / silence stats, facts.md
+  packet.md           script, SFX list, scene + caption timeline, loudness / silence stats, checks.md, facts.md
 """
 import argparse
 import importlib
@@ -138,6 +138,9 @@ def main():
               "Silence gaps (< -45 dB, >= 1 s): " + json.dumps(gaps), "",
               "## Files", f"- contact sheets (every 0.5 s of the encoded MP4): {', '.join(os.path.basename(p) for p in sheets)}",
               "- full-res key frames: key_*.png ; safe-zone overlays: safezone_*.png", "",
+              "## Automatic checks (engine.checks — already known; look for what they cannot see)", "",
+              (open(os.path.join(here, "review", "checks.md"), encoding="utf8").read()
+               if os.path.exists(os.path.join(here, "review", "checks.md")) else "(not run — `python -m engine.ep check`)"), "",
               "## Facts sheet", "", open(facts, encoding="utf8").read() if os.path.exists(facts) else "(missing)"]
     with open(os.path.join(out, "packet.md"), "w", encoding="utf8") as f:
         f.write("\n".join(lines))

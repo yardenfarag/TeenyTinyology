@@ -87,6 +87,21 @@ def render_frame(c, t, tl, ctx):
         c.paint()
 
 
+# ================================================================ layout recorder (engine.checks)
+# While a check runs, _REC is a list and every caption, tag, label, lens and the watermark appends the box it
+# drew, in final screen pixels. Drawing code never reads it; it costs nothing when _REC is None.
+_REC = None
+
+
+def _record(kind, text, c, x, y, w, h, alpha, size=None, zoom=None):
+    if _REC is None or alpha <= 0:
+        return
+    pts = [c.user_to_device(px, py) for px, py in ((x, y), (x + w, y), (x, y + h), (x + w, y + h))]
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    _REC.append(dict(kind=kind, text=text, box=(min(xs), min(ys), max(xs), max(ys)), alpha=alpha, size=size,
+                     zoom=zoom if zoom is not None else c.get_matrix().xx))
+
+
 # ================================================================ captions
 @dataclass
 class Caption:
@@ -190,6 +205,7 @@ def watermark(c, alpha=0.85, cx=None, cy=None, r=None, art=False):
         lens(c, cx + r * 0.10, cy - r * 0.10, r * 0.40, r * 0.155, GOLD, handle=-1)
     c.pop_group_to_source()
     c.paint_with_alpha(alpha)
+    _record("watermark", "", c, cx - r - 4, cy - r - 4, 2 * r + 8, 2 * r + 15, alpha)
     c.restore()
 
 
@@ -226,6 +242,7 @@ def draw_captions(c, t, caps):
         bw = tw + 64
         cy = CAP_Y + (1 - fi) * 14
         soft_bubble(c, CAP_X - bw / 2, cy - bh / 2, bw, bh, al)
+        _record("caption", " ".join(words), c, CAP_X - bw / 2, cy - bh / 2, bw, bh, al, CAP_SIZE)
         x = CAP_X - tw / 2
         base = cy + CAP_SIZE * 0.36
         for (w, ws, we), wd in zip(cap.words, ws_):
@@ -247,6 +264,7 @@ def tag(c, txt, x, y, alpha, size=40, sub=None, pointer=True):
     if alpha <= 0:
         return
     k = back_out(min(1.0, alpha * 1.4))
+    zoom = c.get_matrix().xx
     c.save()
     c.translate(x, y)
     c.scale(k, k)
@@ -268,6 +286,7 @@ def tag(c, txt, x, y, alpha, size=40, sub=None, pointer=True):
     text.center(c, txt, 0, top + size * 1.12, size, UI_INK, alpha=alpha, bold=True)
     if sub:
         text.center(c, sub, 0, top + size * 1.12 + sub_size * 1.15, sub_size, UI_ACCENT, alpha=alpha, italic=True)
+    _record("tag", txt + (f" / {sub}" if sub else ""), c, -bw / 2, top, bw, -top, alpha, size, zoom)
     c.restore()
 
 
@@ -280,6 +299,7 @@ def label(c, txt, x, y, alpha, size=36):
     h = size * 1.6
     soft_bubble(c, x - w / 2, y - h / 2, w, h, alpha, shadow=0.12)
     text.center(c, txt, x, y + size * 0.36, size, UI_INK, alpha=alpha, semibold=True)
+    _record("label", txt, c, x - w / 2, y - h / 2, w, h, alpha, size)
 
 
 def leader(c, x0, y0, x1, y1, alpha, col=(1, 1, 1)):

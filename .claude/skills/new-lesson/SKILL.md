@@ -10,6 +10,18 @@ read `docs/judge-lessons.md` (mistakes earlier videos made) and every report in 
 
 Each gate below ends when the owner has approved; show them files through `for-review/` and wait.
 
+**Review loop (every gate):** put the files in `for-review/<pkg>/<stage folder>/` and send the review-page link
+(`python -m engine.ep review`, then `http://localhost:8765/#l002/2_narration`). Before the next round, read
+`python -m engine.ep feedback <pkg>`, fix each comment, and close it with `engine.ep resolve <pkg> <id> "what was done"`.
+The owner approves gates with the page's Approve buttons (or tells you; then run `engine.ep approve`). Confirm with
+`engine.ep status <pkg>` before moving past a gate.
+
+**Started from the review page (headless run):** the owner may start this skill with the page's New idea / Continue
+buttons instead of the chat. Then nobody can answer questions mid-run: do the work up to the next owner gate and stop
+(a new idea stops at the first gate: the plan), make decisions you would normally ask about
+yourself and flag them in the note, and end with a short plain-language note to the owner (≤ 6 sentences, no code):
+what was done, which review-page tab to look at, any question. Never commit.
+
 ## 0. Set up
 - Next number: `lessons/lNNN_slug/` (Python package, with `__init__.py`). Files: `plan.md`, `facts.md`,
   `script.py`, `lesson.py`, `voice_cache/`, `judge_reports/`, `out/`.
@@ -39,9 +51,9 @@ Each gate below ends when the owner has approved; show them files through `for-r
   narrators other than Miles (the narrator lives in `engine/voice.py` `VOICE_ID`).
 
 ## 4. Narration preview — **owner approves by ear**
-- `.venv/Scripts/python -m engine.preview lessons.<pkg>.script for-review/<pkg>_narration.mp3 --no-music --batches`
+- `.venv/Scripts/python -m engine.preview lessons.<pkg>.script for-review/<pkg>/2_narration/<lNNN>_narration_vN.mp3 --no-music --batches`
   writes one short MP3 per board region plus `<pkg>_narration_batches.md` (timestamped lines). The owner reviews
-  batch by batch and points at problems as "b · 0:42". Before sending, `voice_cache/qa.json` must be empty: give
+  batch by batch on the review page (each batch's lines are listed and clickable; comments pin to a line). Before sending, `voice_cache/qa.json` must be empty: give
   any line it flags a new `take` and re-run. Cached lines cost nothing; approved takes stay locked.
 
 ## 5. Board frames — **owner approves the look**

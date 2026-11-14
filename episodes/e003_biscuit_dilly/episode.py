@@ -25,7 +25,7 @@ from engine.audio.common import SR, Bus
 from engine.core import TAU, Palette, back_out, clamp, ease, ease_out, ellipse, hexc, lerp, prog, window
 from engine.scene import Timeline, label, leader, sparkles, tag
 from engine.voice import narrate, sfx_events
-from episodes.e002_roly_mango.episode import Cam, blinking, brand_plate, paint
+from engine.kit import Cam, along, blinking, brand_plate, framed, lens, paint, poly_len  # noqa: F401
 from episodes.e003_biscuit_dilly.script import SCRIPT, SFX
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -37,84 +37,6 @@ DUSK_MOSQ = Palette("#7a6852", "#ad9a80", "#4e4030", "#33281c")
 
 # Biscuit's spot on the meadow path (world coords; the scene is drawn STAGE_LIFT higher on screen)
 BX, BY = 430, 1400
-
-
-def framed(z, fx, fy, sx=540.0, sy=1130.0, bg_h=None):
-    """Cam showing world point (fx, fy) at (sx, sy), clamped so the frame never runs off the background.
-    Scenes are drawn STAGE_LIFT higher, so the visible world band is y 170..2090 (sy defaults to its middle)."""
-    bg_h = bg.HH if bg_h is None else bg_h
-    z = max(1.0, z)
-    wx = clamp(fx, sx / z, 1080 - (1080 - sx) / z)
-    wy = clamp(fy, (sy - 170) / z, bg_h - (2090 - sy) / z)
-    return Cam(z, wx, wy, sx, sy)
-
-
-def lens(c, x, y, r, inner, a=1.0, t=0.0):
-    """The channel's magnifying glass: a round window onto something tiny. inner(c) draws in world coords,
-    clipped to the glass. The handle points down-left, away from the app's right rail."""
-    if a <= 0:
-        return
-    from branding.banner import GOLD, NAVY
-    k = back_out(min(1.0, a * 1.25))
-    c.save()
-    c.translate(x, y)
-    c.scale(k, k)
-    c.translate(-x, -y)
-    c.push_group()
-    hx, hy = x - r * 0.72, y + r * 0.72                        # handle
-    c.move_to(hx, hy)
-    c.line_to(hx - r * 0.42, hy + r * 0.42)
-    c.set_line_cap(cairo.LINE_CAP_ROUND)
-    c.set_source_rgba(*NAVY[:3], 1)
-    c.set_line_width(r * 0.16)
-    c.stroke()
-    for dy, grow, al in ((10, 10, 0.08), (5, 5, 0.10)):           # soft shadow
-        c.arc(x, y + dy, r + grow, 0, TAU)
-        c.set_source_rgba(0.2, 0.1, 0.05, al)
-        c.fill()
-    c.save()
-    c.arc(x, y, r, 0, TAU)
-    c.clip()
-    c.set_source_rgba(*hexc("#fbefe2"))
-    c.paint()
-    inner(c)
-    g = cairo.RadialGradient(x - r * 0.4, y - r * 0.5, 0, x - r * 0.4, y - r * 0.5, r * 0.9)
-    g.add_color_stop_rgba(0, 1, 1, 1, 0.22)                    # glass glint
-    g.add_color_stop_rgba(1, 1, 1, 1, 0)
-    c.set_source(g)
-    c.paint()
-    c.restore()
-    c.arc(x, y, r, 0, TAU)
-    c.set_source_rgba(*GOLD[:3], 1)
-    c.set_line_width(r * 0.09)
-    c.stroke()
-    c.arc(x, y, r * 0.955, 0, TAU)
-    c.set_source_rgba(1, 0.97, 0.9, 0.7)
-    c.set_line_width(3)
-    c.stroke()
-    c.pop_group_to_source()
-    c.paint_with_alpha(min(1.0, a * 1.5))
-    c.restore()
-
-
-def along(poly, head_d, length, n=60):
-    """Points of a worm lying on a polyline: head at arc-length head_d, body trailing `length` behind it."""
-    seg = [math.dist(p, q) for p, q in zip(poly, poly[1:])]
-
-    def at(d):
-        d = max(0.0, d)
-        for (p, q), L in zip(zip(poly, poly[1:]), seg):
-            if d <= L or L == seg[-1] and (p, q) == (poly[-2], poly[-1]):
-                f = d / L if L else 0.0
-                return lerp(p[0], q[0], min(f, 1.0)), lerp(p[1], q[1], min(f, 1.0))
-            d -= L
-        return poly[-1]
-
-    return [at(head_d - length * k / (n - 1)) for k in range(n)]
-
-
-def poly_len(poly):
-    return sum(math.dist(p, q) for p, q in zip(poly, poly[1:]))
 
 
 def evening(c, k):
